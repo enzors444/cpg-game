@@ -36,6 +36,7 @@ As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e
 | `global.cartas_selecionadas` | Valores das cartas selecionadas pelo jogador. |
 | `global.indices_cartas_selecionadas` | Posicoes dessas cartas dentro da mao. |
 | `global.ops_selecionadas` | Operacoes escolhidas entre as cartas. |
+| `global.expressao_partes` | Guarda a ordem real dos cliques da expressao, misturando cartas e operacoes. |
 
 ## `obj_game`
 
@@ -51,13 +52,25 @@ No evento Create, ele:
 - chama `criar_inimigos()`;
 - cria a mao;
 - cria os botoes de operacao;
-- cria o botao de reroll.
+- cria o botao de reroll;
+- cria o botao de limpar expressao.
 
 O botao de reroll e criado assim:
 
 ```gml
-var _btn_reroll      = instance_create_layer(room_width - 40, 270, "Instances", obj_btn_operacao);
+var _btn_reroll      = instance_create_layer(room_width - 40, 320, "Instances", obj_btn_operacao);
 _btn_reroll.operacao = "REROLL";
+
+var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", obj_btn_operacao);
+_btn_clear.operacao = "CLEAR";
+```
+
+No evento Draw, `obj_game` desenha um display entre o player e a mao. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
+
+Exemplo:
+
+```text
+7 + 2
 ```
 
 No evento Step existe um trecho comentado que abriria `obj_card_selection` ao pressionar espaco. No estado atual, essa tela de troca so funciona se esse gatilho for religado ou chamado por outro lugar.
@@ -109,7 +122,9 @@ No Mouse Left Pressed:
 - se for carta de selecao, salva `global.carta_escolhida` e chama `confirmar()`;
 - se for carta da mao, alterna entre selecionada e nao selecionada;
 - ao selecionar, adiciona valor em `global.cartas_selecionadas`;
-- ao selecionar, adiciona posicao em `global.indices_cartas_selecionadas`.
+- ao selecionar, adiciona posicao em `global.indices_cartas_selecionadas`;
+- ao selecionar, adiciona uma parte do tipo `"carta"` em `global.expressao_partes`;
+- antes de selecionar, chama `pode_adicionar_carta_expressao()` para respeitar o limite de cartas por numero da fase.
 
 ## `obj_card_selection`
 
@@ -152,14 +167,24 @@ Operacoes por fase:
 
 ### Botao `"="`
 
+Quando o jogador clica em uma operacao comum, como `+` ou `*`, o botao primeiro chama `pode_adicionar_operacao_expressao()`. Isso impede operacao antes de carta e impede duas operacoes seguidas. Se puder adicionar, a operacao entra em `global.ops_selecionadas` e tambem em `global.expressao_partes`.
+
 Quando o jogador clica em `"="`, o codigo valida:
 
-- se foram selecionadas pelo menos 2 cartas;
-- se foi selecionada pelo menos 1 operacao;
-- se a quantidade de operacoes e exatamente `quantidade de cartas - 1`;
+- se a expressao comeca e termina com carta;
+- se existe pelo menos 1 operacao;
+- se nao existem duas operacoes seguidas;
+- se a quantidade de cartas seguidas por numero respeita a fase;
 - se existe um `obj_enemy` na sala.
 
-Depois chama `calcular_resultado()`.
+Depois chama `calcular_resultado_expressao()`.
+
+Regras de cartas por numero:
+
+| Fase | Regra |
+| --- | --- |
+| `1` | Cada numero pode ter apenas 1 carta. Permite `9 * 2`, mas bloqueia `90 * 2`. |
+| `2` e `3` | Cada numero pode ter ate 2 cartas. Permite `90 * 2`, `9 * 2` ou `90 * 23`. |
 
 Se o resultado for positivo, ele vira dano em `global.enemy_life`. Se `global.enemy_life` chegar a `0`, o jogo:
 
@@ -194,6 +219,23 @@ No Draw, esse botao mostra:
 - `R0`, quando acabou.
 
 Quando acaba a carga, o botao fica cinza.
+
+### Botao `"CLEAR"`
+
+O botao de limpar tambem e um `obj_btn_operacao`, mas recebe:
+
+```gml
+operacao = "CLEAR";
+```
+
+No Draw, esse botao aparece como `C`. Ao clicar, ele chama `limpar_expressao()`, que:
+
+- limpa `global.cartas_selecionadas`;
+- limpa `global.indices_cartas_selecionadas`;
+- limpa `global.ops_selecionadas`;
+- limpa `global.expressao_partes`;
+- desmarca cartas da mao;
+- desmarca botoes de operacao.
 
 ## `obj_enemy`
 
@@ -255,9 +297,11 @@ Retorna operacoes parecidas com `operacoes_da_fase()`, mas sem o `"="`. No fluxo
 
 ### `calcular_resultado(_cartas, _ops)`
 
+Calcula um resultado a partir de arrays ja separados em numeros e operacoes.
+
 Recebe:
 
-- `_cartas`: array com os valores das cartas selecionadas;
+- `_cartas`: array com os numeros que entram no calculo;
 - `_ops`: array com as operacoes selecionadas.
 
 Ele comeca com a primeira carta e aplica cada operacao usando a proxima carta.
@@ -287,6 +331,29 @@ Operacoes suportadas:
 | `^` | Potencia. |
 | `sqrt` | Raiz quadrada do proximo numero. |
 | `log` | Logaritmo usando `logn(_num, _resultado)`. |
+
+### Funcoes de expressao
+
+Essas funcoes tambem ficam em `scripts/calcular_resultados/calcular_resultados.gml`.
+
+| Funcao | Funcao no jogo |
+| --- | --- |
+| `max_cartas_por_numero()` | Retorna `1` na fase 1 e `2` nas fases 2 e 3. |
+| `pode_adicionar_carta_expressao()` | Bloqueia cartas seguidas acima do limite da fase. |
+| `pode_adicionar_operacao_expressao()` | Permite operacao apenas depois de uma carta. |
+| `expressao_valida()` | Confere se a expressao esta pronta para calcular. |
+| `calcular_resultado_expressao()` | Monta numeros com cartas seguidas e calcula o resultado final. |
+| `remover_expressao_a_partir(_inicio)` | Remove uma parte da expressao e tudo que veio depois dela. |
+| `limpar_expressao()` | Limpa toda a expressao e desmarca cartas e operacoes. |
+| `montar_texto_expressao(_mostrar_resultado)` | Gera o texto usado pelo display da expressao. |
+
+Exemplos:
+
+```text
+fase 1: 9 * 2  -> valido
+fase 1: 90 * 2 -> bloqueado
+fase 2: 90 * 2 -> valido
+```
 
 ### `recomprar_cartas()`
 

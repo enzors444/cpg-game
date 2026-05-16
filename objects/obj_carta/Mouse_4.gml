@@ -8,16 +8,22 @@ if (global.jogo_pausado || indice_mao == -1) exit;
 
 // Seleciona/deseleciona uma carta da mao.
 if (!selecionada) {
+    if (!pode_adicionar_carta_expressao()) exit;
+
     selecionada = true;
     array_push(global.cartas_selecionadas, numero);
     array_push(global.indices_cartas_selecionadas, indice_mao);
+    array_push(global.expressao_partes, { tipo: "carta", valor: numero, indice: indice_mao });
     image_blend = c_yellow;
 } else {
-    selecionada = false;
-    var _idx = array_get_index(global.indices_cartas_selecionadas, indice_mao);
-    if (_idx != -1) {
-        array_delete(global.cartas_selecionadas, _idx, 1);
-        array_delete(global.indices_cartas_selecionadas, _idx, 1);
+    for (var i = 0; i < array_length(global.expressao_partes); i++) {
+        var _parte = global.expressao_partes[i];
+        if (_parte.tipo == "carta" && _parte.indice == indice_mao) {
+            remover_expressao_a_partir(i);
+            exit;
+        }
     }
+
+    selecionada = false;
     image_blend = c_white;
 }

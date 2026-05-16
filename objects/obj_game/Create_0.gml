@@ -11,6 +11,7 @@ global.mao                 = [];
 global.cartas_selecionadas = [];
 global.indices_cartas_selecionadas = [];
 global.ops_selecionadas    = [];
+global.expressao_partes    = [];
 
 criar_inimigos();
 
@@ -28,3 +29,6 @@ for (var i = 0; i < array_length(global.ops); i++) {
 
 var _btn_reroll      = instance_create_layer(room_width - 40, 320, "Instances", obj_btn_operacao);
 _btn_reroll.operacao = "REROLL";
+
+var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", obj_btn_operacao);
+_btn_clear.operacao = "CLEAR";

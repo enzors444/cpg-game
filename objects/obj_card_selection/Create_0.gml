@@ -27,6 +27,7 @@ function confirmar() {
     global.cartas_selecionadas = [];
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];
+    global.expressao_partes = [];
     global.carta_escolhida = -1;
 
     with (obj_carta) {

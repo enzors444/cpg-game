@@ -1,0 +1,1 @@
+sprite_index = sprites_enemy[global.chosen_enemy];

@@ -10,5 +10,5 @@ sprites_enemy = [
 	spr_enemy_8,
 	spr_enemy_9
 ];
-chosen_enemy = irandom(9);
-sprite_index = sprites_enemy[chosen_enemy];
+global.chosen_enemy = irandom(9);
+sprite_index = sprites_enemy[global.chosen_enemy];

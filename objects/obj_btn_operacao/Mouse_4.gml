@@ -13,11 +13,11 @@ if (operacao == "=") {
     if (_enemy == noone) exit;
 
     var _resultado = calcular_resultado(global.cartas_selecionadas, global.ops_selecionadas);
-    var _acertou_exato = (_resultado == _enemy.vida);
+    var _acertou_exato = (_resultado == global.enemy_life);
     var _dano = max(0, _resultado);
-    _enemy.vida = max(0, _enemy.vida - _dano);
+    global.enemy_life = max(0, global.enemy_life - _dano);
 
-    if (_enemy.vida <= 0) {
+    if (global.enemy_life <= 0) {
         if (_acertou_exato) {
             global.bonus_tentativas_proxima += 1;
         }

@@ -1,6 +1,7 @@
 // 1. sorteia
 var _pool = [0,1,2,3,4,5,6,7,8,9];
 cartas = array_create(3);
+randomise();
 for (var i = 0; i < 3; i++) {
     var _idx = irandom(array_length(_pool) - 1);
     cartas[i] = _pool[_idx];

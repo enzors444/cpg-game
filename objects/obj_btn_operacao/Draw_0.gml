@@ -22,11 +22,6 @@ if (operacao == "REROLL") {
     }
 }
 
-if (operacao == "CLEAR") {
-    _texto = "C";
-    _meia_largura = 24;
-}
-
 draw_set_color(_cor);
 draw_rectangle(x - _meia_largura, y - 20, x + _meia_largura, y + 20, false);
 draw_set_color(c_black);

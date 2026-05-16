@@ -15,8 +15,10 @@ Este projeto e um jogo feito no GameMaker em que o jogador usa cartas numericas 
 9. O resultado positivo vira dano e e subtraido de `global.enemy_life`.
 10. Se a vida chegar a `0`, as cartas usadas sao recompradas e `proximo_inimigo()` cria a proxima rodada.
 11. Se o jogador acertar exatamente o valor da vida do inimigo, ganha `+1` tentativa na proxima rodada.
-12. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
-13. Se as tentativas acabarem, `game_over()` reinicia a sala.
+12. A barra superior de progressao avanca um ponto a cada inimigo morto.
+13. Ao derrotar o ponto grande, que representa o boss, a fase avanca e os botoes de operacao sao recriados.
+14. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
+15. Se as tentativas acabarem, `game_over()` reinicia a sala.
 
 ## Variaveis globais
 
@@ -30,6 +32,11 @@ As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e
 | `global.bonus_tentativas_proxima` | Guarda o bonus de tentativa quando o jogador mata com resultado exato. |
 | `global.cargas_reroll_mao` | Quantidade de rerolls restantes na fase atual. Comeca com `2`. |
 | `global.fase_reroll_mao` | Fase usada para saber quando as cargas de reroll precisam resetar. |
+| `global.ui_top_space` | Reserva `50` pixels no topo da sala para UI e desloca a area jogavel para baixo. |
+| `global.inimigos_por_fase` | Quantidade de encontros na barra de progressao. Usa `4`: tres inimigos comuns e um boss. |
+| `global.inimigo_atual_fase` | Indice atual da progressao da fase. Cada morte aumenta esse valor. |
+| `global.fase_maxima` | Ultima fase que o jogo pode alcancar automaticamente. |
+| `global.precisa_atualizar_botoes` | Sinaliza para o `obj_game` recriar os botoes quando a fase muda. |
 | `global.carta_escolhida` | Guarda temporariamente a carta escolhida na tela de troca. |
 | `global.jogo_pausado` | Impede selecao normal da mao e reroll enquanto a tela de escolha esta aberta. |
 | `global.mao` | Array global reservado para mao, mas a mao usada de fato fica em `obj_hand.mao`. |
@@ -48,24 +55,26 @@ No evento Create, ele:
 - define `3` tentativas;
 - inicia `global.bonus_tentativas_proxima` com `0`;
 - inicia `global.cargas_reroll_mao` com `2`;
+- define `global.ui_top_space = 50` para deixar espaco livre para UI no topo;
+- inicia a progressao de fase com `4` encontros, sendo o ultimo o boss;
 - limpa arrays globais de selecao;
 - chama `criar_inimigos()`;
 - cria a mao;
-- cria os botoes de operacao;
+- cria os botoes de operacao com `criar_botoes_operacao()`;
 - cria o botao de reroll;
 - cria o botao de limpar expressao.
 
 O botao de reroll e criado assim:
 
 ```gml
-var _btn_reroll      = instance_create_layer(room_width - 40, 320, "Instances", obj_btn_operacao);
+var _btn_reroll      = instance_create_layer(room_width - 40, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_reroll.operacao = "REROLL";
 
-var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", obj_btn_operacao);
+var _btn_clear      = instance_create_layer(room_width - 95, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_clear.operacao = "CLEAR";
 ```
 
-No evento Draw, `obj_game` desenha um display entre o player e a mao. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
+No evento Draw, `obj_game` desenha uma moldura branca ao redor da arena de luta, pegando player e inimigos. A mesma rotina desenha o display entre a arena e a mao. A arena e o display usam `global.ui_top_space` para ficarem abaixo da UI superior. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
 
 Exemplo:
 
@@ -74,6 +83,22 @@ Exemplo:
 ```
 
 No evento Step existe um trecho comentado que abriria `obj_card_selection` ao pressionar espaco. No estado atual, essa tela de troca so funciona se esse gatilho for religado ou chamado por outro lugar.
+
+O Step tambem confere `global.precisa_atualizar_botoes`. Quando essa flag fica verdadeira, `obj_game` chama `criar_botoes_operacao()` para destruir os botoes antigos e recriar as operacoes da nova fase.
+
+## `obj_ui`
+
+`obj_ui` desenha a UI superior.
+
+Ele mostra:
+
+- o circulo vermelho de tentativas no canto esquerdo;
+- a barra laranja de progressao da fase;
+- pontos pequenos para inimigos comuns;
+- um ponto grande no final para o boss;
+- uma borda branca no ponto atual.
+
+A barra usa `global.inimigos_por_fase` e `global.inimigo_atual_fase`. Quando `global.inimigo_atual_fase` aumenta, o ponto ativo anda para a direita.
 
 ## `obj_hand`
 
@@ -394,6 +419,7 @@ Essa funcao:
 - sorteia um digito para cada posicao;
 - evita que o digito mais alto seja `0`;
 - cria uma instancia de `obj_enemy` por digito;
+- posiciona os inimigos usando `100 + global.ui_top_space`, mantendo a area superior livre para UI;
 - chama `_enemy.definir_numero_enemy(_numero, i)` para configurar o digito da instancia;
 - soma o valor final em `global.enemy_life`.
 
@@ -404,6 +430,9 @@ Tambem fica em `scripts/proximo_inimigo/proximo_inimigo.gml`.
 Essa funcao:
 
 - destroi inimigos antigos;
+- avanca `global.inimigo_atual_fase`;
+- se o ponto atual passar do ultimo ponto, reseta a progressao e avanca `global.fase`;
+- marca `global.precisa_atualizar_botoes = true` quando a fase muda;
 - aplica `global.bonus_tentativas_proxima` nas tentativas;
 - zera o bonus;
 - limpa selecoes;
@@ -427,15 +456,15 @@ global.enemy_life = 0;
 Alguns objetos estao no projeto, mas nao fazem parte do ciclo principal documentado acima:
 
 - `obj_player`;
-- `obj_ui`;
 - `obj_operation`.
 
-Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_game`, `obj_hand`, `obj_carta`, `obj_card_selection`, `obj_btn_operacao` e `obj_enemy`.
+Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_game`, `obj_ui`, `obj_hand`, `obj_carta`, `obj_card_selection`, `obj_btn_operacao` e `obj_enemy`.
 
 ## Pontos de atencao
 
-- `global.fase` inicia em `1`, mas o codigo atual ainda nao avanca automaticamente para a fase `2` ou `3`.
+- `global.fase` inicia em `1` e avanca depois que o boss da barra de progressao e derrotado.
 - `global.mao` e criado, mas a mao usada fica no array local `mao` dentro de `obj_hand`.
 - A tela de escolha depende de um gatilho. O trecho do espaco em `obj_game/Step_0.gml` esta comentado.
 - `criar_inimigos()` depende do metodo `definir_numero_enemy` criado no Create de `obj_enemy`.
-- A sala `Room1` tem tamanho `500x300`, enquanto a janela e ajustada para `1760x990`.
+- A sala `Room1` tem tamanho `500x400`, enquanto a janela e ajustada para `1760x990`.
+- Os primeiros `50` pixels da sala ficam reservados para UI superior. Player, inimigos, arena, display, mao e botoes sao deslocados usando `global.ui_top_space`.

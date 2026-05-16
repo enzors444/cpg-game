@@ -37,5 +37,5 @@ if (!selecionada) {
     }
 
     selecionada = false;
-    image_blend = c_white;
+    image_blend = coringa_numerico ? c_aqua : c_white;
 }

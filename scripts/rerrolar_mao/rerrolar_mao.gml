@@ -20,6 +20,10 @@ function rerrolar_mao() {
 
     for (var i = 0; i < array_length(_hand.mao); i++) {
         _hand.mao[i] = _hand.comprar_carta_valida(i);
+
+        if (variable_instance_exists(_hand, "mao_coringa")) {
+            _hand.mao_coringa[i] = false;
+        }
     }
 
     global.cargas_reroll_mao--;

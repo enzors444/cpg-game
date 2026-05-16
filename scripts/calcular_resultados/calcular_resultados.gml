@@ -246,10 +246,16 @@ function remover_expressao_a_partir(_inicio) {
             with (obj_carta) {
                 if (!carta_selecao && indice_mao == _indice_carta) {
                     selecionada = false;
-                    image_blend = c_white;
+                    image_blend = coringa_numerico ? c_aqua : c_white;
                 }
             }
         } else if (_parte.tipo == "op") {
+            if (variable_struct_exists(_parte, "repetida") && _parte.repetida) {
+                if (variable_global_exists("repeticoes_operacao_rodada")) {
+                    global.repeticoes_operacao_rodada = max(0, global.repeticoes_operacao_rodada - 1);
+                }
+            }
+
             var _idx_op = array_get_index(global.ops_selecionadas, _parte.valor);
             if (_idx_op != -1) {
                 array_delete(global.ops_selecionadas, _idx_op, 1);

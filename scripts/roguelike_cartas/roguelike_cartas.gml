@@ -5,6 +5,8 @@ function inicializar_roguelike() {
     if (!variable_global_exists("fase_bonus_numero_grudado")) global.fase_bonus_numero_grudado = -1;
     if (!variable_global_exists("usos_coringa_numerico_por_rodada")) global.usos_coringa_numerico_por_rodada = 0;
     if (!variable_global_exists("usos_coringa_numerico_rodada")) global.usos_coringa_numerico_rodada = 0;
+    if (!variable_global_exists("repeticoes_operacao_por_rodada")) global.repeticoes_operacao_por_rodada = 0;
+    if (!variable_global_exists("repeticoes_operacao_rodada")) global.repeticoes_operacao_rodada = 0;
     if (!variable_global_exists("coringa_escolhendo_valor")) global.coringa_escolhendo_valor = false;
     if (!variable_global_exists("recompensa_roguelike_aberta")) global.recompensa_roguelike_aberta = false;
     if (!variable_global_exists("roguelike_opcoes")) global.roguelike_opcoes = [];
@@ -18,6 +20,8 @@ function resetar_roguelike() {
     global.fase_bonus_numero_grudado = -1;
     global.usos_coringa_numerico_por_rodada = 0;
     global.usos_coringa_numerico_rodada = 0;
+    global.repeticoes_operacao_por_rodada = 0;
+    global.repeticoes_operacao_rodada = 0;
     global.coringa_escolhendo_valor = false;
     global.recompensa_roguelike_aberta = false;
     global.roguelike_opcoes = [];
@@ -32,11 +36,17 @@ function cargas_reroll_maximas() {
 function resetar_roguelike_por_rodada() {
     inicializar_roguelike();
     global.usos_coringa_numerico_rodada = 0;
+    global.repeticoes_operacao_rodada = 0;
 }
 
 function pode_usar_coringa_numerico() {
     inicializar_roguelike();
     return global.usos_coringa_numerico_rodada < global.usos_coringa_numerico_por_rodada;
+}
+
+function pode_repetir_operacao_rodada() {
+    inicializar_roguelike();
+    return global.repeticoes_operacao_rodada < global.repeticoes_operacao_por_rodada;
 }
 
 function limpar_bonus_temporarios_fase() {
@@ -74,6 +84,13 @@ function carta_roguelike(_id) {
                 nome: "Coringa Numerico",
                 descricao: "Shift + clique: escolha 0-9 uma vez por rodada."
             };
+
+        case "eco_operacao":
+            return {
+                id: _id,
+                nome: "Eco Operacao",
+                descricao: "Repita uma operacao uma vez por rodada."
+            };
     }
 
     return {
@@ -86,7 +103,7 @@ function carta_roguelike(_id) {
 function sortear_opcoes_roguelike(_qtd) {
     inicializar_roguelike();
 
-    var _base = ["mao_nova", "precisao", "numero_grudado", "coringa_numerico"];
+    var _base = ["mao_nova", "precisao", "numero_grudado", "coringa_numerico", "eco_operacao"];
     var _pool = [];
 
     for (var i = 0; i < array_length(_base); i++) {
@@ -146,6 +163,10 @@ function aplicar_carta_roguelike(_id) {
 
         case "coringa_numerico":
             global.usos_coringa_numerico_por_rodada = max(1, global.usos_coringa_numerico_por_rodada);
+            break;
+
+        case "eco_operacao":
+            global.repeticoes_operacao_por_rodada += 1;
             break;
     }
 }

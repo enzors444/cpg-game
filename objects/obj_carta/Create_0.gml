@@ -4,6 +4,7 @@ hover       = false;
 y_offset    = 0;
 indice_mao  = -1;
 carta_selecao = false;
+coringa_numerico = false;
 
 sprite_index = spr_carta;
 image_index  = numero;

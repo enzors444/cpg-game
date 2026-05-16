@@ -6,6 +6,10 @@ function recomprar_cartas() {
         for (var i = 0; i < array_length(global.indices_cartas_selecionadas); i++) {
             var _idx = global.indices_cartas_selecionadas[i];
             _hand.mao[_idx] = _hand.comprar_carta_valida(_idx);
+
+            if (variable_instance_exists(_hand, "mao_coringa")) {
+                _hand.mao_coringa[_idx] = false;
+            }
         }
 
         _hand.atualizar_mao();

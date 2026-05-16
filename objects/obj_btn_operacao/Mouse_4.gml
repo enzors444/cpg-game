@@ -75,6 +75,15 @@ if (operacao == "=") {
         array_push(global.ops_selecionadas, operacao);
         array_push(global.expressao_partes, { tipo: "op", valor: operacao });
     } else if (selecionada) {
+        if (array_length(global.ops_selecionadas) < 4
+        && pode_adicionar_operacao_expressao()
+        && pode_repetir_operacao_rodada()) {
+            array_push(global.ops_selecionadas, operacao);
+            array_push(global.expressao_partes, { tipo: "op", valor: operacao, repetida: true });
+            global.repeticoes_operacao_rodada += 1;
+            exit;
+        }
+
         for (var i = 0; i < array_length(global.expressao_partes); i++) {
             var _parte = global.expressao_partes[i];
             if (_parte.tipo == "op" && _parte.valor == operacao) {

@@ -31,8 +31,25 @@ for (var n = 0; n <= 9; n++) {
             global.cartas_selecionadas[_idx] = n;
         }
 
+        var _hand = instance_find(obj_hand, 0);
+        if (_hand != noone && indice_mao >= 0 && indice_mao < array_length(_hand.mao)) {
+            if (!variable_instance_exists(_hand, "mao_coringa")) {
+                _hand.mao_coringa = [];
+            }
+
+            while (array_length(_hand.mao_coringa) < array_length(_hand.mao)) {
+                array_push(_hand.mao_coringa, false);
+            }
+
+            _hand.mao[indice_mao] = n;
+            _hand.mao_coringa[indice_mao] = true;
+        }
+
         with (obj_carta) {
             if (!carta_selecao && indice_mao == other.indice_mao) {
+                numero = n;
+                image_index = n;
+                coringa_numerico = true;
                 image_blend = c_aqua;
             }
         }

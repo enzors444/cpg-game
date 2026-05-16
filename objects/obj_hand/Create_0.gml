@@ -3,6 +3,10 @@ function atualizar_mao() {
         if (!carta_selecao) instance_destroy();
     }
 
+    while (array_length(mao_coringa) < array_length(mao)) {
+        array_push(mao_coringa, false);
+    }
+
     var _gap   = 60;
     var _start = room_width / 2 - (_gap * (array_length(mao) - 1)) / 2;
 
@@ -11,7 +15,9 @@ function atualizar_mao() {
         _c.numero        = mao[i];
         _c.indice_mao    = i;
         _c.carta_selecao = false;
+        _c.coringa_numerico = mao_coringa[i];
         _c.image_index   = mao[i];
+        _c.image_blend   = _c.coringa_numerico ? c_aqua : c_white;
     }
 }
 
@@ -59,13 +65,16 @@ function substituir_carta(_numero) {
     }
 
     mao[_idx] = _numero;
+    mao_coringa[_idx] = false;
     atualizar_mao();
 }
 
 // Inicia a mao com 5 cartas aleatorias.
 mao = [];
+mao_coringa = [];
 for (var i = 0; i < 5; i++) {
     array_push(mao, comprar_carta_valida(-1));
+    array_push(mao_coringa, false);
 }
 
 atualizar_mao();

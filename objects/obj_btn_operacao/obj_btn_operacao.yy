@@ -32,7 +32,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_operations",
+    "path":"sprites/spr_operations/spr_operations.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

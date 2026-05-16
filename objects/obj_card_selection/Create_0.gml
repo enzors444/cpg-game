@@ -14,7 +14,7 @@ var _start = room_width/2 - _gap;
 for (var i = 0; i < 3; i++) {
     var _inst         = instance_create_layer(_start + i * _gap, room_height/2, "Instances", obj_carta);
     _inst.numero      = cartas[i];
-    _inst.image_index = cartas[i]; // ← linha adicionada
+    _inst.image_index = cartas[i]; 
 }
 
 // 3. função

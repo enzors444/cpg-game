@@ -1,1 +1,1 @@
-draw_sprite(spr_carta, numero, x, y + y_offset);
+draw_sprite_ext(spr_carta, numero, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);

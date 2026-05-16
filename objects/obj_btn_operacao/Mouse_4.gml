@@ -1,3 +1,7 @@
+if (global.jogo_pausado) {
+    exit;
+}
+
 if (operacao == "REROLL") {
     rerrolar_mao();
     exit;
@@ -21,7 +25,12 @@ if (operacao == "=") {
 
     if (global.enemy_life <= 0) {
         if (_acertou_exato) {
-            global.bonus_tentativas_proxima += 1;
+            var _bonus_exato = 1;
+            if (variable_global_exists("bonus_precisao")) {
+                _bonus_exato += global.bonus_precisao;
+            }
+
+            global.bonus_tentativas_proxima += _bonus_exato;
         }
 
         recomprar_cartas();

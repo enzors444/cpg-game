@@ -19,7 +19,15 @@ function calcular_resultado(_cartas, _ops) {
 }
 
 function max_cartas_por_numero() {
-    return (global.fase <= 1) ? 1 : 2;
+    var _max = (global.fase <= 1) ? 1 : 2;
+
+    if (variable_global_exists("bonus_cartas_seguidas_temporario")
+    && variable_global_exists("fase_bonus_numero_grudado")
+    && global.fase_bonus_numero_grudado == global.fase) {
+        _max += global.bonus_cartas_seguidas_temporario;
+    }
+
+    return _max;
 }
 
 function pode_adicionar_carta_expressao() {

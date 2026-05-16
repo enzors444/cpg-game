@@ -1,10 +1,12 @@
 function rerrolar_mao() {
-    if (!variable_global_exists("cargas_reroll_mao")) global.cargas_reroll_mao = 2;
+    inicializar_roguelike();
+
+    if (!variable_global_exists("cargas_reroll_mao")) global.cargas_reroll_mao = cargas_reroll_maximas();
     if (!variable_global_exists("fase_reroll_mao")) global.fase_reroll_mao = global.fase;
 
     if (global.fase_reroll_mao != global.fase) {
         global.fase_reroll_mao = global.fase;
-        global.cargas_reroll_mao = 2;
+        global.cargas_reroll_mao = cargas_reroll_maximas();
     }
 
     if (global.jogo_pausado || global.cargas_reroll_mao <= 0) {

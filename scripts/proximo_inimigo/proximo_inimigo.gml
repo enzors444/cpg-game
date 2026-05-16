@@ -24,20 +24,28 @@ function proximo_inimigo() {
         instance_destroy();
     }
 
+    inicializar_roguelike();
+
     if (!variable_global_exists("inimigos_por_fase")) global.inimigos_por_fase = 4;
     if (!variable_global_exists("inimigo_atual_fase")) global.inimigo_atual_fase = 0;
     if (!variable_global_exists("fase_maxima")) global.fase_maxima = 3;
+
+    var _mudou_fase = false;
 
     global.inimigo_atual_fase++;
 
     if (global.inimigo_atual_fase >= global.inimigos_por_fase) {
         global.inimigo_atual_fase = 0;
+        limpar_bonus_temporarios_fase();
 
         if (global.fase < global.fase_maxima) {
             global.fase++;
             global.precisa_atualizar_botoes = true;
+            _mudou_fase = true;
         }
     }
+
+    resetar_roguelike_por_rodada();
 
     global.tentativas = 3 + global.bonus_tentativas_proxima;
     global.bonus_tentativas_proxima = 0;
@@ -48,4 +56,8 @@ function proximo_inimigo() {
     global.expressao_partes = [];
 
     criar_inimigos();
+
+    if (_mudou_fase) {
+        abrir_recompensa_roguelike();
+    }
 }

@@ -17,8 +17,9 @@ Este projeto e um jogo feito no GameMaker em que o jogador usa cartas numericas 
 11. Se o jogador acertar exatamente o valor da vida do inimigo, ganha `+1` tentativa na proxima rodada.
 12. A barra superior de progressao avanca um ponto a cada inimigo morto.
 13. Ao derrotar o ponto grande, que representa o boss, a fase avanca e os botoes de operacao sao recriados.
-14. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
-15. Se as tentativas acabarem, `game_over()` reinicia a sala.
+14. Ao passar de fase, o jogo pausa e abre 3 cartas rogue-like para o jogador escolher 1.
+15. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
+16. Se as tentativas acabarem, `game_over()` reinicia a sala.
 
 ## Variaveis globais
 
@@ -37,6 +38,14 @@ As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e
 | `global.inimigo_atual_fase` | Indice atual da progressao da fase. Cada morte aumenta esse valor. |
 | `global.fase_maxima` | Ultima fase que o jogo pode alcancar automaticamente. |
 | `global.precisa_atualizar_botoes` | Sinaliza para o `obj_game` recriar os botoes quando a fase muda. |
+| `global.bonus_cargas_reroll_mao` | Bonus permanente de cargas de reroll dado pela carta `Mao Nova`. |
+| `global.bonus_precisao` | Bonus permanente para acerto exato dado pela carta `Precisao`. |
+| `global.bonus_cartas_seguidas_temporario` | Bonus temporario no limite de cartas grudadas dado pela carta `Numero Grudado`. |
+| `global.fase_bonus_numero_grudado` | Fase em que o bonus temporario de `Numero Grudado` esta ativo. |
+| `global.usos_coringa_numerico_por_rodada` | Quantas vezes o Coringa Numerico pode ser usado por rodada. |
+| `global.usos_coringa_numerico_rodada` | Quantas vezes o Coringa Numerico ja foi usado na rodada atual. |
+| `global.recompensa_roguelike_aberta` | Indica se a tela de escolha rogue-like esta aberta. |
+| `global.roguelike_opcoes` | Array com as 3 cartas sorteadas na recompensa atual. |
 | `global.carta_escolhida` | Guarda temporariamente a carta escolhida na tela de troca. |
 | `global.jogo_pausado` | Impede selecao normal da mao e reroll enquanto a tela de escolha esta aberta. |
 | `global.mao` | Array global reservado para mao, mas a mao usada de fato fica em `obj_hand.mao`. |
@@ -57,6 +66,8 @@ No evento Create, ele:
 - inicia `global.cargas_reroll_mao` com `2`;
 - define `global.ui_top_space = 50` para deixar espaco livre para UI no topo;
 - inicia a progressao de fase com `4` encontros, sendo o ultimo o boss;
+- chama `resetar_roguelike()` para zerar bonus de uma run anterior;
+- chama `inicializar_roguelike()` para preparar os bonus rogue-like;
 - limpa arrays globais de selecao;
 - chama `criar_inimigos()`;
 - cria a mao;
@@ -150,6 +161,7 @@ No Mouse Left Pressed:
 - ao selecionar, adiciona posicao em `global.indices_cartas_selecionadas`;
 - ao selecionar, adiciona uma parte do tipo `"carta"` em `global.expressao_partes`;
 - antes de selecionar, chama `pode_adicionar_carta_expressao()` para respeitar o limite de cartas por numero da fase.
+- se o jogador tiver `Coringa Numerico`, pode segurar `Shift` ao clicar em uma carta da mao para abrir a escolha de valor `0` a `9`.
 
 ## `obj_card_selection`
 
@@ -176,11 +188,56 @@ Ela:
 - desmarca os botoes de operacao;
 - despausa o jogo.
 
+## `obj_recompensa_roguelike`
+
+`obj_recompensa_roguelike` desenha a tela de recompensa ao passar de fase.
+
+Ele:
+
+- escurece a tela;
+- mostra 3 cartas sorteadas em `global.roguelike_opcoes`;
+- aplica a carta clicada com `aplicar_carta_roguelike(_id)`;
+- fecha a recompensa com `fechar_recompensa_roguelike()`;
+- despausa o jogo depois da escolha.
+
+Cartas atuais:
+
+| Carta | Efeito |
+| --- | --- |
+| `Mao Nova` | Aumenta as cargas de reroll por fase e soma `+1` imediatamente em `global.cargas_reroll_mao`. |
+| `Precisao` | Aumenta em `+1` o bonus de tentativa quando o jogador mata com resultado exato. |
+| `Numero Grudado` | Durante a fase atual, aumenta em `+1` o limite de cartas seguidas para formar numero. |
+| `Coringa Numerico` | Permite usar `Shift + clique` em uma carta por rodada para escolher um valor de `0` a `9`. |
+
+## `obj_coringa_escolha`
+
+`obj_coringa_escolha` abre quando o jogador usa o `Coringa Numerico`.
+
+Ele:
+
+- pausa o jogo;
+- desenha botoes de `0` a `9`;
+- troca o valor daquela parte em `global.expressao_partes`;
+- marca a carta visualmente com `image_blend = c_aqua`;
+- consome 1 uso de coringa da rodada;
+- despausa o jogo depois da escolha.
+
 ## `obj_btn_operacao`
 
 `obj_btn_operacao` representa tanto botoes matematicos quanto o botao de reroll.
 
 Cada botao tem uma variavel `operacao`, definida quando `obj_game` cria os botoes.
+
+No Draw, os botoes `+`, `-`, `*` e `/` usam o sprite `spr_operations`:
+
+| Operacao | Frame de `spr_operations` |
+| --- | --- |
+| `+` | `0` |
+| `-` | `1` |
+| `*` | `2` |
+| `/` | `3` |
+
+Os botoes que ainda nao tem sprite proprio continuam em texto, como `=`, `C`, `R2`, `log`, `^` e `sqrt`.
 
 Operacoes por fase:
 
@@ -214,7 +271,7 @@ Regras de cartas por numero:
 Se o resultado for positivo, ele vira dano em `global.enemy_life`. Se `global.enemy_life` chegar a `0`, o jogo:
 
 - verifica se o resultado foi exatamente igual a vida anterior;
-- adiciona `+1` em `global.bonus_tentativas_proxima` se foi exato;
+- adiciona `1 + global.bonus_precisao` em `global.bonus_tentativas_proxima` se foi exato;
 - chama `recomprar_cartas()`;
 - chama `proximo_inimigo()`.
 
@@ -372,6 +429,8 @@ Essas funcoes tambem ficam em `scripts/calcular_resultados/calcular_resultados.g
 | `limpar_expressao()` | Limpa toda a expressao e desmarca cartas e operacoes. |
 | `montar_texto_expressao(_mostrar_resultado)` | Gera o texto usado pelo display da expressao. |
 
+`Numero Grudado` aumenta temporariamente o retorno de `max_cartas_por_numero()` em `+1` durante a fase em que a carta foi escolhida.
+
 Exemplos:
 
 ```text
@@ -399,7 +458,7 @@ Troca a mao inteira e consome 1 carga de reroll.
 Ela:
 
 - garante que as globais de reroll existem;
-- reseta as cargas para `2` se `global.fase` mudou;
+- reseta as cargas para `cargas_reroll_maximas()` se `global.fase` mudou;
 - retorna `false` se o jogo esta pausado ou se as cargas acabaram;
 - troca todas as cartas da mao usando `_hand.comprar_carta_valida(i)`;
 - diminui `global.cargas_reroll_mao`;
@@ -433,10 +492,30 @@ Essa funcao:
 - avanca `global.inimigo_atual_fase`;
 - se o ponto atual passar do ultimo ponto, reseta a progressao e avanca `global.fase`;
 - marca `global.precisa_atualizar_botoes = true` quando a fase muda;
+- limpa bonus temporarios da fase anterior;
+- reseta usos de Coringa Numerico da rodada;
 - aplica `global.bonus_tentativas_proxima` nas tentativas;
 - zera o bonus;
 - limpa selecoes;
-- chama `criar_inimigos()`.
+- chama `criar_inimigos()`;
+- se a fase mudou, chama `abrir_recompensa_roguelike()`.
+
+### `roguelike_cartas`
+
+Fica em `scripts/roguelike_cartas/roguelike_cartas.gml`.
+
+Funcoes principais:
+
+| Funcao | Funcao no jogo |
+| --- | --- |
+| `inicializar_roguelike()` | Garante que todas as globais rogue-like existem. |
+| `resetar_roguelike()` | Zera cartas e bonus rogue-like no inicio de uma run. |
+| `cargas_reroll_maximas()` | Retorna `2 + global.bonus_cargas_reroll_mao`. |
+| `sortear_opcoes_roguelike(_qtd)` | Sorteia cartas sem repetir dentro da mesma oferta e evita cartas ja escolhidas enquanto houver opcoes novas. |
+| `abrir_recompensa_roguelike()` | Pausa o jogo e cria `obj_recompensa_roguelike`. |
+| `aplicar_carta_roguelike(_id)` | Aplica o efeito da carta escolhida. |
+| `fechar_recompensa_roguelike()` | Fecha a recompensa e despausa o jogo. |
+| `resetar_roguelike_por_rodada()` | Reseta usos de Coringa Numerico no inicio de cada inimigo. |
 
 ### `game_over()`
 
@@ -458,7 +537,7 @@ Alguns objetos estao no projeto, mas nao fazem parte do ciclo principal document
 - `obj_player`;
 - `obj_operation`.
 
-Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_game`, `obj_ui`, `obj_hand`, `obj_carta`, `obj_card_selection`, `obj_btn_operacao` e `obj_enemy`.
+Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_game`, `obj_ui`, `obj_hand`, `obj_carta`, `obj_card_selection`, `obj_recompensa_roguelike`, `obj_coringa_escolha`, `obj_btn_operacao` e `obj_enemy`.
 
 ## Pontos de atencao
 

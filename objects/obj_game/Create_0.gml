@@ -18,6 +18,10 @@ global.indices_cartas_selecionadas = [];
 global.ops_selecionadas = [];
 global.expressao_partes = [];
 
+resetar_roguelike();
+inicializar_roguelike();
+global.cargas_reroll_mao = cargas_reroll_maximas();
+
 criar_inimigos();
 
 instance_create_layer(room_width / 3, 100 + global.ui_top_space, "Instances", obj_player);

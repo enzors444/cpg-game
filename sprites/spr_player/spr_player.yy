@@ -19,6 +19,7 @@
   "height":64,
   "HTile":false,
   "layers":[
+    {"$GMImageFolderLayer":"","%Name":"df5aae9f-6453-4551-b302-a5e4e2ac1f41","blendMode":0,"displayName":"Layer Group 1","isLocked":false,"layers":[],"name":"df5aae9f-6453-4551-b302-a5e4e2ac1f41","opacity":100.0,"resourceType":"GMImageFolderLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"2a395aee-885a-4f6c-a628-ccf7ee8a12ac","blendMode":0,"displayName":"default","isLocked":false,"name":"2a395aee-885a-4f6c-a628-ccf7ee8a12ac","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_player",

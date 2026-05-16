@@ -9,9 +9,6 @@ function calcular_resultado(_cartas, _ops) {
             case "-":    _resultado -= _num; break;
             case "*":    _resultado *= _num; break;
             case "/":    _resultado = (_num != 0) ? _resultado / _num : _resultado; break;
-            case "^":    _resultado = power(_resultado, _num); break;
-            case "sqrt": _resultado = sqrt(_num); break;
-            case "log":  _resultado = logn(_num, _resultado); break;
         }
     }
 
@@ -164,9 +161,6 @@ function aplicar_operacao_expressao(_resultado, _operacao, _num) {
         case "-":    return _resultado - _num;
         case "*":    return _resultado * _num;
         case "/":    return (_num != 0) ? _resultado / _num : _resultado;
-        case "^":    return power(_resultado, _num);
-        case "sqrt": return sqrt(_num);
-        case "log":  return logn(_num, _resultado);
     }
 
     return _resultado;

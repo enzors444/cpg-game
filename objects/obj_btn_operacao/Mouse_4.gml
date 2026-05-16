@@ -2,16 +2,23 @@ if (operacao == "=") {
     var _qtd_cartas = array_length(global.cartas_selecionadas);
     var _qtd_ops    = array_length(global.ops_selecionadas);
 
-    if (_qtd_cartas < 1 || _qtd_ops != _qtd_cartas - 1) exit;
+    if (_qtd_cartas < 2 || _qtd_ops < 1 || _qtd_ops != _qtd_cartas - 1) exit;
 
     var _enemy = instance_find(obj_enemy, 0);
     if (_enemy == noone) exit;
 
     var _resultado = calcular_resultado(global.cartas_selecionadas, global.ops_selecionadas);
+    var _acertou_exato = (_resultado == _enemy.vida);
     var _dano = max(0, _resultado);
     _enemy.vida = max(0, _enemy.vida - _dano);
 
-    if (_enemy.vida > 0) {
+    if (_enemy.vida <= 0) {
+        if (_acertou_exato) {
+            global.bonus_tentativas_proxima += 1;
+        }
+
+        recomprar_cartas();
+    } else {
         global.tentativas--;
         if (global.tentativas <= 0) {
             game_over();

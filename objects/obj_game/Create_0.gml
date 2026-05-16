@@ -1,6 +1,7 @@
 // Create do obj_game
 global.fase                = 1;
 global.tentativas          = 3;
+global.bonus_tentativas_proxima = 0;
 global.carta_escolhida     = -1;
 global.jogo_pausado        = false;
 global.mao                 = [];

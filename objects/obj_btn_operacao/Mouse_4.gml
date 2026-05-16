@@ -2,12 +2,12 @@ if (global.jogo_pausado) {
     exit;
 }
 
-if (operacao == "REROLL") {
+if (operacao == "R") {
     rerrolar_mao();
     exit;
 }
 
-if (operacao == "CLEAR") {
+if (operacao == "E") {
     limpar_expressao();
     exit;
 }
@@ -74,7 +74,6 @@ if (operacao == "=") {
         selecionada = true;
         array_push(global.ops_selecionadas, operacao);
         array_push(global.expressao_partes, { tipo: "op", valor: operacao });
-        image_blend = c_yellow;
     } else if (selecionada) {
         for (var i = 0; i < array_length(global.expressao_partes); i++) {
             var _parte = global.expressao_partes[i];
@@ -85,6 +84,5 @@ if (operacao == "=") {
         }
 
         selecionada = false;
-        image_blend = c_white;
     }
 }

@@ -42,10 +42,10 @@ criar_botoes_operacao = function() {
     }
 
     var _btn_reroll = instance_create_layer(room_width - 40, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
-    _btn_reroll.operacao = "REROLL";
+    _btn_reroll.operacao = "R";
 
     var _btn_clear = instance_create_layer(room_width - 95, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
-    _btn_clear.operacao = "CLEAR";
+    _btn_clear.operacao = "E";
 };
 
 criar_botoes_operacao();

@@ -65,7 +65,7 @@ var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", o
 _btn_clear.operacao = "CLEAR";
 ```
 
-No evento Draw, `obj_game` desenha um display entre o player e a mao. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
+No evento Draw, `obj_game` desenha uma moldura branca ao redor da arena de luta, pegando player e inimigos. A mesma rotina desenha o display entre a arena e a mao. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
 
 Exemplo:
 

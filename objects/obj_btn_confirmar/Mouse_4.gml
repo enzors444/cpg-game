@@ -6,3 +6,5 @@ if (_resultado > obj_enemy.vida) {
         game_over(); // ← direto, sem with
     }
 }
+
+calcular_resultado(, _ops)

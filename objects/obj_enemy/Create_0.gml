@@ -1,2 +1,2 @@
-vida     = irandom_range(10, 20);
-vida_max = vida;
+vida_max    = irandom_range(10, 20);
+vida = vida_max;

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"aplicar_carta",
+  "%Name":"fases",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"aplicar_carta",
+  "name":"fases",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

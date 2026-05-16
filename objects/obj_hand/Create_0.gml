@@ -7,7 +7,7 @@ function atualizar_mao() {
     var _start = room_width / 2 - (_gap * (array_length(mao) - 1)) / 2;
 
     for (var i = 0; i < array_length(mao); i++) {
-        var _c           = instance_create_layer(_start + i * _gap, 100, "Instances", obj_carta);
+        var _c           = instance_create_layer(_start + i * _gap, 200, "Instances", obj_carta);
         _c.numero        = mao[i];
         _c.indice_mao    = i;
         _c.carta_selecao = false;

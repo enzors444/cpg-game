@@ -15,6 +15,6 @@ instance_create_layer(0, 0, "Instances", obj_hand);
 global.ops  = operacoes_da_fase();
 var _start  = room_width/2 - (array_length(global.ops) * 50) / 2;
 for (var i = 0; i < array_length(global.ops); i++) {
-    var _btn      = instance_create_layer(_start + i * 50, 150, "Instances", obj_btn_operacao);
+    var _btn      = instance_create_layer(_start + i * 50, 270, "Instances", obj_btn_operacao);
     _btn.operacao = global.ops[i];
 }

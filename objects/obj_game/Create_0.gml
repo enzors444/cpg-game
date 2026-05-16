@@ -2,6 +2,7 @@
 global.fase                = 1;
 global.tentativas          = 3;
 global.bonus_tentativas_proxima = 0;
+global.ui_tentativas = global.tentativas;
 global.cargas_reroll_mao   = 2;
 global.fase_reroll_mao     = global.fase;
 global.carta_escolhida     = -1;
@@ -15,6 +16,7 @@ criar_inimigos();
 
 instance_create_layer(room_width / 3, 100, "Instances", obj_player);
 instance_create_layer(0, 0, "Instances", obj_hand);
+instance_create_layer(0, 0, "Instances", obj_ui);
 
 // botões de operação
 global.ops  = operacoes_da_fase();

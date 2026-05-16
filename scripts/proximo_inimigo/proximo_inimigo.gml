@@ -26,6 +26,7 @@ function proximo_inimigo() {
 
     global.tentativas = 3 + global.bonus_tentativas_proxima;
     global.bonus_tentativas_proxima = 0;
+	global.ui_tentativas = global.tentativas;
     global.cartas_selecionadas = [];
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];

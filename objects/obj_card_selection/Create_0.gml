@@ -12,7 +12,7 @@ var _gap   = 90;
 var _start = room_width / 2 - _gap;
 
 for (var i = 0; i < 3; i++) {
-    var _inst           = instance_create_layer(_start + i * _gap, room_height / 2, "Instances", obj_carta);
+    var _inst           = instance_create_layer(_start + i * _gap, room_height / 2 + global.ui_top_space / 2, "Instances", obj_carta);
     _inst.numero        = cartas[i];
     _inst.carta_selecao = true;
     _inst.image_index   = cartas[i];

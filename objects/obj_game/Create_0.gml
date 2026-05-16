@@ -3,6 +3,7 @@ global.fase                = 1;
 global.tentativas          = 3;
 global.bonus_tentativas_proxima = 0;
 global.ui_tentativas = global.tentativas;
+global.ui_top_space = 50;
 global.cargas_reroll_mao   = 2;
 global.fase_reroll_mao     = global.fase;
 global.carta_escolhida     = -1;
@@ -15,7 +16,7 @@ global.expressao_partes    = [];
 
 criar_inimigos();
 
-instance_create_layer(room_width / 3, 100, "Instances", obj_player);
+instance_create_layer(room_width / 3, 100 + global.ui_top_space, "Instances", obj_player);
 instance_create_layer(0, 0, "Instances", obj_hand);
 instance_create_layer(0, 0, "Instances", obj_ui);
 
@@ -23,12 +24,12 @@ instance_create_layer(0, 0, "Instances", obj_ui);
 global.ops  = operacoes_da_fase();
 var _start  = room_width/2 - (array_length(global.ops) * 50) / 2;
 for (var i = 0; i < array_length(global.ops); i++) {
-    var _btn      = instance_create_layer(_start + i * 50, 320, "Instances", obj_btn_operacao);
+    var _btn      = instance_create_layer(_start + i * 50, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
     _btn.operacao = global.ops[i];
 }
 
-var _btn_reroll      = instance_create_layer(room_width - 40, 320, "Instances", obj_btn_operacao);
+var _btn_reroll      = instance_create_layer(room_width - 40, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_reroll.operacao = "REROLL";
 
-var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", obj_btn_operacao);
+var _btn_clear      = instance_create_layer(room_width - 95, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_clear.operacao = "CLEAR";

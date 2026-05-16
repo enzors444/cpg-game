@@ -30,6 +30,7 @@ As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e
 | `global.bonus_tentativas_proxima` | Guarda o bonus de tentativa quando o jogador mata com resultado exato. |
 | `global.cargas_reroll_mao` | Quantidade de rerolls restantes na fase atual. Comeca com `2`. |
 | `global.fase_reroll_mao` | Fase usada para saber quando as cargas de reroll precisam resetar. |
+| `global.ui_top_space` | Reserva `50` pixels no topo da sala para UI e desloca a area jogavel para baixo. |
 | `global.carta_escolhida` | Guarda temporariamente a carta escolhida na tela de troca. |
 | `global.jogo_pausado` | Impede selecao normal da mao e reroll enquanto a tela de escolha esta aberta. |
 | `global.mao` | Array global reservado para mao, mas a mao usada de fato fica em `obj_hand.mao`. |
@@ -48,6 +49,7 @@ No evento Create, ele:
 - define `3` tentativas;
 - inicia `global.bonus_tentativas_proxima` com `0`;
 - inicia `global.cargas_reroll_mao` com `2`;
+- define `global.ui_top_space = 50` para deixar espaco livre para UI no topo;
 - limpa arrays globais de selecao;
 - chama `criar_inimigos()`;
 - cria a mao;
@@ -58,14 +60,14 @@ No evento Create, ele:
 O botao de reroll e criado assim:
 
 ```gml
-var _btn_reroll      = instance_create_layer(room_width - 40, 320, "Instances", obj_btn_operacao);
+var _btn_reroll      = instance_create_layer(room_width - 40, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_reroll.operacao = "REROLL";
 
-var _btn_clear      = instance_create_layer(room_width - 95, 320, "Instances", obj_btn_operacao);
+var _btn_clear      = instance_create_layer(room_width - 95, 320 + global.ui_top_space, "Instances", obj_btn_operacao);
 _btn_clear.operacao = "CLEAR";
 ```
 
-No evento Draw, `obj_game` desenha uma moldura branca ao redor da arena de luta, pegando player e inimigos. A mesma rotina desenha o display entre a arena e a mao. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
+No evento Draw, `obj_game` desenha uma moldura branca ao redor da arena de luta, pegando player e inimigos. A mesma rotina desenha o display entre a arena e a mao. A arena e o display usam `global.ui_top_space` para ficarem abaixo da UI superior. Esse display monta o texto usando `global.expressao_partes`, respeitando a ordem real dos cliques.
 
 Exemplo:
 
@@ -394,6 +396,7 @@ Essa funcao:
 - sorteia um digito para cada posicao;
 - evita que o digito mais alto seja `0`;
 - cria uma instancia de `obj_enemy` por digito;
+- posiciona os inimigos usando `100 + global.ui_top_space`, mantendo a area superior livre para UI;
 - chama `_enemy.definir_numero_enemy(_numero, i)` para configurar o digito da instancia;
 - soma o valor final em `global.enemy_life`.
 
@@ -438,4 +441,5 @@ Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_gam
 - `global.mao` e criado, mas a mao usada fica no array local `mao` dentro de `obj_hand`.
 - A tela de escolha depende de um gatilho. O trecho do espaco em `obj_game/Step_0.gml` esta comentado.
 - `criar_inimigos()` depende do metodo `definir_numero_enemy` criado no Create de `obj_enemy`.
-- A sala `Room1` tem tamanho `500x300`, enquanto a janela e ajustada para `1760x990`.
+- A sala `Room1` tem tamanho `500x400`, enquanto a janela e ajustada para `1760x990`.
+- Os primeiros `50` pixels da sala ficam reservados para UI superior. Player, inimigos, arena, display, mao e botoes sao deslocados usando `global.ui_top_space`.

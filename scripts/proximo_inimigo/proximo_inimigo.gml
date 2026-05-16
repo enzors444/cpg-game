@@ -12,7 +12,7 @@ function criar_inimigos() {
             _numero = irandom_range(1, 9);
         }
 
-        var _enemy = instance_create_layer(_base_x - i * _gap, 100, "Instances", obj_enemy);
+        var _enemy = instance_create_layer(_base_x - i * _gap, 100 + global.ui_top_space, "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
 
         global.enemy_life += _numero * power(10, i);

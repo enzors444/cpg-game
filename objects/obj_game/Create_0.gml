@@ -11,7 +11,11 @@ global.cartas_selecionadas = [];
 global.indices_cartas_selecionadas = [];
 global.ops_selecionadas    = [];
 
-instance_create_layer(room_width/2, room_height/2, "Instances", obj_enemy);
+var _position = 0;
+for (var i = 0; i < (global.fase + 1); i++) {
+instance_create_layer(2 * room_width / 3 + _position , 100, "Instances", obj_enemy);
+_position = 40;
+}
 instance_create_layer(0, 0, "Instances", obj_hand);
 
 // botões de operação

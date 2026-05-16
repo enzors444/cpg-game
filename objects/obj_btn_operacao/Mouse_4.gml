@@ -1,3 +1,8 @@
+if (operacao == "REROLL") {
+    rerrolar_mao();
+    exit;
+}
+
 if (operacao == "=") {
     var _qtd_cartas = array_length(global.cartas_selecionadas);
     var _qtd_ops    = array_length(global.ops_selecionadas);

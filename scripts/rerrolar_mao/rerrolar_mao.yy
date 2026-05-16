@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rerrolar_mao",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rerrolar_mao",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

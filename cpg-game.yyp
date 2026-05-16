@@ -40,6 +40,7 @@
     {"id":{"name":"operacoes_da_fase","path":"scripts/operacoes_da_fase/operacoes_da_fase.yy",},},
     {"id":{"name":"proximo_inimigo","path":"scripts/proximo_inimigo/proximo_inimigo.yy",},},
     {"id":{"name":"recomprar_cartas","path":"scripts/recomprar_cartas/recomprar_cartas.yy",},},
+    {"id":{"name":"rerrolar_mao","path":"scripts/rerrolar_mao/rerrolar_mao.yy",},},
     {"id":{"name":"spr_background","path":"sprites/spr_background/spr_background.yy",},},
     {"id":{"name":"spr_carta","path":"sprites/spr_carta/spr_carta.yy",},},
     {"id":{"name":"spr_enemy_0","path":"sprites/spr_enemy_0/spr_enemy_0.yy",},},

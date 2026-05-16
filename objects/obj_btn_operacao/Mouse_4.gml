@@ -23,6 +23,7 @@ if (operacao == "=") {
         }
 
         recomprar_cartas();
+        proximo_inimigo();
     } else {
         global.tentativas--;
         if (global.tentativas <= 0) {

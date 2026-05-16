@@ -1,31 +1,37 @@
 # Documentacao do projeto cpg-game
 
-Este projeto e um jogo feito no GameMaker em que o jogador usa cartas numericas e operacoes matematicas para tentar derrotar inimigos. O fluxo principal acontece na sala `Room1`, que cria o objeto `obj_game`. A partir dele, o jogo cria o inimigo, a mao de cartas e os botoes de operacao.
+Este projeto e um jogo feito no GameMaker em que o jogador usa cartas numericas e operacoes matematicas para atacar a vida do inimigo. O fluxo principal acontece na sala `Room1`, que cria o objeto `obj_game`. A partir dele, o jogo inicializa variaveis globais, cria os inimigos, cria a mao de cartas e cria os botoes de operacao.
 
 ## Fluxo geral
 
 1. `Room1` inicia com uma instancia de `obj_game`.
 2. `obj_game` inicializa as variaveis globais do jogo.
-3. `obj_game` cria um `obj_enemy` no centro da sala.
+3. `obj_game` chama `criar_inimigos()`, que monta os sprites do inimigo e calcula `global.enemy_life`.
 4. `obj_game` cria um `obj_hand`, que monta a mao inicial com 5 cartas.
-5. `obj_game` cria os botoes de operacao de acordo com a fase atual.
-6. O jogador clica em uma ou mais cartas da mao e, se escolher mais de uma carta, tambem escolhe operacoes.
-7. Ao clicar no botao `"="`, o jogo calcula o resultado.
-8. O resultado positivo e subtraido da vida do inimigo.
-9. Se a vida chegar a `0`, o inimigo morre.
-10. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
-11. Se as tentativas acabarem, a sala reinicia.
+5. `obj_game` cria os botoes de operacao da fase atual.
+6. `obj_game` cria um botao extra de reroll com `operacao = "REROLL"`.
+7. O jogador seleciona cartas da mao e operacoes.
+8. Ao clicar no botao `"="`, o jogo exige pelo menos 2 cartas e pelo menos 1 operacao.
+9. O resultado positivo vira dano e e subtraido de `global.enemy_life`.
+10. Se a vida chegar a `0`, as cartas usadas sao recompradas e `proximo_inimigo()` cria a proxima rodada.
+11. Se o jogador acertar exatamente o valor da vida do inimigo, ganha `+1` tentativa na proxima rodada.
+12. Se o resultado nao derrotar o inimigo, o jogador perde uma tentativa.
+13. Se as tentativas acabarem, `game_over()` reinicia a sala.
 
 ## Variaveis globais
 
-As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml`.
+As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e `scripts/globals/globals.gml`.
 
 | Variavel | Funcao |
 | --- | --- |
 | `global.fase` | Define a fase atual e quais operacoes ficam disponiveis. |
+| `global.enemy_life` | Vida atual do inimigo. Tambem representa o numero formado pelos sprites dos inimigos. |
 | `global.tentativas` | Quantidade de tentativas restantes contra o inimigo atual. |
+| `global.bonus_tentativas_proxima` | Guarda o bonus de tentativa quando o jogador mata com resultado exato. |
+| `global.cargas_reroll_mao` | Quantidade de rerolls restantes na fase atual. Comeca com `2`. |
+| `global.fase_reroll_mao` | Fase usada para saber quando as cargas de reroll precisam resetar. |
 | `global.carta_escolhida` | Guarda temporariamente a carta escolhida na tela de troca. |
-| `global.jogo_pausado` | Impede a selecao normal da mao enquanto a tela de escolha esta aberta. |
+| `global.jogo_pausado` | Impede selecao normal da mao e reroll enquanto a tela de escolha esta aberta. |
 | `global.mao` | Array global reservado para mao, mas a mao usada de fato fica em `obj_hand.mao`. |
 | `global.cartas_selecionadas` | Valores das cartas selecionadas pelo jogador. |
 | `global.indices_cartas_selecionadas` | Posicoes dessas cartas dentro da mao. |
@@ -39,31 +45,46 @@ No evento Create, ele:
 
 - define a fase inicial como `1`;
 - define `3` tentativas;
-- limpa arrays globais;
-- cria o inimigo;
+- inicia `global.bonus_tentativas_proxima` com `0`;
+- inicia `global.cargas_reroll_mao` com `2`;
+- limpa arrays globais de selecao;
+- chama `criar_inimigos()`;
 - cria a mao;
-- cria os botoes de operacao.
+- cria os botoes de operacao;
+- cria o botao de reroll.
 
-No evento Step, ele verifica se a tecla espaco foi pressionada. Quando isso acontece e o jogo nao esta pausado, ele cria `obj_card_selection`, que abre uma selecao de 3 cartas para trocar uma carta da mao.
+O botao de reroll e criado assim:
+
+```gml
+var _btn_reroll      = instance_create_layer(room_width - 40, 270, "Instances", obj_btn_operacao);
+_btn_reroll.operacao = "REROLL";
+```
+
+No evento Step existe um trecho comentado que abriria `obj_card_selection` ao pressionar espaco. No estado atual, essa tela de troca so funciona se esse gatilho for religado ou chamado por outro lugar.
 
 ## `obj_hand`
 
 `obj_hand` representa a mao do jogador.
 
-No Create, ele cria um array chamado `mao` com 5 numeros aleatorios de `0` a `9`. Depois chama `atualizar_mao()`.
+No Create, ele cria um array local chamado `mao` com 5 cartas aleatorias e depois chama `atualizar_mao()`.
+
+A mao tem uma regra importante: ela nao pode ficar com 3 cartas iguais. Para isso, `obj_hand` tem funcoes auxiliares:
+
+| Funcao | Funcao no jogo |
+| --- | --- |
+| `contar_cartas_iguais(_numero, _indice_ignorado)` | Conta quantas cartas iguais existem, ignorando uma posicao especifica. |
+| `pode_receber_carta(_numero, _indice_ignorado)` | Retorna se a carta pode entrar sem formar 3 iguais. |
+| `comprar_carta_valida(_indice_ignorado)` | Sorteia uma carta de `0` a `9` que respeita a regra de no maximo 2 iguais. |
+| `substituir_carta(_numero)` | Troca uma carta selecionada por outra, protegendo a regra de cartas iguais. |
 
 ### `atualizar_mao()`
 
 Essa funcao:
 
 - destroi as cartas antigas da mao;
-- mantem as cartas da tela de selecao, se houver;
+- mantem cartas temporarias da tela de selecao, se houver;
 - recria as cartas da mao na tela;
-- define `numero`, `indice_mao` e `carta_selecao` em cada instancia de `obj_carta`.
-
-### `substituir_carta(_numero)`
-
-Essa funcao troca uma carta da mao pelo numero escolhido na tela de selecao. Ela usa o primeiro indice salvo em `global.indices_cartas_selecionadas`. Se nao houver carta selecionada, troca a carta da posicao `0`.
+- define `numero`, `indice_mao`, `carta_selecao` e `image_index` em cada instancia de `obj_carta`.
 
 ## `obj_carta`
 
@@ -83,14 +104,12 @@ As variaveis principais sao:
 | `indice_mao` | Posicao da carta dentro da mao. |
 | `carta_selecao` | Define se a carta pertence a tela de selecao. |
 
-No Step, a carta calcula se o mouse esta sobre ela e faz uma animacao suave de subida.
-
 No Mouse Left Pressed:
 
-- se for uma carta de selecao, salva o valor em `global.carta_escolhida` e confirma a troca;
-- se for uma carta da mao, alterna entre selecionada e nao selecionada;
-- ao selecionar, adiciona o valor em `global.cartas_selecionadas`;
-- ao selecionar, adiciona o indice em `global.indices_cartas_selecionadas`.
+- se for carta de selecao, salva `global.carta_escolhida` e chama `confirmar()`;
+- se for carta da mao, alterna entre selecionada e nao selecionada;
+- ao selecionar, adiciona valor em `global.cartas_selecionadas`;
+- ao selecionar, adiciona posicao em `global.indices_cartas_selecionadas`.
 
 ## `obj_card_selection`
 
@@ -110,53 +129,119 @@ Essa funcao e chamada quando o jogador clica em uma carta da selecao.
 Ela:
 
 - encontra `obj_hand`;
-- substitui uma carta da mao pelo valor escolhido;
+- chama `_hand.substituir_carta(global.carta_escolhida)`;
 - limpa cartas e operacoes selecionadas;
 - limpa `global.carta_escolhida`;
-- destroi apenas as cartas temporarias de selecao;
+- destroi as cartas temporarias de selecao;
 - desmarca os botoes de operacao;
 - despausa o jogo.
 
 ## `obj_btn_operacao`
 
-`obj_btn_operacao` representa cada botao matematico.
+`obj_btn_operacao` representa tanto botoes matematicos quanto o botao de reroll.
 
-Cada botao tem uma variavel `operacao`, definida quando `obj_game` cria os botoes. Os valores possiveis dependem da fase:
+Cada botao tem uma variavel `operacao`, definida quando `obj_game` cria os botoes.
 
-- fase 1: `+`, `-`, `=`;
-- fase 2: `+`, `-`, `*`, `/`, `=`;
-- fase 3: `+`, `-`, `*`, `/`, `log`, `^`, `sqrt`, `=`.
+Operacoes por fase:
 
-Quando o jogador clica em um botao que nao e `"="`, a operacao e adicionada em `global.ops_selecionadas`. Clicar novamente no mesmo botao remove essa operacao.
+| Fase | Operacoes |
+| --- | --- |
+| `1` | `+`, `-`, `=` |
+| `2` | `+`, `-`, `*`, `/`, `=` |
+| `3` | `+`, `-`, `*`, `/`, `log`, `^`, `sqrt`, `=` |
+
+### Botao `"="`
 
 Quando o jogador clica em `"="`, o codigo valida:
 
-- se ha pelo menos 1 carta;
+- se foram selecionadas pelo menos 2 cartas;
+- se foi selecionada pelo menos 1 operacao;
 - se a quantidade de operacoes e exatamente `quantidade de cartas - 1`;
-- se existe um inimigo na sala.
+- se existe um `obj_enemy` na sala.
 
 Depois chama `calcular_resultado()`.
 
-O resultado positivo vira dano e e subtraido da vida do inimigo. Se a vida chegar a `0`, o inimigo morre. Caso contrario, o jogador perde uma tentativa. Se as tentativas chegarem a `0`, chama `game_over()`.
+Se o resultado for positivo, ele vira dano em `global.enemy_life`. Se `global.enemy_life` chegar a `0`, o jogo:
+
+- verifica se o resultado foi exatamente igual a vida anterior;
+- adiciona `+1` em `global.bonus_tentativas_proxima` se foi exato;
+- chama `recomprar_cartas()`;
+- chama `proximo_inimigo()`.
+
+Se o inimigo sobreviver, o jogador perde uma tentativa. Se ainda houver tentativas, as cartas usadas sao recompradas. Se as tentativas acabarem, `game_over()` reinicia a sala.
+
+### Botao `"REROLL"`
+
+O botao de reroll tambem e um `obj_btn_operacao`, mas recebe:
+
+```gml
+operacao = "REROLL";
+```
+
+No Mouse Left Pressed, antes das operacoes normais, ele faz:
+
+```gml
+if (operacao == "REROLL") {
+    rerrolar_mao();
+    exit;
+}
+```
+
+No Draw, esse botao mostra:
+
+- `R2`, quando ainda tem 2 cargas;
+- `R1`, quando ainda tem 1 carga;
+- `R0`, quando acabou.
+
+Quando acaba a carga, o botao fica cinza.
 
 ## `obj_enemy`
 
-`obj_enemy` representa o inimigo atual.
+`obj_enemy` representa visualmente os digitos da vida do inimigo.
 
-No Create:
+Cada instancia usa um sprite de `spr_enemy_0` ate `spr_enemy_9`. Cada inimigo representa um digito de `global.enemy_life`.
 
-- define `vida_max` com um valor aleatorio entre `10` e `20`;
-- copia esse valor para `vida`.
+No Create, o objeto monta o array `sprites_enemy` e cria o metodo de instancia `definir_numero_enemy(_numero, _posicao)`:
 
-No Step:
+```gml
+definir_numero_enemy = function(_numero, _posicao) {
+    digito_posicao = _posicao;
+    numero_enemy = _numero;
+    sprite_index = sprites_enemy[numero_enemy];
+    image_index = 0;
+    image_speed = 0;
+};
+```
 
-- se `vida <= 0`, chama `proximo_inimigo()`;
-- depois destroi a instancia atual.
+Esse metodo guarda:
 
-No Draw:
+- `numero_enemy`: o digito mostrado por aquela instancia;
+- `digito_posicao`: a posicao decimal que ela representa, como unidade, dezena ou centena;
+- `sprite_index`: o sprite correspondente ao digito.
 
-- desenha o sprite do inimigo;
-- desenha o valor atual de `vida` acima dele.
+O script `criar_inimigos()` cria `global.fase + 1` inimigos, da direita para a esquerda, e soma os valores em `global.enemy_life` usando potencias de 10:
+
+```gml
+global.enemy_life += _numero * power(10, i);
+```
+
+Assim:
+
+- o inimigo da posicao `0` representa unidade;
+- o inimigo da posicao `1` representa dezena;
+- o inimigo da posicao `2` representa centena.
+
+No Step, cada inimigo recalcula o digito que deve mostrar com base na vida atual:
+
+```gml
+var _peso = power(10, digito_posicao);
+var _numero_atual = floor(global.enemy_life / _peso) mod 10;
+
+definir_numero_enemy(_numero_atual, digito_posicao);
+visible = (digito_posicao == 0 || global.enemy_life >= _peso);
+```
+
+Isso faz os sprites acompanharem a vida quando o jogador causa dano. Se a vida cair de `52` para `8`, por exemplo, o digito da dezena fica invisivel e sobra so a unidade.
 
 ## Scripts
 
@@ -166,7 +251,7 @@ Retorna o array de operacoes que deve aparecer como botoes na fase atual.
 
 ### `fases()`
 
-Retorna operacoes parecidas com `operacoes_da_fase()`, mas sem o `"="`. No fluxo atual, quem e usado para criar botoes e `operacoes_da_fase()`.
+Retorna operacoes parecidas com `operacoes_da_fase()`, mas sem o `"="`. No fluxo atual, quem cria os botoes usa `operacoes_da_fase()`.
 
 ### `calcular_resultado(_cartas, _ops)`
 
@@ -205,15 +290,57 @@ Operacoes suportadas:
 
 ### `recomprar_cartas()`
 
-Troca por numeros aleatorios apenas as cartas usadas na tentativa. Depois limpa:
+Troca apenas as cartas usadas na tentativa.
 
-- `global.cartas_selecionadas`;
-- `global.indices_cartas_selecionadas`;
-- `global.ops_selecionadas`.
+Ela:
+
+- encontra `obj_hand`;
+- percorre `global.indices_cartas_selecionadas`;
+- usa `_hand.comprar_carta_valida(_idx)` para repor cada carta;
+- chama `_hand.atualizar_mao()`;
+- limpa cartas e operacoes selecionadas.
+
+### `rerrolar_mao()`
+
+Troca a mao inteira e consome 1 carga de reroll.
+
+Ela:
+
+- garante que as globais de reroll existem;
+- reseta as cargas para `2` se `global.fase` mudou;
+- retorna `false` se o jogo esta pausado ou se as cargas acabaram;
+- troca todas as cartas da mao usando `_hand.comprar_carta_valida(i)`;
+- diminui `global.cargas_reroll_mao`;
+- limpa cartas e operacoes selecionadas;
+- desmarca botoes;
+- atualiza a mao;
+- retorna `true` quando o reroll acontece.
+
+### `criar_inimigos()`
+
+Fica em `scripts/proximo_inimigo/proximo_inimigo.gml`.
+
+Essa funcao:
+
+- zera `global.enemy_life`;
+- calcula a quantidade de inimigos com `global.fase + 1`;
+- sorteia um digito para cada posicao;
+- evita que o digito mais alto seja `0`;
+- cria uma instancia de `obj_enemy` por digito;
+- chama `_enemy.definir_numero_enemy(_numero, i)` para configurar o digito da instancia;
+- soma o valor final em `global.enemy_life`.
 
 ### `proximo_inimigo()`
 
-Reseta tentativas e selecoes, depois cria um novo `obj_enemy`.
+Tambem fica em `scripts/proximo_inimigo/proximo_inimigo.gml`.
+
+Essa funcao:
+
+- destroi inimigos antigos;
+- aplica `global.bonus_tentativas_proxima` nas tentativas;
+- zera o bonus;
+- limpa selecoes;
+- chama `criar_inimigos()`.
 
 ### `game_over()`
 
@@ -221,10 +348,11 @@ Reinicia a sala atual com `room_restart()`.
 
 ### `globals`
 
-Define o tamanho da janela com:
+Define o tamanho da janela e inicia a vida global do inimigo:
 
 ```gml
-window_set_size(1280, 720);
+window_set_size(1760, 990);
+global.enemy_life = 0;
 ```
 
 ## Objetos que existem, mas quase nao participam do fluxo atual
@@ -239,7 +367,8 @@ Eles podem ser usados futuramente, mas hoje o fluxo principal passa por `obj_gam
 
 ## Pontos de atencao
 
-- `global.fase` inicia em `1`, mas o codigo atual nao avanca automaticamente para a fase `2` ou `3`.
+- `global.fase` inicia em `1`, mas o codigo atual ainda nao avanca automaticamente para a fase `2` ou `3`.
 - `global.mao` e criado, mas a mao usada fica no array local `mao` dentro de `obj_hand`.
-- A tela de escolha troca a primeira carta selecionada. Se nenhuma carta estiver selecionada, troca a carta da posicao `0`.
-- A sala `Room1` tem tamanho `320x180`, enquanto a janela e ajustada para `1280x720`.
+- A tela de escolha depende de um gatilho. O trecho do espaco em `obj_game/Step_0.gml` esta comentado.
+- `criar_inimigos()` depende do metodo `definir_numero_enemy` criado no Create de `obj_enemy`.
+- A sala `Room1` tem tamanho `500x300`, enquanto a janela e ajustada para `1760x990`.

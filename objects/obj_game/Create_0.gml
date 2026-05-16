@@ -11,20 +11,8 @@ global.cartas_selecionadas = [];
 global.indices_cartas_selecionadas = [];
 global.ops_selecionadas    = [];
 
-var _position = 0;
-for (var i = 0; i < (global.fase + 1); i++) {
-instance_create_layer(2 * room_width / 3 - _position , 100, "Instances", obj_enemy);
-_position = 40;
-if(i == 0){
-	global.enemy_life += global.chosen_enemy;
-}
-else if(i == 1){
-	global.enemy_life += global.chosen_enemy * 10;
-}
-else if(i == 2){
-	global.enemy_life += global.chosen_enemy * 100;
-}
-}
+criar_inimigos();
+
 instance_create_layer(0, 0, "Instances", obj_hand);
 
 // botões de operação

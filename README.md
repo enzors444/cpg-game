@@ -61,7 +61,7 @@ As variaveis globais principais sao criadas em `objects/obj_game/Create_0.gml` e
 No evento Create, ele:
 
 - define a fase inicial como `1`;
-- define `3` tentativas;
+- define as tentativas com `tentativas_base_fase()`;
 - inicia `global.bonus_tentativas_proxima` com `0`;
 - inicia `global.cargas_reroll_mao` com `2`;
 - define `global.ui_top_space = 50` para deixar espaco livre para UI no topo;
@@ -125,6 +125,8 @@ A mao tem uma regra importante: ela nao pode ficar com 3 cartas iguais. Para iss
 | `pode_receber_carta(_numero, _indice_ignorado)` | Retorna se a carta pode entrar sem formar 3 iguais. |
 | `comprar_carta_valida(_indice_ignorado)` | Sorteia uma carta de `0` a `9` que respeita a regra de no maximo 2 iguais. |
 | `substituir_carta(_numero)` | Troca uma carta selecionada por outra, protegendo a regra de cartas iguais. |
+
+Na fase 1, `comprar_carta_valida()` sorteia apenas de `1` a `9`, evitando que a mao inicial venha fraca demais com cartas `0`.
 
 ### `atualizar_mao()`
 
@@ -237,7 +239,7 @@ No Draw, os botoes `+`, `-`, `*` e `/` usam o sprite `spr_operations`:
 | `*` | `2` |
 | `/` | `3` |
 
-Os botoes que ainda nao tem sprite proprio continuam em texto, como `=`, `C`, `R2`, `log`, `^` e `sqrt`.
+Os botoes que ainda nao tem sprite proprio continuam em texto, como `(`, `)`, `=`, `C`, `R2`, `log`, `^` e `sqrt`.
 
 Operacoes por fase:
 
@@ -245,11 +247,13 @@ Operacoes por fase:
 | --- | --- |
 | `1` | `+`, `-`, `=` |
 | `2` | `+`, `-`, `*`, `/`, `=` |
-| `3` | `+`, `-`, `*`, `/`, `log`, `^`, `sqrt`, `=` |
+| `3` | `(`, `)`, `+`, `-`, `*`, `/`, `log`, `^`, `sqrt`, `=` |
 
 ### Botao `"="`
 
 Quando o jogador clica em uma operacao comum, como `+` ou `*`, o botao primeiro chama `pode_adicionar_operacao_expressao()`. Isso impede operacao antes de carta e impede duas operacoes seguidas. Se puder adicionar, a operacao entra em `global.ops_selecionadas` e tambem em `global.expressao_partes`.
+
+Na fase 3, os botoes `(` e `)` usam `pode_adicionar_parentese_expressao()` para garantir que parenteses abrem antes de um valor, fecham depois de um valor e nunca ficam desbalanceados.
 
 Quando o jogador clica em `"="`, o codigo valida:
 
@@ -413,6 +417,7 @@ Operacoes suportadas:
 | `^` | Potencia. |
 | `sqrt` | Raiz quadrada do proximo numero. |
 | `log` | Logaritmo usando `logn(_num, _resultado)`. |
+| `(` e `)` | Agrupam parte da expressao a partir da fase 3. |
 
 ### Funcoes de expressao
 
@@ -423,8 +428,11 @@ Essas funcoes tambem ficam em `scripts/calcular_resultados/calcular_resultados.g
 | `max_cartas_por_numero()` | Retorna `1` na fase 1 e `2` nas fases 2 e 3. |
 | `pode_adicionar_carta_expressao()` | Bloqueia cartas seguidas acima do limite da fase. |
 | `pode_adicionar_operacao_expressao()` | Permite operacao apenas depois de uma carta. |
+| `pode_adicionar_parentese_expressao(_parentese)` | Valida abertura e fechamento de parenteses. |
+| `contar_parenteses_abertos()` | Conta quantos parenteses ainda estao abertos na expressao. |
 | `expressao_valida()` | Confere se a expressao esta pronta para calcular. |
-| `calcular_resultado_expressao()` | Monta numeros com cartas seguidas e calcula o resultado final. |
+| `calcular_grupo_expressao(_partes, _inicio)` | Calcula grupos entre parenteses de forma recursiva. |
+| `calcular_resultado_expressao()` | Monta numeros com cartas seguidas e calcula o resultado final, respeitando parenteses. |
 | `remover_expressao_a_partir(_inicio)` | Remove uma parte da expressao e tudo que veio depois dela. |
 | `limpar_expressao()` | Limpa toda a expressao e desmarca cartas e operacoes. |
 | `montar_texto_expressao(_mostrar_resultado)` | Gera o texto usado pelo display da expressao. |
@@ -434,9 +442,11 @@ Essas funcoes tambem ficam em `scripts/calcular_resultados/calcular_resultados.g
 Exemplos:
 
 ```text
-fase 1: 9 * 2  -> valido
+fase 1: 9 + 2  -> valido
+fase 1: 9 * 2  -> bloqueado porque multiplicacao so aparece a partir da fase 2
 fase 1: 90 * 2 -> bloqueado
 fase 2: 90 * 2 -> valido
+fase 3: 2 * (3 + 4) -> valido
 ```
 
 ### `recomprar_cartas()`
@@ -467,20 +477,36 @@ Ela:
 - atualiza a mao;
 - retorna `true` quando o reroll acontece.
 
+### `tentativas_base_fase()`
+
+Retorna a quantidade base de tentativas por fase.
+
+No balanceamento atual:
+
+| Fase | Tentativas base |
+| --- | --- |
+| `1` | `4` |
+| `2` e `3` | `3` |
+
+### `sortear_vida_inimigo()`
+
+Sorteia a vida do inimigo por faixa de dificuldade, usando `global.fase` e `global.inimigo_atual_fase`.
+
+Na fase 1, o primeiro inimigo fica entre `10` e `18` de vida, os inimigos seguintes ficam entre `16` e `28`, e o boss fica entre `30` e `45`.
+
 ### `criar_inimigos()`
 
 Fica em `scripts/proximo_inimigo/proximo_inimigo.gml`.
 
 Essa funcao:
 
-- zera `global.enemy_life`;
+- define `global.enemy_life` usando `sortear_vida_inimigo()`;
 - calcula a quantidade de inimigos com `global.fase + 1`;
-- sorteia um digito para cada posicao;
-- evita que o digito mais alto seja `0`;
+- quebra `global.enemy_life` em digitos;
 - cria uma instancia de `obj_enemy` por digito;
 - posiciona os inimigos usando `100 + global.ui_top_space`, mantendo a area superior livre para UI;
 - chama `_enemy.definir_numero_enemy(_numero, i)` para configurar o digito da instancia;
-- soma o valor final em `global.enemy_life`.
+- esconde digitos altos quando a vida nao precisa deles.
 
 ### `proximo_inimigo()`
 

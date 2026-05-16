@@ -12,6 +12,13 @@ if (operacao == "CLEAR") {
     exit;
 }
 
+if (operacao == "(" || operacao == ")") {
+    if (!pode_adicionar_parentese_expressao(operacao)) exit;
+
+    array_push(global.expressao_partes, { tipo: "paren", valor: operacao });
+    exit;
+}
+
 if (operacao == "=") {
     if (!expressao_valida()) exit;
 

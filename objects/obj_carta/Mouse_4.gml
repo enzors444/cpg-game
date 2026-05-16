@@ -16,7 +16,7 @@ if (!selecionada) {
     array_push(global.expressao_partes, { tipo: "carta", valor: numero, indice: indice_mao });
 
     if (pode_usar_coringa_numerico() && keyboard_check(vk_shift)) {
-        var _seletor_coringa = instance_create_layer(0, 0, "Instances", obj_coringa_escolha);
+        var _seletor_coringa = instance_create_depth(0, 0, -100000, obj_coringa_escolha);
         _seletor_coringa.indice_expressao = array_length(global.expressao_partes) - 1;
         _seletor_coringa.indice_mao = indice_mao;
         global.coringa_escolhendo_valor = true;

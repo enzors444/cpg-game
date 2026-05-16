@@ -122,7 +122,7 @@ function abrir_recompensa_roguelike() {
     global.recompensa_roguelike_aberta = true;
     global.jogo_pausado = true;
 
-    instance_create_layer(0, 0, "Instances", obj_recompensa_roguelike);
+    instance_create_depth(0, 0, -100000, obj_recompensa_roguelike);
 }
 
 function aplicar_carta_roguelike(_id) {

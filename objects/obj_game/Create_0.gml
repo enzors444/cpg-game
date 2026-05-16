@@ -1,6 +1,6 @@
 // Create do obj_game
 global.fase = 1;
-global.tentativas = 3;
+global.tentativas = tentativas_base_fase();
 global.bonus_tentativas_proxima = 0;
 global.ui_tentativas = global.tentativas;
 global.ui_top_space = 50;

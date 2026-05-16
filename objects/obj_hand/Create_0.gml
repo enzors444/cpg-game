@@ -33,8 +33,13 @@ function pode_receber_carta(_numero, _indice_ignorado) {
 
 function comprar_carta_valida(_indice_ignorado) {
     var _opcoes = [];
+    var _menor_numero = 0;
 
-    for (var _numero = 0; _numero <= 9; _numero++) {
+    if (variable_global_exists("fase") && global.fase <= 1) {
+        _menor_numero = 1;
+    }
+
+    for (var _numero = _menor_numero; _numero <= 9; _numero++) {
         if (pode_receber_carta(_numero, _indice_ignorado)) {
             array_push(_opcoes, _numero);
         }

@@ -7,6 +7,8 @@ function inicializar_roguelike() {
     if (!variable_global_exists("usos_coringa_numerico_rodada")) global.usos_coringa_numerico_rodada = 0;
     if (!variable_global_exists("repeticoes_operacao_por_rodada")) global.repeticoes_operacao_por_rodada = 0;
     if (!variable_global_exists("repeticoes_operacao_rodada")) global.repeticoes_operacao_rodada = 0;
+    if (!variable_global_exists("sem_volta_ativo")) global.sem_volta_ativo = false;
+    if (!variable_global_exists("quadrado_desbloqueado")) global.quadrado_desbloqueado = false;
     if (!variable_global_exists("coringa_escolhendo_valor")) global.coringa_escolhendo_valor = false;
     if (!variable_global_exists("recompensa_roguelike_aberta")) global.recompensa_roguelike_aberta = false;
     if (!variable_global_exists("roguelike_opcoes")) global.roguelike_opcoes = [];
@@ -22,6 +24,8 @@ function resetar_roguelike() {
     global.usos_coringa_numerico_rodada = 0;
     global.repeticoes_operacao_por_rodada = 0;
     global.repeticoes_operacao_rodada = 0;
+    global.sem_volta_ativo = false;
+    global.quadrado_desbloqueado = false;
     global.coringa_escolhendo_valor = false;
     global.recompensa_roguelike_aberta = false;
     global.roguelike_opcoes = [];
@@ -47,6 +51,37 @@ function pode_usar_coringa_numerico() {
 function pode_repetir_operacao_rodada() {
     inicializar_roguelike();
     return global.repeticoes_operacao_rodada < global.repeticoes_operacao_por_rodada;
+}
+
+function tem_bonus_sem_volta() {
+    inicializar_roguelike();
+    return global.sem_volta_ativo;
+}
+
+function bonus_sem_volta_valor(_dano_base) {
+    if (!tem_bonus_sem_volta() || _dano_base <= 0) return 0;
+    return floor(_dano_base * 0.5);
+}
+
+function bonus_sem_volta_preview() {
+    if (!tem_bonus_sem_volta() || !expressao_valida()) return 0;
+
+    var _resultado = max(0, calcular_resultado_expressao());
+    return bonus_sem_volta_valor(_resultado);
+}
+
+function adicionar_reroll_acerto_exato() {
+    inicializar_roguelike();
+
+    if (!variable_global_exists("cargas_reroll_mao")) global.cargas_reroll_mao = cargas_reroll_maximas();
+    if (!variable_global_exists("fase_reroll_mao")) global.fase_reroll_mao = global.fase;
+
+    if (global.fase_reroll_mao != global.fase) {
+        global.fase_reroll_mao = global.fase;
+        global.cargas_reroll_mao = cargas_reroll_maximas();
+    }
+
+    global.cargas_reroll_mao += 1;
 }
 
 function limpar_bonus_temporarios_fase() {
@@ -91,6 +126,20 @@ function carta_roguelike(_id) {
                 nome: "Eco Operacao",
                 descricao: "Repita uma operacao uma vez por rodada."
             };
+
+        case "sem_volta":
+            return {
+                id: _id,
+                nome: "Sem Volta",
+                descricao: "+50% de dano como bonus inteiro verde."
+            };
+
+        case "exponencial":
+            return {
+                id: _id,
+                nome: "Exponencial",
+                descricao: "Desbloqueia ^2 em um unico numero."
+            };
     }
 
     return {
@@ -103,7 +152,7 @@ function carta_roguelike(_id) {
 function sortear_opcoes_roguelike(_qtd) {
     inicializar_roguelike();
 
-    var _base = ["mao_nova", "precisao", "numero_grudado", "coringa_numerico", "eco_operacao"];
+    var _base = ["mao_nova", "precisao", "numero_grudado", "coringa_numerico", "eco_operacao", "sem_volta", "exponencial"];
     var _pool = [];
 
     for (var i = 0; i < array_length(_base); i++) {
@@ -167,6 +216,15 @@ function aplicar_carta_roguelike(_id) {
 
         case "eco_operacao":
             global.repeticoes_operacao_por_rodada += 1;
+            break;
+
+        case "sem_volta":
+            global.sem_volta_ativo = true;
+            break;
+
+        case "exponencial":
+            global.quadrado_desbloqueado = true;
+            global.precisa_atualizar_botoes = true;
             break;
     }
 }

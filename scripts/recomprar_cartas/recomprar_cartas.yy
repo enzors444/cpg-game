@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"recomprar_cartas",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"recomprar_cartas",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

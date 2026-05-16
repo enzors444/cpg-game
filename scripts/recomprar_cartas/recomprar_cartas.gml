@@ -1,10 +1,17 @@
 function recomprar_cartas() {
-    // repõe só as cartas que foram usadas
-    for (var i = 0; i < array_length(global.cartas_selecionadas); i++) {
-        var _idx = global.cartas_selecionadas[i]; // índice na mão
-        obj_hand.mao[_idx] = irandom(9);
+    var _hand = instance_find(obj_hand, 0);
+
+    if (_hand != noone) {
+        // Repoe so as cartas que foram usadas.
+        for (var i = 0; i < array_length(global.indices_cartas_selecionadas); i++) {
+            var _idx = global.indices_cartas_selecionadas[i];
+            _hand.mao[_idx] = irandom(9);
+        }
+
+        _hand.atualizar_mao();
     }
+
     global.cartas_selecionadas = [];
-    global.ops_selecionadas    = [];
-    obj_hand.atualizar_mao();
+    global.indices_cartas_selecionadas = [];
+    global.ops_selecionadas = [];
 }

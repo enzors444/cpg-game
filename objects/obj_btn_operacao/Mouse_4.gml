@@ -1,12 +1,17 @@
 if (operacao == "=") {
-    if (array_length(global.cartas_selecionadas) < 2 
-    ||  array_length(global.ops_selecionadas)    < 1) exit;
-    
+    var _qtd_cartas = array_length(global.cartas_selecionadas);
+    var _qtd_ops    = array_length(global.ops_selecionadas);
+
+    if (_qtd_cartas < 1 || _qtd_ops != _qtd_cartas - 1) exit;
+
+    var _enemy = instance_find(obj_enemy, 0);
+    if (_enemy == noone) exit;
+
     var _resultado = calcular_resultado(global.cartas_selecionadas, global.ops_selecionadas);
-    
-    if (_resultado > obj_enemy.vida) {
-        obj_enemy.vida = 0;
-    } else {
+    var _dano = max(0, _resultado);
+    _enemy.vida = max(0, _enemy.vida - _dano);
+
+    if (_enemy.vida > 0) {
         global.tentativas--;
         if (global.tentativas <= 0) {
             game_over();
@@ -14,21 +19,31 @@ if (operacao == "=") {
             recomprar_cartas();
         }
     }
-    
-    global.cartas_selecionadas = [];
-    global.ops_selecionadas    = [];
-    with (obj_card)         { selecionada = false; image_blend = c_white; }
-    with (obj_btn_operacao) { selecionada = false; image_blend = c_white; }
 
+    global.cartas_selecionadas = [];
+    global.indices_cartas_selecionadas = [];
+    global.ops_selecionadas = [];
+
+    with (obj_carta) {
+        if (!carta_selecao) {
+            selecionada = false;
+            image_blend = c_white;
+        }
+    }
+
+    with (obj_btn_operacao) {
+        selecionada = false;
+        image_blend = c_white;
+    }
 } else {
-    if (!selecionada && array_length(global.ops_selecionadas) < 3) {
+    if (!selecionada && array_length(global.ops_selecionadas) < 4) {
         selecionada = true;
         array_push(global.ops_selecionadas, operacao);
         image_blend = c_yellow;
     } else if (selecionada) {
         selecionada = false;
         var _idx = array_get_index(global.ops_selecionadas, operacao);
-        array_delete(global.ops_selecionadas, _idx, 1);
+        if (_idx != -1) array_delete(global.ops_selecionadas, _idx, 1);
         image_blend = c_white;
     }
 }

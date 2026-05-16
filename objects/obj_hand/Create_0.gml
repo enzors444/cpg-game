@@ -1,21 +1,34 @@
-// inicia a mão com 5 cartas aleatórias
+function atualizar_mao() {
+    with (obj_carta) {
+        if (!carta_selecao) instance_destroy();
+    }
+
+    var _gap   = 60;
+    var _start = room_width / 2 - (_gap * (array_length(mao) - 1)) / 2;
+
+    for (var i = 0; i < array_length(mao); i++) {
+        var _c           = instance_create_layer(_start + i * _gap, 100, "Instances", obj_carta);
+        _c.numero        = mao[i];
+        _c.indice_mao    = i;
+        _c.carta_selecao = false;
+        _c.image_index   = mao[i];
+    }
+}
+
+function substituir_carta(_numero) {
+    var _idx = 0;
+    if (array_length(global.indices_cartas_selecionadas) > 0) {
+        _idx = global.indices_cartas_selecionadas[0];
+    }
+
+    mao[_idx] = _numero;
+    atualizar_mao();
+}
+
+// Inicia a mao com 5 cartas aleatorias.
 mao = [];
 for (var i = 0; i < 5; i++) {
-    array_push(mao, irandom(9)); // número de 0 a 9
+    array_push(mao, irandom(9));
 }
 
-// cria as instâncias das cartas na tela
 atualizar_mao();
-
-function atualizar_mao() {
-    // destroi cartas antigas
-	var _gap   = 120;
-	var _start = room_width/2 - (_gap * 2);
-	
-
-	for (var i = 0; i < array_length(mao); i++) {
-	    var _c         = instance_create_layer(_start + i * _gap, 100, "Instances", obj_carta);
-	    _c.numero      = mao[i];
-	    _c.image_index = mao[i];
-	}
-}

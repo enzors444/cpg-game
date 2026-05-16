@@ -9,9 +9,6 @@ function calcular_resultado(_cartas, _ops) {
             case "-":    _resultado -= _num; break;
             case "*":    _resultado *= _num; break;
             case "/":    _resultado = (_num != 0) ? _resultado / _num : _resultado; break;
-            case "^":    _resultado = power(_resultado, _num); break;
-            case "sqrt": _resultado = sqrt(_num); break;
-            case "log":  _resultado = logn(_num, _resultado); break;
         }
     }
 
@@ -30,7 +27,28 @@ function max_cartas_por_numero() {
     return _max;
 }
 
-function pode_adicionar_carta_expressao() {
+function expressao_respeita_limite_numeros(_partes) {
+    var _max_cartas = max_cartas_por_numero();
+    var _cartas_seguidas = 0;
+    var _numeros_grudados = 0;
+
+    for (var i = 0; i < array_length(_partes); i++) {
+        var _parte = _partes[i];
+
+        if (_parte.tipo == "carta") {
+            _cartas_seguidas++;
+            if (_cartas_seguidas > _max_cartas) return false;
+        } else {
+            if (_cartas_seguidas > 1) _numeros_grudados++;
+            _cartas_seguidas = 0;
+        }
+    }
+
+    if (_cartas_seguidas > 1) _numeros_grudados++;
+    return _numeros_grudados <= 1;
+}
+
+function pode_adicionar_carta_expressao(_valor, _indice) {
     if (!variable_global_exists("expressao_partes")) global.expressao_partes = [];
 
     var _qtd_partes = array_length(global.expressao_partes);
@@ -39,16 +57,13 @@ function pode_adicionar_carta_expressao() {
         if (_ultima.tipo == "paren" && _ultima.valor == ")") return false;
     }
 
-    var _cartas_seguidas = 0;
-
-    for (var i = array_length(global.expressao_partes) - 1; i >= 0; i--) {
-        var _parte = global.expressao_partes[i];
-        if (_parte.tipo != "carta") break;
-
-        _cartas_seguidas++;
+    var _partes_teste = [];
+    for (var i = 0; i < _qtd_partes; i++) {
+        array_push(_partes_teste, global.expressao_partes[i]);
     }
 
-    return _cartas_seguidas < max_cartas_por_numero();
+    array_push(_partes_teste, { tipo: "carta", valor: _valor, indice: _indice });
+    return expressao_respeita_limite_numeros(_partes_teste);
 }
 
 function pode_adicionar_operacao_expressao() {
@@ -108,6 +123,7 @@ function expressao_valida() {
 
     var _qtd_partes = array_length(global.expressao_partes);
     if (_qtd_partes < 3) return false;
+    if (!expressao_respeita_limite_numeros(global.expressao_partes)) return false;
 
     var _max_cartas = max_cartas_por_numero();
     var _cartas_seguidas = 0;
@@ -164,9 +180,6 @@ function aplicar_operacao_expressao(_resultado, _operacao, _num) {
         case "-":    return _resultado - _num;
         case "*":    return _resultado * _num;
         case "/":    return (_num != 0) ? _resultado / _num : _resultado;
-        case "^":    return power(_resultado, _num);
-        case "sqrt": return sqrt(_num);
-        case "log":  return logn(_num, _resultado);
     }
 
     return _resultado;

@@ -51,28 +51,28 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Mao Nova",
-                descricao: "+1 carga de reroll por fase."
+                descricao: "+1 reroll por fase."
             };
 
         case "precisao":
             return {
                 id: _id,
                 nome: "Precisao",
-                descricao: "Acerto exato da +1 tentativa extra."
+                descricao: "Acerto exato: +1 tentativa extra."
             };
 
         case "numero_grudado":
             return {
                 id: _id,
                 nome: "Numero Grudado",
-                descricao: "Nesta fase, numeros podem ter +1 carta."
+                descricao: "Um numero pode ter +1 carta nesta fase."
             };
 
         case "coringa_numerico":
             return {
                 id: _id,
                 nome: "Coringa Numerico",
-                descricao: "Shift + clique em 1 carta por rodada para escolher 0-9."
+                descricao: "Shift + clique: escolha 0-9 uma vez por rodada."
             };
     }
 

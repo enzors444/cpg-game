@@ -1,6 +1,7 @@
 function tentativas_base_fase() {
     if (global.fase <= 1) return 4;
-    return 3;
+    if (global.fase == 2) return 4;
+    return 5;
 }
 
 function sortear_vida_inimigo() {
@@ -19,12 +20,12 @@ function sortear_vida_inimigo() {
             return irandom_range(16, 28);
 
         case 2:
-            if (_boss) return irandom_range(90, 160);
-            return irandom_range(35 + _indice * 10, 80 + _indice * 15);
+            if (_boss) return irandom_range(430, 650);
+            return irandom_range(100 + _indice * 90, 180 + _indice * 100);
 
         case 3:
-            if (_boss) return irandom_range(160, 280);
-            return irandom_range(60 + _indice * 20, 140 + _indice * 30);
+            if (_boss) return irandom_range(3600, 5200);
+            return irandom_range(1000 + _indice * 650, 1600 + _indice * 750);
     }
 
     return irandom_range(10, 25);

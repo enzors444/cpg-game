@@ -24,6 +24,7 @@ function rerrolar_mao() {
     global.cartas_selecionadas = [];
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];
+    global.expressao_partes = [];
 
     with (obj_btn_operacao) {
         selecionada = false;

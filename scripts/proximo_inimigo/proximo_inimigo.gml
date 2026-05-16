@@ -29,6 +29,7 @@ function proximo_inimigo() {
     global.cartas_selecionadas = [];
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];
+    global.expressao_partes = [];
 
     criar_inimigos();
 }

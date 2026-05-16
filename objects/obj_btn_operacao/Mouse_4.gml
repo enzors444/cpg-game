@@ -3,16 +3,18 @@ if (operacao == "REROLL") {
     exit;
 }
 
-if (operacao == "=") {
-    var _qtd_cartas = array_length(global.cartas_selecionadas);
-    var _qtd_ops    = array_length(global.ops_selecionadas);
+if (operacao == "CLEAR") {
+    limpar_expressao();
+    exit;
+}
 
-    if (_qtd_cartas < 2 || _qtd_ops < 1 || _qtd_ops != _qtd_cartas - 1) exit;
+if (operacao == "=") {
+    if (!expressao_valida()) exit;
 
     var _enemy = instance_find(obj_enemy, 0);
     if (_enemy == noone) exit;
 
-    var _resultado = calcular_resultado(global.cartas_selecionadas, global.ops_selecionadas);
+    var _resultado = calcular_resultado_expressao();
     var _acertou_exato = (_resultado == global.enemy_life);
     var _dano = max(0, _resultado);
     global.enemy_life = max(0, global.enemy_life - _dano);
@@ -36,6 +38,7 @@ if (operacao == "=") {
     global.cartas_selecionadas = [];
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];
+    global.expressao_partes = [];
 
     with (obj_carta) {
         if (!carta_selecao) {
@@ -50,13 +53,22 @@ if (operacao == "=") {
     }
 } else {
     if (!selecionada && array_length(global.ops_selecionadas) < 4) {
+        if (!pode_adicionar_operacao_expressao()) exit;
+
         selecionada = true;
         array_push(global.ops_selecionadas, operacao);
+        array_push(global.expressao_partes, { tipo: "op", valor: operacao });
         image_blend = c_yellow;
     } else if (selecionada) {
+        for (var i = 0; i < array_length(global.expressao_partes); i++) {
+            var _parte = global.expressao_partes[i];
+            if (_parte.tipo == "op" && _parte.valor == operacao) {
+                remover_expressao_a_partir(i);
+                exit;
+            }
+        }
+
         selecionada = false;
-        var _idx = array_get_index(global.ops_selecionadas, operacao);
-        if (_idx != -1) array_delete(global.ops_selecionadas, _idx, 1);
         image_blend = c_white;
     }
 }

@@ -172,6 +172,7 @@ function criar_inimigos() {
     global.enemy_life = sortear_vida_inimigo();
     configurar_boss_atual();
     tocar_musica_fase(global.fase, global.boss_ativo);
+    global.morte_numeros_ativa = false;
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
@@ -196,9 +197,62 @@ function criar_inimigos() {
 
         var _enemy = instance_create_layer(_base_x - i * _gap, _base_y , "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
-        _enemy.visible = (i == 0 || global.enemy_life >= _peso);
+        var _visivel = (i == 0 || global.enemy_life >= _peso);
+
+        if (!_visivel) {
+            _enemy.ocultar_numero_enemy();
+        }
+
         _enemy.image_xscale = 1.5;
         _enemy.image_blend = c_white;
+    }
+}
+
+function verificar_morte_numeros_finalizada() {
+    if (!variable_global_exists("morte_numeros_ativa") || !global.morte_numeros_ativa) return;
+
+    var _restantes = 0;
+
+    for (var i = 0; i < instance_number(obj_enemy); i++) {
+        var _enemy = instance_find(obj_enemy, i);
+
+        if (variable_instance_exists(_enemy, "enemy_morte_proximo")
+        && _enemy.enemy_morte_proximo
+        && !_enemy.enemy_morte_concluida) {
+            _restantes++;
+        }
+    }
+
+    if (_restantes <= 0) {
+        global.morte_numeros_ativa = false;
+        global.jogo_pausado = false;
+        proximo_inimigo();
+    }
+}
+
+function iniciar_morte_numeros() {
+    if (variable_global_exists("morte_numeros_ativa") && global.morte_numeros_ativa) return;
+
+    global.morte_numeros_ativa = true;
+    global.jogo_pausado = true;
+
+    var _iniciados = 0;
+
+    for (var i = 0; i < instance_number(obj_enemy); i++) {
+        var _enemy = instance_find(obj_enemy, i);
+
+        if (variable_instance_exists(_enemy, "boss_visual")
+        && !_enemy.boss_visual
+        && _enemy.visible) {
+            _enemy.iniciar_morte_enemy(true);
+            _iniciados++;
+        }
+    }
+
+    if (_iniciados <= 0) {
+        global.morte_numeros_ativa = false;
+        global.jogo_pausado = false;
+        proximo_inimigo();
     }
 }
 
@@ -275,6 +329,8 @@ function finalizar_caminhada_arena() {
 }
 
 function proximo_inimigo() {
+    global.morte_numeros_ativa = false;
+
     with (obj_enemy) {
         instance_destroy();
     }

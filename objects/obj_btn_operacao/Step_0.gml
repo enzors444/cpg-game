@@ -1,3 +1,7 @@
+if (variable_global_exists("pause_ativo") && global.pause_ativo) {
+    exit;
+}
+
 var _meia_largura = 24;
 var _meia_altura = 24;
 

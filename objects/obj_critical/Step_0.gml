@@ -1,3 +1,7 @@
+if (variable_global_exists("pause_ativo") && global.pause_ativo) {
+    exit;
+}
+
 // Faz o efeito subir levemente
 y += y_speed;
 

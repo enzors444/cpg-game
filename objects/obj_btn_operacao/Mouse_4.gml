@@ -66,7 +66,7 @@ if (operacao == "=") {
                 criar_criticos_numeros_visiveis();
 
                 recomprar_cartas();
-                proximo_inimigo();
+                iniciar_morte_numeros();
             } else {
                 var _mensagem_boss_exato = global.boss_mensagem;
                 recomprar_cartas();
@@ -92,7 +92,7 @@ if (operacao == "=") {
             if (global.enemy_life <= 0) {
                 criar_criticos_numeros_visiveis();
                 recomprar_cartas();
-                proximo_inimigo();
+                iniciar_morte_numeros();
             } else {
                 recomprar_cartas();
             }
@@ -115,7 +115,7 @@ if (operacao == "=") {
             if (global.enemy_life <= 0) {
                 criar_criticos_numeros_visiveis();
                 recomprar_cartas();
-                proximo_inimigo();
+                iniciar_morte_numeros();
             } else {
                 recomprar_cartas();
             }
@@ -155,7 +155,7 @@ if (operacao == "=") {
             }
 
             recomprar_cartas();
-            proximo_inimigo();
+            iniciar_morte_numeros();
 
             if (_ganhou_reroll_exato) {
                 adicionar_reroll_acerto_exato();

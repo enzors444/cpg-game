@@ -1,3 +1,31 @@
+if (!variable_global_exists("pause_ativo")) {
+    global.pause_ativo = false;
+}
+
+if (global.pause_ativo) {
+    if (!instance_exists(obj_pause_menu)) {
+        instance_create_depth(0, 0, -100000, obj_pause_menu);
+    }
+
+    exit;
+}
+
+var _pode_pausar = !global.jogo_pausado
+    && !global.jogo_vencido
+    && (!variable_global_exists("game_over_ativo") || !global.game_over_ativo)
+    && (!variable_global_exists("renzo_game_over_ativo") || !global.renzo_game_over_ativo)
+    && (!variable_global_exists("recompensa_roguelike_aberta") || !global.recompensa_roguelike_aberta)
+    && (!variable_global_exists("coringa_escolhendo_valor") || !global.coringa_escolhendo_valor)
+    && (!variable_global_exists("transicao_fase_ativa") || !global.transicao_fase_ativa)
+    && (!variable_global_exists("morte_numeros_ativa") || !global.morte_numeros_ativa);
+
+if (_pode_pausar && keyboard_check_pressed(vk_escape)) {
+    global.pause_ativo = true;
+    global.jogo_pausado = true;
+    instance_create_depth(0, 0, -100000, obj_pause_menu);
+    exit;
+}
+
 if (variable_global_exists("em_caminhada_arena") && global.em_caminhada_arena) {
     global.caminhada_arena_timer += 1;
 

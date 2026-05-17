@@ -1,6 +1,16 @@
 if (variable_global_exists("renzo_game_over_ativo") && global.renzo_game_over_ativo) {
     global.renzo_game_over_timer += 1;
 
+    if (!variable_global_exists("renzo_game_over_hadouken_tocado")) {
+        global.renzo_game_over_hadouken_tocado = false;
+    }
+
+    if (!global.renzo_game_over_hadouken_tocado
+    && global.renzo_game_over_timer >= global.renzo_game_over_disparo_inicio) {
+        tocar_sfx_unico("hadouken", hadouken, 0.9);
+        global.renzo_game_over_hadouken_tocado = true;
+    }
+
     if (global.renzo_game_over_timer >= global.renzo_game_over_duracao) {
         global.renzo_game_over_ativo = false;
         resposta = "";

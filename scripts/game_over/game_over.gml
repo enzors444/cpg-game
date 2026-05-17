@@ -150,6 +150,7 @@ function game_over_iniciar_cena_renzo() {
     global.renzo_game_over_duracao = 112;
     global.renzo_game_over_disparo_inicio = 24;
     global.renzo_game_over_impacto = 82;
+    global.renzo_game_over_hadouken_tocado = false;
     global.renzo_game_over_boss_x = room_width * 0.67;
     global.renzo_game_over_boss_y = 80 + global.ui_top_space;
     global.renzo_game_over_boss_scale = escala_boss_da_fase(3);

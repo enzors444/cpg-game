@@ -1,3 +1,7 @@
+if (variable_global_exists("pause_ativo") && global.pause_ativo) {
+    exit;
+}
+
 if (boss_visual) {
     var _estagio_atual = boss_estagio_visual;
 
@@ -17,8 +21,27 @@ if (boss_visual) {
     exit;
 }
 
+if (enemy_estado == "aparecendo" || enemy_estado == "morrendo") {
+    enemy_anim_timer++;
+
+    if (enemy_anim_timer >= enemy_anim_duration) {
+        if (enemy_estado == "aparecendo") {
+            enemy_ir_para_parado();
+        } else if (enemy_morte_proximo) {
+            image_index = image_number - 1;
+            image_speed = 0;
+            enemy_morte_concluida = true;
+            verificar_morte_numeros_finalizada();
+        } else {
+            ocultar_numero_enemy();
+        }
+    }
+
+    if (enemy_estado == "morrendo") exit;
+}
+
 var _peso = power(10, digito_posicao);
 var _numero_atual = floor(global.enemy_life / _peso) mod 10;
+var _visivel_atual = (digito_posicao == 0 || global.enemy_life >= _peso);
 
-definir_numero_enemy(_numero_atual, digito_posicao);
-visible = (digito_posicao == 0 || global.enemy_life >= _peso);
+atualizar_numero_enemy(_numero_atual, _visivel_atual);

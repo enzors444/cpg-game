@@ -349,8 +349,8 @@ function criar_inimigos() {
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
-	var _base_y = 70 + global.ui_top_space;
-    var _gap = 40;
+	var _base_y = 80 + global.ui_top_space;
+    var _gap = 55;
 
     for (var i = 0; i < _qtd_inimigos; i++) {
         var _peso = power(10, i);
@@ -359,6 +359,7 @@ function criar_inimigos() {
         var _enemy = instance_create_layer(_base_x - i * _gap, _base_y , "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
         _enemy.visible = (i == 0 || global.enemy_life >= _peso);
+		_enemy.image_xscale = 1.5;
     }
 }
 
@@ -375,10 +376,8 @@ function iniciar_caminhada_arena(_abrir_recompensa) {
 
     with (obj_player) {
         x = room_width / 3;
-        y = 100 + global.ui_top_space;
+        y = 110 + global.ui_top_space;
         sprite_index = spr_player_walking;
-        image_index = 0;
-        image_speed = 0.2;
     }
 }
 
@@ -389,10 +388,9 @@ function finalizar_caminhada_arena() {
 
     with (obj_player) {
         x = room_width / 3;
-        y = 100 + global.ui_top_space;
+        y = 110 + global.ui_top_space;
         sprite_index = spr_player_idle;
         image_index = 0;
-        image_speed = 0.15;
     }
 
     criar_inimigos();

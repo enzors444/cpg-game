@@ -46,7 +46,7 @@ if (!variable_global_exists("arena_scroll") || _nova_run) {
 }
 
 instance_create_layer(0, 0, "Instances", obj_arena_background);
-instance_create_layer(room_width / 3, 100 + global.ui_top_space, "Instances", obj_player);
+instance_create_layer(room_width / 3, 110 + global.ui_top_space, "Instances", obj_player);
 instance_create_layer(0, 0, "Instances", obj_hand);
 instance_create_layer(0, 0, "Instances", obj_ui);
 

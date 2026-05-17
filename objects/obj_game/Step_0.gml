@@ -12,9 +12,8 @@ if (variable_global_exists("em_caminhada_arena") && global.em_caminhada_arena) {
 
     with (obj_player) {
         sprite_index = spr_player_walking;
-        image_speed = 0.2;
         x = room_width / 3 + sin(global.caminhada_arena_timer * 0.25) * 2;
-        y = 100 + global.ui_top_space;
+        y = 110 + global.ui_top_space;
     }
 
     if (_t >= 1) {
@@ -29,11 +28,3 @@ if (global.precisa_atualizar_botoes) {
     criar_botoes_operacao();
 }
 
-// Exemplo: abre as cartas ao pressionar espaco.
-/*
-if (keyboard_check_pressed(vk_space) && !global.jogo_pausado) {
-    global.jogo_pausado = true;
-    global.carta_escolhida = -1;
-    instance_create_layer(0, 0, "Instances", obj_card_selection);
-}
-*/

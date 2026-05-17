@@ -46,32 +46,32 @@ criar_botoes_operacao = function() {
     }
 
     global.ops = operacoes_da_fase();
-    var _botoes = [];
-
-    for (var i = 0; i < array_length(global.ops); i++) {
-        array_push(_botoes, global.ops[i]);
-    }
-
-    array_push(_botoes, "E");
-    array_push(_botoes, "R");
-
-    var _qtd_botoes = array_length(_botoes);
     var _linha_y = room_height - 30;
-    var _limite_esq = 80;
-    var _limite_dir = room_width;
-    var _gap = 60;
+    var _gap = 54;
+    var _reserva_lateral = 80;
+    var _qtd_ops = array_length(global.ops);
 
-    if (_qtd_botoes > 1) {
-        _gap = min(_gap, (_limite_dir - _limite_esq) / (_qtd_botoes - 1));
+    if (_qtd_ops > 1) {
+        _gap = min(_gap, (room_width - _reserva_lateral * 2) / (_qtd_ops - 1));
     }
 
-    var _largura_total = max(0, _qtd_botoes - 1) * _gap;
-    var _start = (_limite_esq + _limite_dir) / 2 - _largura_total / 2;
+    var _largura_ops = max(0, _qtd_ops - 1) * _gap;
+    var _start_ops = room_width / 2 - _largura_ops / 2;
 
-    for (var j = 0; j < _qtd_botoes; j++) {
-        var _btn = instance_create_layer(_start + j * _gap, _linha_y, "Instances", obj_btn_operacao);
-        _btn.operacao = _botoes[j];
+    for (var i = 0; i < _qtd_ops; i++) {
+        var _btn_op = instance_create_layer(_start_ops + i * _gap, _linha_y, "Instances", obj_btn_operacao);
+        _btn_op.operacao = global.ops[i];
     }
+
+    var _margem_lateral = 8;
+    var _controle_w = 48;
+    var _util_x = room_width - _margem_lateral - _controle_w / 2;
+
+    var _btn_reroll = instance_create_layer(_util_x, _linha_y - 58, "Instances", obj_btn_operacao);
+    _btn_reroll.operacao = "R";
+
+    var _btn_clear = instance_create_layer(_util_x, _linha_y, "Instances", obj_btn_operacao);
+    _btn_clear.operacao = "E";
 };
 
 criar_botoes_operacao();

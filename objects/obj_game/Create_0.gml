@@ -58,8 +58,8 @@ criar_botoes_operacao = function() {
     var _qtd_botoes = array_length(_botoes);
     var _linha_y = room_height - 30;
     var _limite_esq = 80;
-    var _limite_dir = room_width - 30;
-    var _gap = 54;
+    var _limite_dir = room_width;
+    var _gap = 60;
 
     if (_qtd_botoes > 1) {
         _gap = min(_gap, (_limite_dir - _limite_esq) / (_qtd_botoes - 1));

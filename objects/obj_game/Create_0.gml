@@ -27,6 +27,7 @@ global.cargas_reroll_mao = 2;
 global.fase_reroll_mao = global.fase;
 global.carta_escolhida = -1;
 global.jogo_pausado = false;
+global.jogo_vencido = false;
 global.em_caminhada_arena = false;
 global.caminhada_arena_timer = 0;
 global.caminhada_arena_duracao_base = 90;

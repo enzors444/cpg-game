@@ -80,6 +80,25 @@ if (operacao == "=") {
                 recomprar_cartas();
             }
         }
+    } else if (boss_desafio_ativo()) {
+        var _acertou_boss_desafio = boss_desafio_tentar_resultado(_resultado);
+
+        if (_acertou_boss_desafio) {
+            if (global.enemy_life <= 0) {
+                criar_criticos_numeros_visiveis();
+                recomprar_cartas();
+                proximo_inimigo();
+            } else {
+                recomprar_cartas();
+            }
+        } else {
+            global.tentativas--;
+            if (global.tentativas <= 0) {
+                game_over();
+            } else {
+                recomprar_cartas();
+            }
+        }
     } else {
         _dano += bonus_sem_volta_valor(_dano);
 

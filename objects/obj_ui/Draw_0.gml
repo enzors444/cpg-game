@@ -57,17 +57,22 @@ var _qtd = encontros_combate_da_fase(global.fase);
 var _atual = global.inimigo_atual_fase;
 var _progresso_visual = _atual;
 var _progresso_inicio = -0.45;
+var _progresso_fim = _qtd - 1;
 var _andando_arena = variable_global_exists("em_caminhada_arena") && global.em_caminhada_arena;
+
+if (recompensa_apos_encontro(global.fase, _qtd - 1)) {
+    _progresso_fim = _qtd - 0.5;
+}
 
 if (variable_global_exists("progresso_inicio_barra")) {
     _progresso_inicio = global.progresso_inicio_barra;
 }
 
 if (variable_global_exists("progresso_visual")) {
-    _progresso_visual = clamp(global.progresso_visual, _progresso_inicio, _qtd - 1);
+    _progresso_visual = clamp(global.progresso_visual, _progresso_inicio, _progresso_fim);
 }
 
-var _progresso_span = max(1, (_qtd - 1) - _progresso_inicio);
+var _progresso_span = max(1, _progresso_fim - _progresso_inicio);
 var _tooltip_titulo = "";
 var _tooltip_x = 0;
 var _tooltip_y = _progresso_y;
@@ -116,18 +121,12 @@ var _px_marcador = lerp(_progresso_x1, _progresso_x2, _t_marcador);
 for (var k = 0; k < _qtd; k++) {
     if (!recompensa_apos_encontro(global.fase, k)) continue;
 
-    var _t_carta = (k - _progresso_inicio) / _progresso_span;
-    var _cx_carta = lerp(_progresso_x1, _progresso_x2, _t_carta);
-
-    if (k < _qtd - 1) {
-        var _t_proximo = ((k + 1) - _progresso_inicio) / _progresso_span;
-        _cx_carta = lerp(_cx_carta, lerp(_progresso_x1, _progresso_x2, _t_proximo), 0.5);
-    } else {
-        _cx_carta = min(room_width - 35, _cx_carta + 24);
-    }
+    var _progresso_carta = k + 0.5;
+    var _t_carta_alvo = (_progresso_carta - _progresso_inicio) / _progresso_span;
+    var _cx_carta = lerp(_progresso_x1, _progresso_x2, _t_carta_alvo);
 
     var _reward_ativo = global.recompensa_roguelike_aberta && _atual == k + 1;
-    var _reward_passou = _progresso_visual > k;
+    var _reward_passou = _progresso_visual >= _progresso_carta;
 
     draw_set_color(_reward_ativo ? c_yellow : _cor_progresso);
     draw_rectangle(_cx_carta - 5, _progresso_y - 7, _cx_carta + 5, _progresso_y + 7, false);

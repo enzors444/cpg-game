@@ -15,8 +15,6 @@ definir_numero_enemy = function(_numero, _posicao) {
     digito_posicao = _posicao;
     numero_enemy = _numero;
     sprite_index = sprites_enemy[numero_enemy];
-    image_index = 0;
-    image_speed = 0;
 };
 
 definir_numero_enemy(irandom(9), 0);

@@ -33,6 +33,12 @@ var _progresso_y = 27;
 var _cor_progresso = make_color_rgb(255, 96, 0);
 var _qtd = encontros_combate_da_fase(global.fase);
 var _atual = global.inimigo_atual_fase;
+var _progresso_visual = _atual;
+var _andando_arena = variable_global_exists("em_caminhada_arena") && global.em_caminhada_arena;
+
+if (variable_global_exists("progresso_visual")) {
+    _progresso_visual = clamp(global.progresso_visual, 0, _qtd - 1);
+}
 
 global.inimigos_por_fase = _qtd;
 
@@ -44,8 +50,8 @@ for (var j = 0; j < _qtd; j++) {
     var _px = lerp(_progresso_x1, _progresso_x2, _t);
     var _boss = (j == _qtd - 1);
     var _raio_ponto = _boss ? 10 : 4;
-    var _passou = (j < _atual);
-    var _ativo = (j == _atual);
+    var _passou = (j < _progresso_visual);
+    var _ativo = (!_andando_arena && j == _atual);
 
     draw_set_color(_cor_progresso);
     draw_circle(_px, _progresso_y, _raio_ponto, false);
@@ -61,6 +67,9 @@ for (var j = 0; j < _qtd; j++) {
     }
 }
 
+var _t_marcador = _progresso_visual / max(1, _qtd - 1);
+var _px_marcador = lerp(_progresso_x1, _progresso_x2, _t_marcador);
+
 for (var k = 0; k < _qtd; k++) {
     if (!recompensa_apos_encontro(global.fase, k)) continue;
 
@@ -75,7 +84,7 @@ for (var k = 0; k < _qtd; k++) {
     }
 
     var _reward_ativo = global.recompensa_roguelike_aberta && _atual == k + 1;
-    var _reward_passou = _atual > k;
+    var _reward_passou = _progresso_visual > k;
 
     draw_set_color(_reward_ativo ? c_yellow : _cor_progresso);
     draw_rectangle(_cx_carta - 5, _progresso_y - 7, _cx_carta + 5, _progresso_y + 7, false);
@@ -85,6 +94,11 @@ for (var k = 0; k < _qtd; k++) {
         draw_rectangle(_cx_carta - 2, _progresso_y - 4, _cx_carta + 2, _progresso_y + 4, false);
     }
 }
+
+draw_set_color(c_white);
+draw_circle(_px_marcador, _progresso_y, 8, true);
+draw_set_color(_cor_progresso);
+draw_circle(_px_marcador, _progresso_y, 4, false);
 
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);

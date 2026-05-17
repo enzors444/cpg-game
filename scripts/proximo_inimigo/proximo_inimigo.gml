@@ -364,6 +364,8 @@ function criar_inimigos() {
 
 function iniciar_caminhada_arena(_abrir_recompensa) {
     if (!variable_global_exists("arena_scroll")) global.arena_scroll = 0;
+    if (!variable_global_exists("progresso_visual_inicio")) global.progresso_visual_inicio = global.inimigo_atual_fase;
+    if (!variable_global_exists("progresso_visual_alvo")) global.progresso_visual_alvo = global.inimigo_atual_fase;
 
     global.em_caminhada_arena = true;
     global.jogo_pausado = true;
@@ -372,6 +374,7 @@ function iniciar_caminhada_arena(_abrir_recompensa) {
     global.caminhada_arena_scroll_inicio = global.arena_scroll;
     global.caminhada_arena_scroll_alvo = global.arena_scroll + 260;
     global.caminhada_abrir_recompensa = _abrir_recompensa;
+    global.progresso_visual = global.progresso_visual_inicio;
 
     with (obj_player) {
         x = room_width / 3;
@@ -386,6 +389,7 @@ function finalizar_caminhada_arena() {
     global.em_caminhada_arena = false;
     global.jogo_pausado = false;
     global.arena_scroll = global.caminhada_arena_scroll_alvo;
+    global.progresso_visual = global.progresso_visual_alvo;
 
     with (obj_player) {
         x = room_width / 3;
@@ -458,6 +462,8 @@ function proximo_inimigo() {
     global.indices_cartas_selecionadas = [];
     global.ops_selecionadas = [];
     global.expressao_partes = [];
+    global.progresso_visual_inicio = _indice_derrotado;
+    global.progresso_visual_alvo = global.inimigo_atual_fase;
 
     iniciar_caminhada_arena(_abrir_recompensa);
 }

@@ -8,7 +8,7 @@ var _h = 34;
 
 var _arena_top = 20 + _top_space;
 var _arena_bottom = _y - _h / 2 - 12;
-var _arena_w = 380;
+var _arena_w = 600;
 
 draw_set_alpha(1);
 draw_set_color(c_white);

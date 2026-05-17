@@ -338,13 +338,14 @@ function criar_inimigos() {
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
+	var _base_y = 70 + global.ui_top_space;
     var _gap = 40;
 
     for (var i = 0; i < _qtd_inimigos; i++) {
         var _peso = power(10, i);
         var _numero = floor(global.enemy_life / _peso) mod 10;
 
-        var _enemy = instance_create_layer(_base_x - i * _gap, 100 + global.ui_top_space, "Instances", obj_enemy);
+        var _enemy = instance_create_layer(_base_x - i * _gap, _base_y , "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
         _enemy.visible = (i == 0 || global.enemy_life >= _peso);
     }

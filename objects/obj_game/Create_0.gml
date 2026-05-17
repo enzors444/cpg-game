@@ -52,6 +52,7 @@ tocar_musica_fase(global.fase, false);
 
 boss_resetar_estado();
 global.cargas_reroll_mao = cargas_reroll_maximas();
+game_over_salvar_checkpoint_fase();
 
 if (!variable_global_exists("arena_scroll") || _nova_run) {
     global.arena_scroll = 0;

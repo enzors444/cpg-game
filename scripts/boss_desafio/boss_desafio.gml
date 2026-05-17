@@ -6,29 +6,6 @@ function valor_tres_digitos(_valor) {
     return _valor >= 100 && _valor <= 999;
 }
 
-function valor_primo(_valor) {
-    if (!valor_inteiro(_valor)) return false;
-
-    _valor = floor(_valor);
-
-    if (_valor < 2) return false;
-    if (_valor == 2) return true;
-    if ((_valor mod 2) == 0) return false;
-
-    for (var i = 3; i * i <= _valor; i += 2) {
-        if ((_valor mod i) == 0) return false;
-    }
-
-    return true;
-}
-
-function valor_quadrado_perfeito(_valor) {
-    if (!valor_inteiro(_valor) || _valor < 0) return false;
-
-    var _raiz = floor(sqrt(_valor));
-    return _raiz * _raiz == _valor;
-}
-
 function boss_desafio_nome_estagio() {
     if (!boss_desafio_ativo()) return "";
 
@@ -43,9 +20,9 @@ function boss_desafio_nome_estagio() {
 
 function boss_desafio_linha() {
     switch (global.boss_estagio) {
-        case 1: return "Primo de 3 digitos maior que 27.";
+        case 1: return "Numero par maior que 30.";
         case 2: return "Impar de 3 digitos multiplo de 9.";
-        case 3: return "Quadrado perfeito de 3 digitos.";
+        case 3: return "Resultado entre 90 e 120.";
     }
 
     return "";
@@ -81,13 +58,13 @@ function boss_desafio_resultado_valido(_resultado) {
 
     switch (global.boss_estagio) {
         case 1:
-            return valor_tres_digitos(_resultado) && _resultado > 27 && valor_primo(_resultado);
+            return _resultado > 30 && (_resultado mod 2) == 0;
 
         case 2:
             return valor_tres_digitos(_resultado) && (_resultado mod 2) != 0 && (_resultado mod 9) == 0;
 
         case 3:
-            return valor_tres_digitos(_resultado) && valor_quadrado_perfeito(_resultado);
+            return _resultado >= 90 && _resultado <= 120;
     }
 
     return false;
@@ -98,21 +75,21 @@ function boss_desafio_feedback(_resultado) {
 
     _resultado = floor(_resultado);
 
-    if (!valor_tres_digitos(_resultado)) return "Precisa ter 3 digitos.";
-
     switch (global.boss_estagio) {
         case 1:
-            if (_resultado <= 27) return "Precisa ser maior que 27.";
-            if (!valor_primo(_resultado)) return "Nao e primo.";
-            break;
+            if (_resultado <= 30) return "Precisa ser maior que 30.";
+            if ((_resultado mod 2) != 0) return "Precisa ser par.";
+            return "Nao cumpre o desafio.";
 
         case 2:
+            if (!valor_tres_digitos(_resultado)) return "Precisa ter 3 digitos.";
             if ((_resultado mod 2) == 0) return "Precisa ser impar.";
             if ((_resultado mod 9) != 0) return "Nao e multiplo de 9.";
             break;
 
         case 3:
-            if (!valor_quadrado_perfeito(_resultado)) return "Nao e quadrado perfeito.";
+            if (_resultado < 90) return "Baixo demais.";
+            if (_resultado > 120) return "Alto demais.";
             break;
     }
 

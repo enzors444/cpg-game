@@ -155,7 +155,7 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Exponencial",
-                descricao: "^2 em um unico numero."
+                descricao: "Uso unico: ^2 em um numero."
             };
     }
 
@@ -242,6 +242,22 @@ function aplicar_carta_roguelike(_id) {
             global.quadrado_desbloqueado = true;
             break;
     }
+}
+
+function consumir_exponencial_se_usado() {
+    inicializar_roguelike();
+
+    if (indice_quadrado_expressao() == -1) return false;
+
+    var _idx = array_get_index(global.cartas_roguelike_escolhidas, "exponencial");
+    if (_idx == -1) {
+        global.quadrado_desbloqueado = false;
+        return false;
+    }
+
+    array_delete(global.cartas_roguelike_escolhidas, _idx, 1);
+    global.quadrado_desbloqueado = array_get_index(global.cartas_roguelike_escolhidas, "exponencial") != -1;
+    return true;
 }
 
 function fechar_recompensa_roguelike() {

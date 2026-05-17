@@ -90,7 +90,7 @@ function encontro_atual_e_boss() {
 function recompensa_apos_encontro(_fase, _indice_derrotado) {
     switch (_fase) {
         case 1: return _indice_derrotado == indice_boss_da_fase(_fase);
-        case 2: return _indice_derrotado == 1;
+        case 2: return _indice_derrotado == 1 || _indice_derrotado == indice_boss_da_fase(_fase);
         case 3: return _indice_derrotado == 2;
     }
 

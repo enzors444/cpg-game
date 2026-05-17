@@ -29,12 +29,17 @@ global.carta_escolhida = -1;
 global.jogo_pausado = false;
 global.em_caminhada_arena = false;
 global.caminhada_arena_timer = 0;
-global.caminhada_arena_duracao = 48;
+global.caminhada_arena_duracao_base = 90;
+global.caminhada_arena_duracao = global.caminhada_arena_duracao_base;
+global.caminhada_arena_scroll_passo = 180;
 global.caminhada_arena_scroll_inicio = 0;
 global.caminhada_arena_scroll_alvo = 0;
 global.caminhada_abrir_recompensa = false;
-global.progresso_visual = global.inimigo_atual_fase;
-global.progresso_visual_inicio = global.inimigo_atual_fase;
+global.caminhada_criar_inimigo_no_fim = true;
+global.caminhada_continuar_apos_recompensa = false;
+global.progresso_inicio_barra = -0.45;
+global.progresso_visual = global.progresso_inicio_barra;
+global.progresso_visual_inicio = global.progresso_inicio_barra;
 global.progresso_visual_alvo = global.inimigo_atual_fase;
 global.mao = [];
 global.cartas_selecionadas = [];
@@ -88,4 +93,4 @@ criar_botoes_operacao = function() {
 };
 
 criar_botoes_operacao();
-iniciar_caminhada_arena(false);
+iniciar_caminhada_arena(false, true);

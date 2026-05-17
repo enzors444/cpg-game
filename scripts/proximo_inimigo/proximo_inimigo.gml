@@ -68,6 +68,14 @@ function recompensa_apos_encontro(_fase, _indice_derrotado) {
     return false;
 }
 
+function progresso_recompensa_apos_encontro(_fase, _indice_derrotado) {
+    if (_indice_derrotado < indice_boss_da_fase(_fase)) {
+        return _indice_derrotado + 0.5;
+    }
+
+    return _indice_derrotado;
+}
+
 function boss_resetar_estado() {
     global.boss_ativo = false;
     global.boss_tipo = "";
@@ -363,18 +371,21 @@ function criar_inimigos() {
     }
 }
 
-function iniciar_caminhada_arena(_abrir_recompensa) {
+function iniciar_caminhada_arena(_abrir_recompensa, _criar_inimigo_no_fim) {
     if (!variable_global_exists("arena_scroll")) global.arena_scroll = 0;
+    if (!variable_global_exists("caminhada_arena_duracao_base")) global.caminhada_arena_duracao_base = 90;
+    if (!variable_global_exists("caminhada_arena_scroll_passo")) global.caminhada_arena_scroll_passo = 180;
     if (!variable_global_exists("progresso_visual_inicio")) global.progresso_visual_inicio = global.inimigo_atual_fase;
     if (!variable_global_exists("progresso_visual_alvo")) global.progresso_visual_alvo = global.inimigo_atual_fase;
 
     global.em_caminhada_arena = true;
     global.jogo_pausado = true;
     global.caminhada_arena_timer = 0;
-    global.caminhada_arena_duracao = 48;
+    global.caminhada_arena_duracao = global.caminhada_arena_duracao_base;
     global.caminhada_arena_scroll_inicio = global.arena_scroll;
-    global.caminhada_arena_scroll_alvo = global.arena_scroll + 260;
+    global.caminhada_arena_scroll_alvo = global.arena_scroll + global.caminhada_arena_scroll_passo;
     global.caminhada_abrir_recompensa = _abrir_recompensa;
+    global.caminhada_criar_inimigo_no_fim = _criar_inimigo_no_fim;
     global.progresso_visual = global.progresso_visual_inicio;
 
     with (obj_player) {
@@ -397,13 +408,16 @@ function finalizar_caminhada_arena() {
         image_index = 0;
     }
 
-    criar_inimigos();
+    if (global.caminhada_criar_inimigo_no_fim) {
+        criar_inimigos();
+    }
 
     if (global.caminhada_abrir_recompensa) {
         abrir_recompensa_roguelike();
     }
 
     global.caminhada_abrir_recompensa = false;
+    global.caminhada_criar_inimigo_no_fim = true;
 }
 
 function proximo_inimigo() {
@@ -462,6 +476,13 @@ function proximo_inimigo() {
     global.expressao_partes = [];
     global.progresso_visual_inicio = _indice_derrotado;
     global.progresso_visual_alvo = global.inimigo_atual_fase;
+    global.caminhada_continuar_apos_recompensa = false;
 
-    iniciar_caminhada_arena(_abrir_recompensa);
+    if (_abrir_recompensa) {
+        global.progresso_visual_alvo = progresso_recompensa_apos_encontro(_fase_derrotada, _indice_derrotado);
+        global.caminhada_continuar_apos_recompensa = true;
+        iniciar_caminhada_arena(true, false);
+    } else {
+        iniciar_caminhada_arena(false, true);
+    }
 }

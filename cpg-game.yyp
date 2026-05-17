@@ -63,6 +63,7 @@
     {"id":{"name":"spr_operations","path":"sprites/spr_operations/spr_operations.yy",},},
     {"id":{"name":"spr_player_idle","path":"sprites/spr_player_idle/spr_player_idle.yy",},},
     {"id":{"name":"spr_player_walking","path":"sprites/spr_player_walking/spr_player_walking.yy",},},
+    {"id":{"name":"spr_roguelike","path":"sprites/spr_roguelike/spr_roguelike.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

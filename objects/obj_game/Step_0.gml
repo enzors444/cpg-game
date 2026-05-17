@@ -32,4 +32,3 @@ if (global.precisa_atualizar_botoes) {
     global.precisa_atualizar_botoes = false;
     criar_botoes_operacao();
 }
-

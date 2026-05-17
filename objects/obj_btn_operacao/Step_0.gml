@@ -7,5 +7,6 @@ var _alvo = (hover || selecionada) ? -12 : 0;
 y_offset = lerp(y_offset, _alvo, 0.2);
 
 if (mouse_check_button_pressed(mb_left) && hover) {
+    clique_manual_operacao = true;
     event_perform(ev_mouse, ev_left_press);
 }

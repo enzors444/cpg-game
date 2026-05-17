@@ -238,9 +238,12 @@ function fechar_recompensa_roguelike() {
 
     var _ir_para_sala_pendente = global.tem_sala_pendente_apos_recompensa;
     var _sala_pendente = global.sala_pendente_apos_recompensa;
+    var _continuar_caminhada = variable_global_exists("caminhada_continuar_apos_recompensa")
+        && global.caminhada_continuar_apos_recompensa;
 
     global.tem_sala_pendente_apos_recompensa = false;
     global.sala_pendente_apos_recompensa = noone;
+    global.caminhada_continuar_apos_recompensa = false;
 
     with (obj_recompensa_roguelike) {
         instance_destroy();
@@ -248,5 +251,9 @@ function fechar_recompensa_roguelike() {
 
     if (_ir_para_sala_pendente && _sala_pendente != noone) {
         room_goto(_sala_pendente);
+    } else if (_continuar_caminhada) {
+        global.progresso_visual_inicio = global.progresso_visual;
+        global.progresso_visual_alvo = global.inimigo_atual_fase;
+        iniciar_caminhada_arena(false, true);
     }
 }

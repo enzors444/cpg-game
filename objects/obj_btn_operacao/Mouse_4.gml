@@ -1,3 +1,16 @@
+if (!clique_manual_operacao) {
+    exit;
+}
+
+clique_manual_operacao = false;
+
+var _meia_largura_clique = 24;
+var _meia_altura_clique = 24;
+
+if (!point_in_rectangle(mouse_x, mouse_y, x - _meia_largura_clique, y - _meia_altura_clique, x + _meia_largura_clique, y + _meia_altura_clique)) {
+    exit;
+}
+
 if (global.jogo_pausado) {
     exit;
 }

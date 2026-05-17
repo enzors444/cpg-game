@@ -324,6 +324,8 @@ function proximo_inimigo() {
         global.inimigo_atual_fase = 0;
         global.jogo_vencido = true;
         global.jogo_pausado = true;
+        parar_musica();
+        room_goto(Vitoria);
         exit;
     }
 

@@ -1,3 +1,75 @@
+if (variable_global_exists("renzo_game_over_ativo") && global.renzo_game_over_ativo) {
+    var _timer = global.renzo_game_over_timer;
+    var _boss_scale = global.renzo_game_over_boss_scale;
+    var _boss_x = global.renzo_game_over_boss_x;
+    var _boss_y = global.renzo_game_over_boss_y;
+    var _player_x = global.renzo_game_over_player_x;
+    var _player_y = global.renzo_game_over_player_y;
+    var _disparo_inicio = global.renzo_game_over_disparo_inicio;
+    var _impacto = global.renzo_game_over_impacto;
+    var _boss_frame = floor(_timer / 6) mod sprite_get_number(spr_mega_renzo_attack);
+
+    draw_set_alpha(0.32);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, room_width, room_height, false);
+
+    draw_set_alpha(1);
+    draw_sprite_ext(spr_mega_renzo_attack, _boss_frame, _boss_x, _boss_y, _boss_scale, _boss_scale, 0, c_white, 1);
+
+    if (_timer >= _disparo_inicio) {
+        var _t = clamp((_timer - _disparo_inicio) / max(1, _impacto - _disparo_inicio), 0, 1);
+        _t = _t * _t * (3 - 2 * _t);
+
+        var _start_x = _boss_x + 10 * _boss_scale;
+        var _start_y = _boss_y + 24 * _boss_scale;
+        var _end_x = _player_x + 18;
+        var _end_y = _player_y + 34;
+        var _proj_x = lerp(_start_x, _end_x, _t);
+        var _proj_y = lerp(_start_y, _end_y, _t);
+        var _proj_frame = floor(_timer / 4) mod sprite_get_number(spr_mega_renzo_projetil);
+        var _proj_scale = 1.8 + 0.18 * sin(_timer * 0.45);
+        var _proj_angle = point_direction(_start_x, _start_y, _end_x, _end_y);
+        var _proj_w = sprite_get_width(spr_mega_renzo_projetil) * _proj_scale;
+        var _proj_h = sprite_get_height(spr_mega_renzo_projetil) * _proj_scale;
+
+        draw_sprite_ext(
+            spr_mega_renzo_projetil,
+            _proj_frame,
+            _proj_x - _proj_w / 2,
+            _proj_y - _proj_h / 2,
+            _proj_scale,
+            _proj_scale,
+            _proj_angle,
+            c_white,
+            1
+        );
+
+        if (_timer < _impacto - 10) {
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            draw_set_color(make_color_rgb(90, 220, 255));
+            draw_text(_boss_x + 20 * _boss_scale, _boss_y - 14, "RADUKEN!");
+        }
+    }
+
+    if (_timer >= _impacto) {
+        var _flash = 1 - clamp((_timer - _impacto) / 18, 0, 1);
+
+        draw_set_alpha(0.65 * _flash);
+        draw_set_color(c_white);
+        draw_rectangle(0, 0, room_width, room_height, false);
+
+        draw_set_alpha(0.55 * _flash);
+        draw_set_color(c_red);
+        draw_rectangle(0, 0, room_width, room_height, false);
+    }
+
+    draw_set_alpha(1);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    exit;
+}
+
 if (!variable_global_exists("game_over_ativo") || !global.game_over_ativo) {
     exit;
 }

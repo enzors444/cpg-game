@@ -114,6 +114,7 @@ function game_over_gerar_equacao(_nivel) {
 function game_over_iniciar_desafio() {
     if (!variable_global_exists("game_over_nivel")) global.game_over_nivel = 0;
 
+    global.renzo_game_over_ativo = false;
     global.game_over_nivel += 1;
 
     var _equacao = game_over_gerar_equacao(global.game_over_nivel);
@@ -134,8 +135,56 @@ function game_over_iniciar_desafio() {
     }
 }
 
+function game_over_deve_cena_renzo() {
+    return variable_global_exists("fase")
+        && global.fase == 3
+        && variable_global_exists("boss_ativo")
+        && global.boss_ativo
+        && variable_global_exists("boss_tipo")
+        && global.boss_tipo == "desafio";
+}
+
+function game_over_iniciar_cena_renzo() {
+    global.renzo_game_over_ativo = true;
+    global.renzo_game_over_timer = 0;
+    global.renzo_game_over_duracao = 112;
+    global.renzo_game_over_disparo_inicio = 24;
+    global.renzo_game_over_impacto = 82;
+    global.renzo_game_over_boss_x = room_width * 0.67;
+    global.renzo_game_over_boss_y = 80 + global.ui_top_space;
+    global.renzo_game_over_boss_scale = escala_boss_da_fase(3);
+    global.renzo_game_over_player_x = room_width / 3;
+    global.renzo_game_over_player_y = 110 + global.ui_top_space;
+    global.game_over_ativo = false;
+    global.jogo_pausado = true;
+
+    for (var i = 0; i < instance_number(obj_enemy); i++) {
+        var _enemy = instance_find(obj_enemy, i);
+
+        if (variable_instance_exists(_enemy, "boss_visual")
+        && _enemy.boss_visual
+        && _enemy.boss_fase == 3) {
+            global.renzo_game_over_boss_x = _enemy.x;
+            global.renzo_game_over_boss_y = _enemy.y;
+            global.renzo_game_over_boss_scale = abs(_enemy.image_xscale);
+            break;
+        }
+    }
+
+    if (instance_exists(obj_player)) {
+        var _player = instance_find(obj_player, 0);
+        global.renzo_game_over_player_x = _player.x;
+        global.renzo_game_over_player_y = _player.y;
+    }
+
+    if (!instance_exists(obj_game_over)) {
+        instance_create_depth(0, 0, -100000, obj_game_over);
+    }
+}
+
 function game_over_acertar() {
     global.game_over_ativo = false;
+    global.renzo_game_over_ativo = false;
     global.jogo_pausado = false;
     global.tentativas = max(1, ceil(global.ui_tentativas * 0.5));
     tocar_musica_fase(global.fase, global.boss_ativo);
@@ -145,6 +194,7 @@ function game_over_falhar() {
     var _fase = global.game_over_fase;
 
     global.game_over_ativo = false;
+    global.renzo_game_over_ativo = false;
     global.jogo_pausado = false;
     global.jogo_vencido = false;
     global.em_caminhada_arena = false;
@@ -160,16 +210,17 @@ function game_over_falhar() {
     global.arena_scroll = 0;
 
     var _sala = sala_da_fase(global.fase);
-
-    if (room == _sala) {
-        room_restart();
-    } else {
-        room_goto(_sala);
-    }
+    global.game_over_reiniciar_sala = _sala;
+    room_goto(GameOver);
 }
 
 function game_over() {
     if (variable_global_exists("game_over_ativo") && global.game_over_ativo) return;
+    if (variable_global_exists("renzo_game_over_ativo") && global.renzo_game_over_ativo) return;
 
-    game_over_iniciar_desafio();
+    if (game_over_deve_cena_renzo()) {
+        game_over_iniciar_cena_renzo();
+    } else {
+        game_over_iniciar_desafio();
+    }
 }

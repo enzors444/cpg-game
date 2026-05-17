@@ -38,6 +38,45 @@ function boss_modificador_ativo() {
         && global.boss_tipo == "modificador";
 }
 
+function boss_fala_atual() {
+    if (!variable_global_exists("boss_ativo") || !global.boss_ativo) return "";
+
+    var _fala = global.boss_mensagem;
+    var _nome = "Boss";
+
+    if (_fala == "") {
+        _fala = "...";
+    }
+
+    if (variable_global_exists("boss_nome") && global.boss_nome != "") {
+        _nome = global.boss_nome;
+    }
+
+    switch (global.boss_tipo) {
+        case "exato":
+            var _alvo = global.boss_alvo_oculto ? "??" : string(global.boss_alvo);
+
+            if (global.boss_estagio == 3) {
+                return _nome + "#" + global.boss_funcao_texto + " -> " + _alvo + ".";
+            }
+
+            return _nome + "#Exato: " + _alvo + ".";
+
+        case "modificador":
+            switch (global.boss_estagio) {
+                case 1: return _nome + "#" + _fala + " Resultado -50.";
+                case 2: return _nome + "#" + _fala + " Resultado /2.";
+                case 3: return _nome + "#" + _fala + " Resultado vira raiz.";
+            }
+            break;
+
+        case "desafio":
+            return _nome + "#" + _fala + " " + global.boss_desafio_texto;
+    }
+
+    return _nome + "#" + _fala;
+}
+
 function configurar_boss_atual() {
     boss_resetar_estado();
 

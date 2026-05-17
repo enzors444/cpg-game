@@ -67,7 +67,7 @@ var _caixa_x2 = min(room_width - _caixa_margem_tela, _arena_x2);
 var _ok_w = 64;
 var _ok_h = 28;
 var _ok_x1 = _caixa_x2 - 84;
-var _ok_y1 = _caixa_y2 - 58;
+var _ok_y1 = _caixa_y2 - 40;
 var _ok_x2 = _ok_x1 + _ok_w;
 var _ok_y2 = _ok_y1 + _ok_h;
 var _texto_x = _caixa_x1 + 18;
@@ -88,6 +88,7 @@ draw_set_color(c_white);
 var _dialogo_indice = min(dialogo_atual, array_length(dialogos) - 1);
 var _texto_completo = dialogos[_dialogo_indice];
 var _texto_mostrado = string_copy(_texto_completo, 1, min(string_length(_texto_completo), texto_revelado));
+_texto_mostrado = string_replace_all(_texto_mostrado, "#", chr(10));
 draw_text_ext(_texto_x, _texto_y_interno, _texto_mostrado, 15, _texto_largura);
 
 var _hover_ok = point_in_rectangle(mouse_x, mouse_y, _ok_x1, _ok_y1, _ok_x2, _ok_y2);

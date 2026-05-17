@@ -1,10 +1,8 @@
 dialogos = [
-    "Antes da luta, preste atencao: voce vence criando resultados com as cartas.",
-    "Escolha numeros, coloque operacoes entre eles e aperte = para atacar.",
-    "Acertos exatos sao melhores: eles podem render mais tentativas e rerolls.",
-    "Algumas cartas especiais mudam as regras. Use o inventario quando ganhar uma.",
-    "Os bosses nao sao so vida alta. Leia o desafio no visor antes de atacar.",
-    "Quando estiver pronto, entre na Fase 1."
+    "Mosca:#Atencao, Piter! As provas finais do Inatel invadiram seus sonhos. Para acordar vitorioso e provar seu valor, voce precisa derrotar esses numeros antes que suas tentativas acabem.",
+    "Mosca:#Use suas cartas para montar expressoes logicas: [Numero] + [Operador] + [Numero]. Se o seu resultado superar o valor do inimigo, voce avanca para o proximo combate ate chegar no Chefe Final da materia!",
+    "Mosca:#Mas a verdadeira genialidade esta na precisao! Se a sua conta der o valor EXATO do inimigo, voce ganha tentativas extras para a proxima batalha e um Reroll bonus na manga.",
+    "Mosca:#De tempos em tempos, voce conquistara Evolucoes Matematicas poderosas. Elas ficarao guardadas na sua carteira, ali no canto inferior esquerdo da sua visao. Use-as com sabedoria. Agora va, destrua essas provas!"
 ];
 
 dialogo_atual = 0;

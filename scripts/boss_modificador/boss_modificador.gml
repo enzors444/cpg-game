@@ -1,15 +1,3 @@
-function boss_modificador_nome_estagio() {
-    if (!boss_modificador_ativo()) return "";
-
-    switch (global.boss_estagio) {
-        case 1: return "Subtracao Vermelha";
-        case 2: return "Divisao Forcada";
-        case 3: return "Raiz Final";
-    }
-
-    return "";
-}
-
 function boss_modificador_texto_display() {
     if (!boss_modificador_ativo()) return "";
 
@@ -50,17 +38,17 @@ function boss_modificador_preparar_estagio(_estagio) {
     switch (global.boss_estagio) {
         case 1:
             global.boss_regra_texto = "Seu resultado perde 50 antes do dano.";
-            global.boss_mensagem = "O visor vermelho corta seu ataque.";
+            global.boss_mensagem = "Eu corto 50 do seu ataque antes de sentir qualquer coisa.";
             break;
 
         case 2:
             global.boss_regra_texto = "Seu resultado e dividido por 2.";
-            global.boss_mensagem = "Metade do ataque chega nele.";
+            global.boss_mensagem = "Agora eu parto seu resultado no meio.";
             break;
 
         case 3:
             global.boss_regra_texto = "Seu resultado vira raiz antes do dano.";
-            global.boss_mensagem = "So sobra a raiz do ataque.";
+            global.boss_mensagem = "No fim, so a raiz chega ate mim.";
             break;
     }
 }
@@ -68,7 +56,7 @@ function boss_modificador_preparar_estagio(_estagio) {
 function boss_modificador_configurar() {
     global.boss_ativo = true;
     global.boss_tipo = "modificador";
-    global.boss_nome = "O Operador Vermelho";
+    global.boss_nome = "Mago Janos";
     global.boss_vida_por_estagio = 80;
     global.boss_vida_maxima = global.boss_vida_por_estagio;
 
@@ -92,7 +80,7 @@ function boss_modificador_tentar_resultado(_resultado) {
 
     if (_dano_aplicado <= 0) {
         global.boss_turno += 1;
-        global.boss_mensagem = "Resultado final: " + string(floor(_resultado_final)) + ". Sem dano.";
+        global.boss_mensagem = "Isso virou " + string(floor(_resultado_final)) + ". Nem arranhou.";
         return false;
     }
 
@@ -100,16 +88,16 @@ function boss_modificador_tentar_resultado(_resultado) {
         var _estagio_vencido = global.boss_estagio;
 
         if (_estagio_vencido >= 3) {
-            global.boss_mensagem = "O operador foi quebrado.";
+            global.boss_mensagem = "Minha ultima conta caiu.";
         } else {
             boss_modificador_preparar_estagio(_estagio_vencido + 1);
-            global.boss_mensagem = "Estagio " + string(_estagio_vencido) + " vencido.";
+            global.boss_mensagem = "Esse truque quebrou. Vamos ao proximo.";
         }
 
         return true;
     }
 
     global.boss_turno += 1;
-    global.boss_mensagem = "Resultado final: " + string(_dano_base) + ".";
+    global.boss_mensagem = "So " + string(_dano_base) + " passou pelo meu ritual.";
     return false;
 }

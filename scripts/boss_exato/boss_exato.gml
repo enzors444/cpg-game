@@ -1,15 +1,3 @@
-function boss_exato_nome_estagio() {
-    if (!boss_exato_ativo()) return "";
-
-    switch (global.boss_estagio) {
-        case 1: return "Fechadura Aberta";
-        case 2: return "Alvo Instavel";
-        case 3: return "Funcao Instavel";
-    }
-
-    return "";
-}
-
 function boss_exato_alvo_da_mao(_min, _max) {
     var _hand = instance_find(obj_hand, 0);
 
@@ -142,7 +130,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_oculto = false;
             global.boss_funcao_texto = "";
             global.boss_regra_texto = "Acerte exatamente o alvo.";
-            global.boss_mensagem = "Erro nao causa dano.";
+            global.boss_mensagem = "Quero resultado perfeito.";
             break;
 
         case 2:
@@ -150,7 +138,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_oculto = false;
             global.boss_funcao_texto = "";
             global.boss_regra_texto = "Se errar, o alvo troca.";
-            global.boss_mensagem = "A fechadura nao espera.";
+            global.boss_mensagem = "Errou, alvo troca.";
             break;
 
         case 3:
@@ -160,7 +148,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_min = 0;
             global.boss_alvo_max = 0;
             global.boss_regra_texto = "Faca x para f(x) acertar o alvo.";
-            global.boss_mensagem = "Se errar, alvo e funcao trocam.";
+            global.boss_mensagem = "Agora passa pela minha funcao.";
             break;
     }
 }
@@ -168,7 +156,7 @@ function boss_exato_preparar_estagio(_estagio) {
 function boss_exato_configurar() {
     global.boss_ativo = true;
     global.boss_tipo = "exato";
-    global.boss_nome = "O Cofre Exato";
+    global.boss_nome = "Darth Ygonuti";
     global.boss_vida_maxima = 30;
     global.enemy_life = global.boss_vida_maxima;
 
@@ -188,13 +176,13 @@ function boss_exato_registrar_erro(_resultado) {
     global.boss_ultima_saida = _saida;
 
     if (_saida < global.boss_alvo) {
-        global.boss_mensagem = "Baixo demais: " + string(_saida);
+        global.boss_mensagem = "Baixo demais: " + string(_saida) + ".";
         if (global.boss_estagio == 3) {
             boss_exato_sortear_funcao_linear();
             global.boss_alvo = boss_exato_sortear_alvo_estagio();
         }
     } else {
-        global.boss_mensagem = "Alto demais: " + string(_saida);
+        global.boss_mensagem = "Alto demais: " + string(_saida) + ".";
         if (global.boss_estagio == 3) {
             boss_exato_sortear_funcao_linear();
             global.boss_alvo = boss_exato_sortear_alvo_estagio();
@@ -208,9 +196,9 @@ function boss_exato_registrar_erro(_resultado) {
             if (global.boss_alvo != _alvo_antigo) break;
         }
 
-        global.boss_mensagem += " | Novo alvo.";
+        global.boss_mensagem += " Novo alvo.";
     } else if (global.boss_estagio == 3) {
-        global.boss_mensagem += " | Nova funcao e alvo.";
+        global.boss_mensagem += " Nova funcao.";
     }
 }
 
@@ -223,9 +211,9 @@ function boss_exato_tentar_resultado(_resultado) {
 
         if (global.enemy_life > 0) {
             global.boss_estagio = _estagio_quebrado + 1;
-            global.boss_mensagem = "Exato. Fechadura " + string(_estagio_quebrado) + " quebrou.";
+            global.boss_mensagem = "Acerto exato. Ainda tem mais.";
         } else {
-            global.boss_mensagem = "Exato. Cofre aberto.";
+            global.boss_mensagem = "Acerto exato. Voce venceu.";
         }
 
         return true;

@@ -39,6 +39,7 @@
     {"id":{"name":"obj_menu","path":"objects/obj_menu/obj_menu.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_recompensa_roguelike","path":"objects/obj_recompensa_roguelike/obj_recompensa_roguelike.yy",},},
+    {"id":{"name":"obj_tela_final","path":"objects/obj_tela_final/obj_tela_final.yy",},},
     {"id":{"name":"obj_transicao_fase","path":"objects/obj_transicao_fase/obj_transicao_fase.yy",},},
     {"id":{"name":"obj_tutorial","path":"objects/obj_tutorial/obj_tutorial.yy",},},
     {"id":{"name":"obj_ui","path":"objects/obj_ui/obj_ui.yy",},},

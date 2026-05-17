@@ -1,3 +1,16 @@
+if (variable_global_exists("renzo_game_over_ativo") && global.renzo_game_over_ativo) {
+    global.renzo_game_over_timer += 1;
+
+    if (global.renzo_game_over_timer >= global.renzo_game_over_duracao) {
+        global.renzo_game_over_ativo = false;
+        resposta = "";
+        keyboard_string = "";
+        game_over_iniciar_desafio();
+    }
+
+    exit;
+}
+
 if (!variable_global_exists("game_over_ativo") || !global.game_over_ativo) {
     instance_destroy();
     exit;

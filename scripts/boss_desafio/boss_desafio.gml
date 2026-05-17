@@ -6,18 +6,6 @@ function valor_tres_digitos(_valor) {
     return _valor >= 100 && _valor <= 999;
 }
 
-function boss_desafio_nome_estagio() {
-    if (!boss_desafio_ativo()) return "";
-
-    switch (global.boss_estagio) {
-        case 1: return "Crivo Final";
-        case 2: return "Soma Impar";
-        case 3: return "Raiz Fechada";
-    }
-
-    return "";
-}
-
 function boss_desafio_linha() {
     switch (global.boss_estagio) {
         case 1: return "Numero par maior que 30.";
@@ -35,13 +23,26 @@ function boss_desafio_preparar_estagio(_estagio) {
     global.boss_ultima_saida = "";
     global.boss_desafio_texto = boss_desafio_linha();
     global.boss_regra_texto = "Resultado inteiro. Erro nao causa dano.";
-    global.boss_mensagem = "Erro nao causa dano.";
+
+    switch (global.boss_estagio) {
+        case 1:
+            global.boss_mensagem = "Primeira prova: quero um numero par que passe de 30.";
+            break;
+
+        case 2:
+            global.boss_mensagem = "Agora me entregue um impar de tres digitos que caia no 9.";
+            break;
+
+        case 3:
+            global.boss_mensagem = "Ultima prova: mantenha o resultado entre 90 e 120.";
+            break;
+    }
 }
 
 function boss_desafio_configurar() {
     global.boss_ativo = true;
     global.boss_tipo = "desafio";
-    global.boss_nome = "O Examinador Final";
+    global.boss_nome = "Mega Renzo";
     global.boss_vida_maxima = 3;
     global.enemy_life = global.boss_vida_maxima;
 
@@ -71,29 +72,29 @@ function boss_desafio_resultado_valido(_resultado) {
 }
 
 function boss_desafio_feedback(_resultado) {
-    if (!valor_inteiro(_resultado)) return "Precisa ser inteiro.";
+    if (!valor_inteiro(_resultado)) return "Inteiro, por favor. Nao aceito numero quebrado.";
 
     _resultado = floor(_resultado);
 
     switch (global.boss_estagio) {
         case 1:
-            if (_resultado <= 30) return "Precisa ser maior que 30.";
-            if ((_resultado mod 2) != 0) return "Precisa ser par.";
-            return "Nao cumpre o desafio.";
+            if (_resultado <= 30) return "Maior que 30. Isso ainda e pequeno.";
+            if ((_resultado mod 2) != 0) return "Par. Eu pedi par.";
+            return "Ainda nao e a resposta da prova.";
 
         case 2:
-            if (!valor_tres_digitos(_resultado)) return "Precisa ter 3 digitos.";
-            if ((_resultado mod 2) == 0) return "Precisa ser impar.";
-            if ((_resultado mod 9) != 0) return "Nao e multiplo de 9.";
+            if (!valor_tres_digitos(_resultado)) return "Tres digitos. Quero sentir peso nesse numero.";
+            if ((_resultado mod 2) == 0) return "Impar. Esse ficou certinho demais.";
+            if ((_resultado mod 9) != 0) return "Tem que cair na tabuada do 9.";
             break;
 
         case 3:
-            if (_resultado < 90) return "Baixo demais.";
-            if (_resultado > 120) return "Alto demais.";
+            if (_resultado < 90) return "Baixo demais. Suba esse resultado.";
+            if (_resultado > 120) return "Alto demais. Controle essa forca.";
             break;
     }
 
-    return "Nao cumpre o desafio.";
+    return "Ainda nao cumpre minha prova.";
 }
 
 function boss_desafio_tentar_resultado(_resultado) {
@@ -105,9 +106,9 @@ function boss_desafio_tentar_resultado(_resultado) {
 
         if (global.enemy_life > 0) {
             boss_desafio_preparar_estagio(_estagio_vencido + 1);
-            global.boss_mensagem = "Desafio " + string(_estagio_vencido) + " concluido.";
+            global.boss_mensagem = "Voce passou essa. A proxima vem mais pesada.";
         } else {
-            global.boss_mensagem = "Todos os desafios foram concluidos.";
+            global.boss_mensagem = "Voce venceu todas as minhas provas.";
         }
 
         return true;

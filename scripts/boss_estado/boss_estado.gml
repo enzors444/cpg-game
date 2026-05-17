@@ -66,7 +66,7 @@ function boss_fala_atual() {
             switch (global.boss_estagio) {
                 case 1: return _nome + "#" + _fala + " Dano = resultado -50.";
                 case 2: return _nome + "#" + _fala + " Dano = resultado /2.";
-                case 3: return _nome + "#" + _fala + " Dano = raiz.";
+                case 3: return _nome + "#" + _fala + " Dano = raiz x2.";
             }
             break;
 

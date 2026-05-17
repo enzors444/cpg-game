@@ -46,7 +46,7 @@ function boss_desafio_configurar() {
     global.boss_vida_maxima = 3;
     global.enemy_life = global.boss_vida_maxima;
 
-    global.tentativas = max(global.tentativas, 8);
+    global.tentativas = max(global.tentativas, 9);
     global.ui_tentativas = global.tentativas;
 
     boss_desafio_preparar_estagio(1);

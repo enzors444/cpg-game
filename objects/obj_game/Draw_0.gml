@@ -110,20 +110,24 @@ if (_mostra_fala_boss) {
     }
     } else if (boss_modificador_ativo() && global.boss_estagio == 3 && array_length(global.expressao_partes) > 0) {
     var _bonus_texto_raiz = " + " + string(_bonus_sem_volta);
+    var _mult_texto_raiz = "2* ";
     var _texto_raiz = "(" + _texto + ")";
+    var _mult_w_raiz = string_width(_mult_texto_raiz);
     var _texto_w_raiz = string_width(_texto_raiz);
     var _root_w = 24;
     var _bonus_w_raiz = (_bonus_sem_volta > 0) ? string_width(_bonus_texto_raiz) : 0;
-    var _total_w_raiz = _root_w + _texto_w_raiz + _bonus_w_raiz;
+    var _total_w_raiz = _mult_w_raiz + _root_w + _texto_w_raiz + _bonus_w_raiz;
     var _texto_x_raiz = _x - _total_w_raiz / 2;
-    var _root_x = _texto_x_raiz;
+    var _root_x = _texto_x_raiz + _mult_w_raiz;
     var _root_y = _y;
-    var _expr_x = _texto_x_raiz + _root_w;
+    var _expr_x = _root_x + _root_w;
     var _bar_y = _root_y - 13;
     var _bar_x1 = _expr_x - 2;
     var _bar_x2 = _expr_x + _texto_w_raiz + 4;
 
+    draw_set_halign(fa_left);
     draw_set_color(make_color_rgb(255, 70, 70));
+    draw_text(_texto_x_raiz, _y, _mult_texto_raiz);
     draw_line_width(_root_x + 2, _root_y + 4, _root_x + 8, _root_y + 12, 3);
     draw_line_width(_root_x + 8, _root_y + 12, _root_x + 15, _bar_y, 3);
     draw_line_width(_root_x + 15, _bar_y, _bar_x1, _bar_y, 3);

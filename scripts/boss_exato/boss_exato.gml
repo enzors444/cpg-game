@@ -160,7 +160,7 @@ function boss_exato_configurar() {
     global.boss_vida_maxima = 30;
     global.enemy_life = global.boss_vida_maxima;
 
-    global.tentativas = max(global.tentativas, 6);
+    global.tentativas = max(global.tentativas, 7);
     global.ui_tentativas = global.tentativas;
 
     boss_exato_preparar_estagio(1);

@@ -1,7 +1,7 @@
 function tentativas_base_fase() {
-    if (global.fase <= 1) return 4;
-    if (global.fase == 2) return 4;
-    return 5;
+    if (global.fase <= 1) return 5;
+    if (global.fase == 2) return 6;
+    return 7;
 }
 
 function sala_da_fase(_fase) {
@@ -145,7 +145,7 @@ function recompensa_apos_encontro(_fase, _indice_derrotado) {
     switch (_fase) {
         case 1: return _indice_derrotado == indice_boss_da_fase(_fase);
         case 2: return _indice_derrotado == 1 || _indice_derrotado == indice_boss_da_fase(_fase);
-        case 3: return _indice_derrotado == 2;
+        case 3: return _indice_derrotado == 2 || _indice_derrotado == 4;
     }
 
     return false;
@@ -165,16 +165,16 @@ function sortear_vida_inimigo() {
     switch (global.fase) {
         case 1:
             if (_boss) return 30;
-            if (_indice <= 0) return irandom_range(10, 18);
-            return irandom_range(16, 28);
+            if (_indice <= 0) return irandom_range(9, 15);
+            return irandom_range(14, 24);
 
         case 2:
-            if (_boss) return irandom_range(430, 650);
-            return irandom_range(100 + _indice * 90, 180 + _indice * 100);
+            if (_boss) return irandom_range(360, 520);
+            return irandom_range(85 + _indice * 75, 150 + _indice * 85);
 
         case 3:
-            if (_boss) return irandom_range(3600, 5200);
-            return irandom_range(1000 + _indice * 650, 1600 + _indice * 750);
+            if (_boss) return irandom_range(3000, 4200);
+            return irandom_range(850 + _indice * 520, 1350 + _indice * 620);
     }
 
     return irandom_range(10, 25);

@@ -14,7 +14,7 @@ function boss_modificador_resultado(_resultado) {
     switch (global.boss_estagio) {
         case 1: return _resultado - 50;
         case 2: return _resultado / 2;
-        case 3: return sqrt(max(0, _resultado));
+        case 3: return sqrt(max(0, _resultado)) * 2;
     }
 
     return _resultado;
@@ -24,8 +24,14 @@ function boss_modificador_dano(_resultado) {
     return max(0, floor(boss_modificador_resultado(_resultado)));
 }
 
-function boss_modificador_vida_minima_estagio(_estagio) {
-    return 0;
+function boss_modificador_vida_estagio(_estagio) {
+    switch (_estagio) {
+        case 1: return 65;
+        case 2: return 70;
+        case 3: return 42;
+    }
+
+    return 65;
 }
 
 function boss_modificador_preparar_estagio(_estagio) {
@@ -33,6 +39,8 @@ function boss_modificador_preparar_estagio(_estagio) {
     global.boss_turno = 1;
     global.boss_ultimo_resultado = "";
     global.boss_ultima_saida = "";
+    global.boss_vida_por_estagio = boss_modificador_vida_estagio(global.boss_estagio);
+    global.boss_vida_maxima = global.boss_vida_por_estagio;
     global.enemy_life = global.boss_vida_por_estagio;
 
     switch (global.boss_estagio) {
@@ -47,8 +55,8 @@ function boss_modificador_preparar_estagio(_estagio) {
             break;
 
         case 3:
-            global.boss_regra_texto = "Seu resultado vira raiz antes do dano.";
-            global.boss_mensagem = "Agora so a raiz passa.";
+            global.boss_regra_texto = "Raiz do resultado x2 vira dano.";
+            global.boss_mensagem = "Raiz x2. Agora da para quebrar.";
             break;
     }
 }
@@ -57,10 +65,10 @@ function boss_modificador_configurar() {
     global.boss_ativo = true;
     global.boss_tipo = "modificador";
     global.boss_nome = "Mago Janos";
-    global.boss_vida_por_estagio = 80;
+    global.boss_vida_por_estagio = boss_modificador_vida_estagio(1);
     global.boss_vida_maxima = global.boss_vida_por_estagio;
 
-    global.tentativas = max(global.tentativas, 6);
+    global.tentativas = max(global.tentativas, 8);
     global.ui_tentativas = global.tentativas;
 
     boss_modificador_preparar_estagio(1);

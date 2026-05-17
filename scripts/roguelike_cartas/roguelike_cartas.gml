@@ -40,7 +40,7 @@ function resetar_roguelike() {
 
 function cargas_reroll_maximas() {
     inicializar_roguelike();
-    return 2 + global.bonus_cargas_reroll_mao;
+    return 3 + global.bonus_cargas_reroll_mao;
 }
 
 function resetar_roguelike_por_rodada() {

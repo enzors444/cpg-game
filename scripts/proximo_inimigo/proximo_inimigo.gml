@@ -26,6 +26,17 @@ function sala_da_fase(_fase) {
     return Room1;
 }
 
+function sprite_arena_da_fase(_fase) {
+    var _nome_sprite = "spr_arena_room" + string(_fase);
+    var _sprite = asset_get_index(_nome_sprite);
+
+    if (_sprite != -1) {
+        return _sprite;
+    }
+
+    return spr_background;
+}
+
 function encontros_combate_da_fase(_fase) {
     switch (_fase) {
         case 1: return 4;
@@ -351,6 +362,48 @@ function criar_inimigos() {
     }
 }
 
+function iniciar_caminhada_arena(_abrir_recompensa) {
+    if (!variable_global_exists("arena_scroll")) global.arena_scroll = 0;
+
+    global.em_caminhada_arena = true;
+    global.jogo_pausado = true;
+    global.caminhada_arena_timer = 0;
+    global.caminhada_arena_duracao = 48;
+    global.caminhada_arena_scroll_inicio = global.arena_scroll;
+    global.caminhada_arena_scroll_alvo = global.arena_scroll + 260;
+    global.caminhada_abrir_recompensa = _abrir_recompensa;
+
+    with (obj_player) {
+        x = room_width / 3;
+        y = 100 + global.ui_top_space;
+        sprite_index = spr_player_walking;
+        image_index = 0;
+        image_speed = 0.2;
+    }
+}
+
+function finalizar_caminhada_arena() {
+    global.em_caminhada_arena = false;
+    global.jogo_pausado = false;
+    global.arena_scroll = global.caminhada_arena_scroll_alvo;
+
+    with (obj_player) {
+        x = room_width / 3;
+        y = 100 + global.ui_top_space;
+        sprite_index = spr_player_idle;
+        image_index = 0;
+        image_speed = 0.15;
+    }
+
+    criar_inimigos();
+
+    if (global.caminhada_abrir_recompensa) {
+        abrir_recompensa_roguelike();
+    }
+
+    global.caminhada_abrir_recompensa = false;
+}
+
 function proximo_inimigo() {
     with (obj_enemy) {
         instance_destroy();
@@ -406,9 +459,5 @@ function proximo_inimigo() {
     global.ops_selecionadas = [];
     global.expressao_partes = [];
 
-    criar_inimigos();
-
-    if (_abrir_recompensa) {
-        abrir_recompensa_roguelike();
-    }
+    iniciar_caminhada_arena(_abrir_recompensa);
 }

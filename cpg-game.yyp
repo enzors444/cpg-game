@@ -24,6 +24,7 @@
   },
   "name":"cpg-game",
   "resources":[
+    {"id":{"name":"obj_arena_background","path":"objects/obj_arena_background/obj_arena_background.yy",},},
     {"id":{"name":"obj_btn_operacao","path":"objects/obj_btn_operacao/obj_btn_operacao.yy",},},
     {"id":{"name":"obj_card_selection","path":"objects/obj_card_selection/obj_card_selection.yy",},},
     {"id":{"name":"obj_carta","path":"objects/obj_carta/obj_carta.yy",},},
@@ -45,7 +46,9 @@
     {"id":{"name":"recomprar_cartas","path":"scripts/recomprar_cartas/recomprar_cartas.yy",},},
     {"id":{"name":"rerrolar_mao","path":"scripts/rerrolar_mao/rerrolar_mao.yy",},},
     {"id":{"name":"roguelike_cartas","path":"scripts/roguelike_cartas/roguelike_cartas.yy",},},
-    {"id":{"name":"spr_background","path":"sprites/spr_background/spr_background.yy",},},
+    {"id":{"name":"spr_arena_room1","path":"sprites/spr_arena_room1/spr_arena_room1.yy",},},
+    {"id":{"name":"spr_arena_room2","path":"sprites/spr_arena_room2/spr_arena_room2.yy",},},
+    {"id":{"name":"spr_arena_room3","path":"sprites/spr_arena_room3/spr_arena_room3.yy",},},
     {"id":{"name":"spr_carta","path":"sprites/spr_carta/spr_carta.yy",},},
     {"id":{"name":"spr_enemy_0","path":"sprites/spr_enemy_0/spr_enemy_0.yy",},},
     {"id":{"name":"spr_enemy_1","path":"sprites/spr_enemy_1/spr_enemy_1.yy",},},

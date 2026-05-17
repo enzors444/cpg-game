@@ -95,8 +95,9 @@ var _inv_w = 48;
 var _inv_h = 48;
 var _inv_x = 8;
 var _inv_y = room_height - 30 - _inv_h / 2;
+var _inv_draw_y = _inv_y + inventario_y_offset;
 var _inv_cx = _inv_x + _inv_w / 2;
-var _inv_cy = _inv_y + _inv_h / 2;
+var _inv_cy = _inv_draw_y + _inv_h / 2;
 var _inv_qtd = array_length(global.cartas_roguelike_escolhidas);
 var _inv_frame = max(0, sprite_get_number(spr_operations) - 1);
 var _card_w = 48;
@@ -106,7 +107,7 @@ var _card_gap = 8;
 if (inventario_aberto) {
     for (var i = 0; i < _inv_qtd; i++) {
         var _card_x1 = _inv_cx - _card_w / 2;
-        var _card_y2 = _inv_y - _card_gap - i * (_card_h + _card_gap);
+        var _card_y2 = _inv_draw_y - _card_gap - i * (_card_h + _card_gap);
         var _card_y1 = _card_y2 - _card_h;
         var _card_x2 = _inv_cx + _card_w / 2;
 
@@ -124,8 +125,8 @@ if (inventario_aberto) {
 }
 
 draw_set_alpha(0.95);
-draw_set_color(make_color_rgb(10, 5, 4));
-draw_rectangle(_inv_x, _inv_y, _inv_x + _inv_w, _inv_y + _inv_h, false);
+draw_set_color(inventario_hover ? make_color_rgb(24, 15, 14) : make_color_rgb(10, 5, 4));
+draw_rectangle(_inv_x, _inv_draw_y, _inv_x + _inv_w, _inv_draw_y + _inv_h, false);
 
 draw_set_alpha(1);
 draw_sprite_ext(spr_operations, _inv_frame, _inv_cx - 24, _inv_cy - 24, 0.75, 0.75, 0, c_white, 1);

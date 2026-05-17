@@ -27,6 +27,12 @@ global.cargas_reroll_mao = 2;
 global.fase_reroll_mao = global.fase;
 global.carta_escolhida = -1;
 global.jogo_pausado = false;
+global.em_caminhada_arena = false;
+global.caminhada_arena_timer = 0;
+global.caminhada_arena_duracao = 48;
+global.caminhada_arena_scroll_inicio = 0;
+global.caminhada_arena_scroll_alvo = 0;
+global.caminhada_abrir_recompensa = false;
 global.mao = [];
 global.cartas_selecionadas = [];
 global.indices_cartas_selecionadas = [];
@@ -35,8 +41,11 @@ global.expressao_partes = [];
 
 global.cargas_reroll_mao = cargas_reroll_maximas();
 
-criar_inimigos();
+if (!variable_global_exists("arena_scroll") || _nova_run) {
+    global.arena_scroll = 0;
+}
 
+instance_create_layer(0, 0, "Instances", obj_arena_background);
 instance_create_layer(room_width / 3, 100 + global.ui_top_space, "Instances", obj_player);
 instance_create_layer(0, 0, "Instances", obj_hand);
 instance_create_layer(0, 0, "Instances", obj_ui);
@@ -76,3 +85,4 @@ criar_botoes_operacao = function() {
 };
 
 criar_botoes_operacao();
+iniciar_caminhada_arena(false);

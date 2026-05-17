@@ -167,6 +167,8 @@ function pode_adicionar_quadrado_expressao() {
     inicializar_roguelike();
 
     if (!global.quadrado_desbloqueado) return false;
+    if (global.exponencial_usado_batalha) return false;
+    if (array_get_index(global.cartas_roguelike_escolhidas, "exponencial") == -1) return false;
     if (indice_quadrado_expressao() != -1) return false;
 
     var _qtd_partes = array_length(global.expressao_partes);
@@ -197,6 +199,8 @@ function alternar_quadrado_expressao() {
 }
 
 function expressao_valida() {
+    inicializar_roguelike();
+
     if (!variable_global_exists("expressao_partes")) global.expressao_partes = [];
 
     var _qtd_partes = array_length(global.expressao_partes);
@@ -244,6 +248,9 @@ function expressao_valida() {
             }
         } else if (_parte.tipo == "quadrado") {
             if (_espera_valor || _tipo_anterior != "carta" || _tem_quadrado) return false;
+            if (!global.quadrado_desbloqueado) return false;
+            if (global.exponencial_usado_batalha) return false;
+            if (array_get_index(global.cartas_roguelike_escolhidas, "exponencial") == -1) return false;
 
             if (i >= 2 && global.expressao_partes[i - 2].tipo == "carta") return false;
 

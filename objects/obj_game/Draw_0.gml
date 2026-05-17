@@ -38,7 +38,57 @@ if (boss_modificador_ativo() && array_length(global.expressao_partes) > 0) {
     _bonus_sem_volta = bonus_sem_volta_preview();
 }
 
-if (_efeito_boss_texto != "" || _bonus_sem_volta > 0) {
+if (boss_modificador_ativo() && global.boss_estagio == 2 && array_length(global.expressao_partes) > 0) {
+    var _bonus_texto_div = " + " + string(_bonus_sem_volta);
+    var _texto_parenteses = "(" + _texto + ")";
+    var _div_texto = " / 2";
+    var _texto_w_div = string_width(_texto_parenteses);
+    var _div_w = string_width(_div_texto);
+    var _bonus_w_div = (_bonus_sem_volta > 0) ? string_width(_bonus_texto_div) : 0;
+    var _total_w_div = _texto_w_div + _div_w + _bonus_w_div;
+    var _texto_x_div = _x - _total_w_div / 2;
+
+    draw_set_halign(fa_left);
+    draw_set_color(c_white);
+    draw_text(_texto_x_div, _y, _texto_parenteses);
+
+    draw_set_color(make_color_rgb(255, 70, 70));
+    draw_text(_texto_x_div + _texto_w_div, _y, _div_texto);
+
+    if (_bonus_sem_volta > 0) {
+        draw_set_color(make_color_rgb(80, 255, 120));
+        draw_text(_texto_x_div + _texto_w_div + _div_w, _y, _bonus_texto_div);
+    }
+} else if (boss_modificador_ativo() && global.boss_estagio == 3 && array_length(global.expressao_partes) > 0) {
+    var _bonus_texto_raiz = " + " + string(_bonus_sem_volta);
+    var _texto_raiz = "(" + _texto + ")";
+    var _texto_w_raiz = string_width(_texto_raiz);
+    var _root_w = 24;
+    var _bonus_w_raiz = (_bonus_sem_volta > 0) ? string_width(_bonus_texto_raiz) : 0;
+    var _total_w_raiz = _root_w + _texto_w_raiz + _bonus_w_raiz;
+    var _texto_x_raiz = _x - _total_w_raiz / 2;
+    var _root_x = _texto_x_raiz;
+    var _root_y = _y;
+    var _expr_x = _texto_x_raiz + _root_w;
+    var _bar_y = _root_y - 13;
+    var _bar_x1 = _expr_x - 2;
+    var _bar_x2 = _expr_x + _texto_w_raiz + 4;
+
+    draw_set_color(make_color_rgb(255, 70, 70));
+    draw_line_width(_root_x + 2, _root_y + 4, _root_x + 8, _root_y + 12, 3);
+    draw_line_width(_root_x + 8, _root_y + 12, _root_x + 15, _bar_y, 3);
+    draw_line_width(_root_x + 15, _bar_y, _bar_x1, _bar_y, 3);
+    draw_line_width(_bar_x1, _bar_y, _bar_x2, _bar_y, 3);
+
+    draw_set_halign(fa_left);
+    draw_set_color(c_white);
+    draw_text(_expr_x, _y, _texto_raiz);
+
+    if (_bonus_sem_volta > 0) {
+        draw_set_color(make_color_rgb(80, 255, 120));
+        draw_text(_expr_x + _texto_w_raiz, _y, _bonus_texto_raiz);
+    }
+} else if (_efeito_boss_texto != "" || _bonus_sem_volta > 0) {
     var _bonus_texto = " + " + string(_bonus_sem_volta);
     var _texto_w = string_width(_texto);
     var _efeito_w = string_width(_efeito_boss_texto);

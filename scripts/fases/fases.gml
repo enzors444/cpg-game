@@ -7,7 +7,12 @@ function fases() {
         case 3: _ops = ["(", ")", "+", "-", "/", "*"]; break;
     }
 
-    if (variable_global_exists("quadrado_desbloqueado") && global.quadrado_desbloqueado) {
+    if (variable_global_exists("quadrado_desbloqueado")
+    && global.quadrado_desbloqueado
+    && variable_global_exists("exponencial_usado_batalha")
+    && !global.exponencial_usado_batalha
+    && variable_global_exists("cartas_roguelike_escolhidas")
+    && array_get_index(global.cartas_roguelike_escolhidas, "exponencial") != -1) {
         array_push(_ops, "^2");
     }
 

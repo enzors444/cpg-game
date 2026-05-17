@@ -15,8 +15,8 @@ function boss_modificador_texto_display() {
 
     switch (global.boss_estagio) {
         case 1: return " - 50";
-        case 2: return " / 2";
-        case 3: return " raiz";
+        case 2: return "";
+        case 3: return "";
     }
 
     return "";
@@ -37,7 +37,7 @@ function boss_modificador_dano(_resultado) {
 }
 
 function boss_modificador_vida_minima_estagio(_estagio) {
-    return max(0, global.boss_vida_maxima - _estagio * global.boss_vida_por_estagio);
+    return 0;
 }
 
 function boss_modificador_preparar_estagio(_estagio) {
@@ -45,6 +45,7 @@ function boss_modificador_preparar_estagio(_estagio) {
     global.boss_turno = 1;
     global.boss_ultimo_resultado = "";
     global.boss_ultima_saida = "";
+    global.enemy_life = global.boss_vida_por_estagio;
 
     switch (global.boss_estagio) {
         case 1:
@@ -68,9 +69,8 @@ function boss_modificador_configurar() {
     global.boss_ativo = true;
     global.boss_tipo = "modificador";
     global.boss_nome = "O Operador Vermelho";
-    global.boss_vida_maxima = 240;
     global.boss_vida_por_estagio = 80;
-    global.enemy_life = global.boss_vida_maxima;
+    global.boss_vida_maxima = global.boss_vida_por_estagio;
 
     global.tentativas = max(global.tentativas, 6);
     global.ui_tentativas = global.tentativas;
@@ -85,12 +85,10 @@ function boss_modificador_tentar_resultado(_resultado) {
     var _dano_base = boss_modificador_dano(_resultado);
     var _bonus = bonus_sem_volta_valor(_dano_base);
     var _dano = _dano_base + _bonus;
-    var _vida_minima = boss_modificador_vida_minima_estagio(global.boss_estagio);
-    var _dano_necessario = max(0, global.enemy_life - _vida_minima);
-    var _dano_aplicado = min(_dano, _dano_necessario);
+    var _dano_aplicado = min(_dano, global.enemy_life);
 
     global.boss_ultima_saida = _resultado_final;
-    global.enemy_life = max(_vida_minima, global.enemy_life - _dano_aplicado);
+    global.enemy_life = max(0, global.enemy_life - _dano_aplicado);
 
     if (_dano_aplicado <= 0) {
         global.boss_turno += 1;
@@ -98,10 +96,10 @@ function boss_modificador_tentar_resultado(_resultado) {
         return false;
     }
 
-    if (global.enemy_life <= _vida_minima) {
+    if (global.enemy_life <= 0) {
         var _estagio_vencido = global.boss_estagio;
 
-        if (global.enemy_life <= 0) {
+        if (_estagio_vencido >= 3) {
             global.boss_mensagem = "O operador foi quebrado.";
         } else {
             boss_modificador_preparar_estagio(_estagio_vencido + 1);

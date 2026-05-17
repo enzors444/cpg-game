@@ -9,6 +9,7 @@ function inicializar_roguelike() {
     if (!variable_global_exists("repeticoes_operacao_rodada")) global.repeticoes_operacao_rodada = 0;
     if (!variable_global_exists("sem_volta_ativo")) global.sem_volta_ativo = false;
     if (!variable_global_exists("quadrado_desbloqueado")) global.quadrado_desbloqueado = false;
+    if (!variable_global_exists("exponencial_usado_batalha")) global.exponencial_usado_batalha = false;
     if (!variable_global_exists("coringa_escolhendo_valor")) global.coringa_escolhendo_valor = false;
     if (!variable_global_exists("recompensa_roguelike_aberta")) global.recompensa_roguelike_aberta = false;
     if (!variable_global_exists("roguelike_opcoes")) global.roguelike_opcoes = [];
@@ -28,6 +29,7 @@ function resetar_roguelike() {
     global.repeticoes_operacao_rodada = 0;
     global.sem_volta_ativo = false;
     global.quadrado_desbloqueado = false;
+    global.exponencial_usado_batalha = false;
     global.coringa_escolhendo_valor = false;
     global.recompensa_roguelike_aberta = false;
     global.roguelike_opcoes = [];
@@ -46,6 +48,7 @@ function resetar_roguelike_por_rodada() {
     global.usos_numero_grudado_rodada = 0;
     global.usos_coringa_numerico_rodada = 0;
     global.repeticoes_operacao_rodada = 0;
+    global.exponencial_usado_batalha = false;
 }
 
 function pode_usar_coringa_numerico() {
@@ -155,7 +158,7 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Exponencial",
-                descricao: "Uso unico: ^2 em um numero."
+                descricao: "1 vez por batalha: ^2."
             };
     }
 
@@ -242,11 +245,12 @@ function aplicar_carta_roguelike(_id) {
 
         case "exponencial":
             global.quadrado_desbloqueado = true;
+            global.exponencial_usado_batalha = false;
             break;
     }
 }
 
-function consumir_exponencial_se_usado() {
+function registrar_exponencial_se_usado() {
     inicializar_roguelike();
 
     if (indice_quadrado_expressao() == -1) return false;
@@ -257,8 +261,10 @@ function consumir_exponencial_se_usado() {
         return false;
     }
 
-    array_delete(global.cartas_roguelike_escolhidas, _idx, 1);
-    global.quadrado_desbloqueado = array_get_index(global.cartas_roguelike_escolhidas, "exponencial") != -1;
+    if (global.exponencial_usado_batalha) return false;
+
+    global.exponencial_usado_batalha = true;
+    global.quadrado_desbloqueado = true;
     return true;
 }
 

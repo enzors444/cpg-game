@@ -201,6 +201,23 @@ if (inventario_aberto) {
         draw_set_alpha(1);
         draw_sprite_ext(spr_roguelike, _frame_roguelike, _card_x1, _card_y1, _card_scale, _card_scale, 0, c_white, 1);
 
+        if (_carta_id == "exponencial" && global.exponencial_usado_batalha) {
+            draw_set_alpha(0.62);
+            draw_set_color(c_black);
+            draw_rectangle(_card_x1, _card_y1, _card_x1 + _card_w, _card_y1 + _card_h, false);
+
+            draw_set_alpha(1);
+            draw_set_color(make_color_rgb(255, 80, 80));
+            draw_rectangle(_card_x1 + 4, _card_y1 + 4, _card_x1 + _card_w - 4, _card_y1 + _card_h - 4, true);
+
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            draw_set_color(c_white);
+            draw_text(_card_x1 + _card_w / 2, _card_y1 + _card_h / 2, "USADO");
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_top);
+        }
+
         if (_tooltip_inventario_nome == "" && point_in_rectangle(mouse_x, mouse_y, _card_x1, _card_y1, _card_x1 + _card_w, _card_y1 + _card_h)) {
             var _carta = carta_roguelike(_carta_id);
 

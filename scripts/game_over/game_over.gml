@@ -19,6 +19,7 @@ function game_over_salvar_checkpoint_fase() {
     global.checkpoint_repeticoes_operacao_por_rodada = global.repeticoes_operacao_por_rodada;
     global.checkpoint_sem_volta_ativo = global.sem_volta_ativo;
     global.checkpoint_quadrado_desbloqueado = global.quadrado_desbloqueado;
+    global.checkpoint_exponencial_usado_batalha = global.exponencial_usado_batalha;
     global.checkpoint_cartas_roguelike_escolhidas = game_over_copiar_array(global.cartas_roguelike_escolhidas);
 }
 
@@ -36,6 +37,7 @@ function game_over_restaurar_checkpoint_fase() {
     global.repeticoes_operacao_rodada = 0;
     global.sem_volta_ativo = global.checkpoint_sem_volta_ativo;
     global.quadrado_desbloqueado = global.checkpoint_quadrado_desbloqueado;
+    global.exponencial_usado_batalha = global.checkpoint_exponencial_usado_batalha;
     global.coringa_escolhendo_valor = false;
     global.recompensa_roguelike_aberta = false;
     global.roguelike_opcoes = [];

@@ -15,7 +15,8 @@ admin_botoes = [
     { texto: "FASE 3", acao: "fase3", coluna: 0, linha: 2 },
     { texto: "BOSS 3", acao: "boss3", coluna: 1, linha: 2 },
     { texto: "COMPRAR TODAS", acao: "comprar", coluna: 0, linha: 3 },
-    { texto: "FECHAR", acao: "fechar", coluna: 0, linha: 4 }
+    { texto: "VITORIA", acao: "vitoria", coluna: 0, linha: 4 },
+    { texto: "FECHAR", acao: "fechar", coluna: 0, linha: 5 }
 ];
 
 admin_restaurar_animacoes = function() {
@@ -97,6 +98,21 @@ admin_ir_para = function(_fase, _boss) {
         room_goto(_sala);
     }
 
+    instance_destroy();
+};
+
+admin_ir_para_vitoria = function() {
+    admin_restaurar_animacoes();
+    global.admin_menu_ativo = false;
+    global.jogo_pausado = false;
+    global.pause_ativo = false;
+    global.jogo_vencido = true;
+
+    with (obj_pause_menu) {
+        instance_destroy();
+    }
+
+    room_goto(Vitoria);
     instance_destroy();
 };
 

@@ -3,7 +3,7 @@ draw_set_color(c_black);
 draw_rectangle(0, 0, room_width, room_height, false);
 
 var _panel_w = 336;
-var _panel_h = 250;
+var _panel_h = 292;
 var _panel_x = room_width / 2;
 var _panel_y = room_height / 2;
 var _panel_x1 = _panel_x - _panel_w / 2;
@@ -35,13 +35,17 @@ var _start_y = _panel_y1 + 58;
 
 for (var i = 0; i < array_length(admin_botoes); i++) {
     var _botao = admin_botoes[i];
-    var _full = _botao.acao == "comprar" || _botao.acao == "fechar";
+    var _full = _botao.acao == "comprar" || _botao.acao == "vitoria" || _botao.acao == "fechar";
     var _x1 = _full ? room_width / 2 - (_btn_w * 2 + _gap_x) / 2 : _grid_x + _botao.coluna * (_btn_w + _gap_x);
     var _y1 = _start_y + _botao.linha * (_btn_h + _gap_y);
     var _x2 = _full ? room_width / 2 + (_btn_w * 2 + _gap_x) / 2 : _x1 + _btn_w;
     var _y2 = _y1 + _btn_h;
     var _hover = admin_hover == i;
     var _botao_cor = _botao.acao == "comprar" ? make_color_rgb(40, 100, 60) : make_color_rgb(28, 18, 48);
+
+    if (_botao.acao == "vitoria") {
+        _botao_cor = make_color_rgb(85, 85, 25);
+    }
 
     if (_botao.acao == "fechar") {
         _botao_cor = make_color_rgb(75, 32, 32);

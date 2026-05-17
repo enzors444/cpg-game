@@ -11,6 +11,37 @@ var _menu_y = room_height / 2 - (_menu_h * _menu_scale) / 2;
 if (menu_tela == "creditos") {
     draw_sprite_ext(spr_creditos, 0, _menu_x, _menu_y, _menu_scale, _menu_scale, 0, c_white, 1);
 
+    var _player_frame_creditos = floor(menu_anim_player) mod sprite_get_number(spr_player_idle);
+    var _creditos_chao = _menu_y + 250 * _menu_scale;
+    var _player_scale_creditos = 1.45 * _menu_scale;
+    var _player_y_creditos = _creditos_chao - (sprite_get_height(spr_player_idle) - sprite_get_yoffset(spr_player_idle)) * _player_scale_creditos;
+    draw_sprite_ext(
+        spr_player_idle,
+        _player_frame_creditos,
+        _menu_x + 106 * _menu_scale,
+        _player_y_creditos,
+        _player_scale_creditos,
+        _player_scale_creditos,
+        0,
+        c_white,
+        1
+    );
+
+    var _renzo_frame_creditos = floor(menu_anim_player * 0.8) mod sprite_get_number(spr_mega_renzo_1);
+    var _renzo_scale_creditos = 1.8 * _menu_scale;
+    var _renzo_y_creditos = _creditos_chao - (sprite_get_height(spr_mega_renzo_1) - sprite_get_yoffset(spr_mega_renzo_1)) * _renzo_scale_creditos;
+    draw_sprite_ext(
+        spr_mega_renzo_1,
+        _renzo_frame_creditos,
+        _menu_x + 337 * _menu_scale,
+        _renzo_y_creditos,
+        _renzo_scale_creditos,
+        _renzo_scale_creditos,
+        0,
+        c_white,
+        1
+    );
+
     var _voltar_x1 = _menu_x + 24 * _menu_scale;
     var _voltar_y1 = _menu_y + 276 * _menu_scale;
     var _voltar_x2 = _voltar_x1 + 92 * _menu_scale;

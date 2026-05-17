@@ -18,7 +18,7 @@ var _btn_h = 28;
 var _gap_x = 12;
 var _gap_y = 9;
 var _panel_w = 336;
-var _panel_h = 250;
+var _panel_h = 292;
 var _panel_x1 = room_width / 2 - _panel_w / 2;
 var _panel_y1 = room_height / 2 - _panel_h / 2;
 var _grid_x = room_width / 2 - (_btn_w * 2 + _gap_x) / 2;
@@ -26,7 +26,7 @@ var _start_y = _panel_y1 + 58;
 
 for (var i = 0; i < array_length(admin_botoes); i++) {
     var _botao = admin_botoes[i];
-    var _full = _botao.acao == "comprar" || _botao.acao == "fechar";
+    var _full = _botao.acao == "comprar" || _botao.acao == "vitoria" || _botao.acao == "fechar";
     var _x1 = _full ? room_width / 2 - (_btn_w * 2 + _gap_x) / 2 : _grid_x + _botao.coluna * (_btn_w + _gap_x);
     var _y1 = _start_y + _botao.linha * (_btn_h + _gap_y);
     var _x2 = _full ? room_width / 2 + (_btn_w * 2 + _gap_x) / 2 : _x1 + _btn_w;
@@ -72,6 +72,10 @@ switch (_acao) {
 
     case "comprar":
         admin_comprar_todas();
+        break;
+
+    case "vitoria":
+        admin_ir_para_vitoria();
         break;
 
     case "fechar":

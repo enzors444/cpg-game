@@ -86,7 +86,9 @@ draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);
 var _dialogo_indice = min(dialogo_atual, array_length(dialogos) - 1);
-draw_text_ext(_texto_x, _texto_y_interno, dialogos[_dialogo_indice], 15, _texto_largura);
+var _texto_completo = dialogos[_dialogo_indice];
+var _texto_mostrado = string_copy(_texto_completo, 1, min(string_length(_texto_completo), texto_revelado));
+draw_text_ext(_texto_x, _texto_y_interno, _texto_mostrado, 15, _texto_largura);
 
 var _hover_ok = point_in_rectangle(mouse_x, mouse_y, _ok_x1, _ok_y1, _ok_x2, _ok_y2);
 

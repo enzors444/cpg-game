@@ -124,6 +124,9 @@ function game_over_iniciar_desafio() {
     global.game_over_timer = global.game_over_timer_max;
     global.jogo_pausado = true;
 
+    tocar_sfx_unico("gameover", gameover_sfx, 1);
+    tocar_musica(gameover_music);
+
     if (!instance_exists(obj_game_over)) {
         instance_create_depth(0, 0, -100000, obj_game_over);
     }
@@ -133,6 +136,7 @@ function game_over_acertar() {
     global.game_over_ativo = false;
     global.jogo_pausado = false;
     global.tentativas = max(1, ceil(global.ui_tentativas * 0.5));
+    tocar_musica_fase(global.fase, global.boss_ativo);
 }
 
 function game_over_falhar() {

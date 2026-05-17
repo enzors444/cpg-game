@@ -3,11 +3,29 @@ var _cy = 30;
 var _raio = 20;
 var _porcentagem = global.tentativas / global.ui_tentativas;
 
+// 1. DESENHA O SPRITE DE FUNDO COM NINE SLICE
+// Retiramos o "+ 8". Agora o fundo terá exatamente 40x40 (raio 20 * 2),
+// fazendo com que o círculo laranja cubra perfeitamente o fundo cinza!
+var _tamanho_sprite = _raio * 2; 
+
+// Centraliza o desenho esticado
+draw_sprite_stretched(
+    spr_tentativas, 
+    0, 
+    _cx - (_tamanho_sprite / 2), 
+    _cy - (_tamanho_sprite / 2), 
+    _tamanho_sprite, 
+    _tamanho_sprite
+);
+
+// 2. DESENHA O GRÁFICO CIRCULAR POR CIMA
 if (_porcentagem > 0) {
     var _secoes = 32;
     var _angulo_total = 360 * _porcentagem;
 
-    draw_set_color(c_red);
+    // --- COR DA BARRA DE PROGRESSO ---
+    draw_set_color(make_color_rgb(255, 96, 0));
+    
     draw_primitive_begin(pr_trianglefan);
     draw_vertex(_cx, _cy);
 
@@ -26,6 +44,10 @@ draw_set_color(c_white);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 draw_text(_cx, _cy, global.tentativas);
+
+// =====================================================================
+// O RESTANTE DO SEU CÓDIGO CONTINUA INTACTO DAQUI PARA BAIXO
+// =====================================================================
 
 var _progresso_x1 = 75;
 var _progresso_x2 = room_width - 65;

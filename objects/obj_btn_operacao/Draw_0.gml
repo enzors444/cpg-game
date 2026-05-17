@@ -35,11 +35,21 @@ if (operacao == "R") {
 }
 
 if (_frame_operacao != -1 && _frame_operacao < sprite_get_number(spr_operations)) {
-    var _escala = 0.75;
-    var _w = 48;
-    var _h = 48;
+    // Definimos o tamanho final em pixels no lugar da escala para o Nine Slice atuar
+    var _largura_final = 36;
+    var _altura_final = 36;
 
-    draw_sprite_ext(spr_operations, _frame_operacao, x - _w / 2, _draw_y - _h / 2, _escala, _escala, 0, _cor, 1);
+    // Desenha esticado usando o Nine Slice que você ativou
+    draw_sprite_stretched_ext(
+        spr_operations, 
+        _frame_operacao, 
+        x - (_largura_final / 2), 
+        _draw_y - (_altura_final / 2), 
+        _largura_final, 
+        _altura_final, 
+        _cor, 
+        1
+    );
 
     if (operacao == "R") {
         draw_set_color(_cor);

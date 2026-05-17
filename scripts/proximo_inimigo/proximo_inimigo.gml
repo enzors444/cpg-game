@@ -219,8 +219,8 @@ function boss_exato_alvo_linear_da_mao() {
 
     var _validos = [];
 
-    for (var x = 1; x <= 18; x++) {
-        var _alvo = floor(global.boss_funcao_a * x + global.boss_funcao_b);
+    for (var i = 1; i <= 18; i++) {
+        var _alvo = floor(global.boss_funcao_a * i + global.boss_funcao_b);
 
         if (_alvo >= 1 && _alvo <= 18) {
             array_push(_validos, _alvo);

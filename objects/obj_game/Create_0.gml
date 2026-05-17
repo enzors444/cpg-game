@@ -47,6 +47,7 @@ global.indices_cartas_selecionadas = [];
 global.ops_selecionadas = [];
 global.expressao_partes = [];
 
+boss_resetar_estado();
 global.cargas_reroll_mao = cargas_reroll_maximas();
 
 if (!variable_global_exists("arena_scroll") || _nova_run) {

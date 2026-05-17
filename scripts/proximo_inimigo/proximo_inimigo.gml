@@ -158,7 +158,7 @@ function boss_exato_alvo_da_mao(_min, _max) {
 function boss_exato_sortear_alvo_estagio() {
     switch (global.boss_estagio) {
         case 1: return boss_exato_alvo_da_mao(8, 18);
-        case 2: return boss_exato_alvo_da_mao(10, 24);
+        case 2: return boss_exato_alvo_da_mao(10, 18);
         case 3: return boss_exato_alvo_linear_da_mao();
     }
 
@@ -208,8 +208,30 @@ function boss_exato_saida(_resultado) {
 }
 
 function boss_exato_alvo_linear_da_mao() {
-    var _x_possivel = boss_exato_alvo_da_mao(4, 18);
-    return max(1, floor(global.boss_funcao_a * _x_possivel + global.boss_funcao_b));
+    repeat (24) {
+        var _x_possivel = boss_exato_alvo_da_mao(1, 18);
+        var _saida = floor(global.boss_funcao_a * _x_possivel + global.boss_funcao_b);
+
+        if (_saida >= 1 && _saida <= 18) {
+            return _saida;
+        }
+    }
+
+    var _validos = [];
+
+    for (var i = 1; i <= 18; i++) {
+        var _alvo = floor(global.boss_funcao_a * i + global.boss_funcao_b);
+
+        if (_alvo >= 1 && _alvo <= 18) {
+            array_push(_validos, _alvo);
+        }
+    }
+
+    if (array_length(_validos) > 0) {
+        return _validos[irandom(array_length(_validos) - 1)];
+    }
+
+    return 18;
 }
 
 function boss_exato_preparar_estagio(_estagio) {
@@ -357,7 +379,7 @@ function criar_inimigos() {
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
-	var _base_y = 80 + global.ui_top_space;
+    var _base_y = 80 + global.ui_top_space;
     var _gap = 55;
 
     for (var i = 0; i < _qtd_inimigos; i++) {
@@ -367,8 +389,28 @@ function criar_inimigos() {
         var _enemy = instance_create_layer(_base_x - i * _gap, _base_y , "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
         _enemy.visible = (i == 0 || global.enemy_life >= _peso);
-		_enemy.image_xscale = 1.5;
-		}
+        _enemy.image_xscale = 1.5;
+        _enemy.image_blend = c_white;
+    }
+}
+
+function criar_criticos_numeros_visiveis() {
+    with (obj_enemy) {
+        if (visible) {
+            var _escala_x = abs(image_xscale);
+            var _escala_y = abs(image_yscale);
+            var _enemy_w = sprite_get_width(sprite_index) * _escala_x;
+            var _enemy_h = sprite_get_height(sprite_index) * _escala_y;
+            var _critical_w = sprite_get_width(spr_critical) * _escala_x;
+            var _critical_h = sprite_get_height(spr_critical) * _escala_y;
+            var _critical_x = x + _enemy_w / 2 - _critical_w / 2;
+            var _critical_y = y + _enemy_h / 2 - _critical_h / 2;
+            var _critical = instance_create_layer(_critical_x, _critical_y, "Instances", obj_critical);
+
+            _critical.image_xscale = _escala_x;
+            _critical.image_yscale = _escala_y;
+        }
+    }
 }
 
 function iniciar_caminhada_arena(_abrir_recompensa, _criar_inimigo_no_fim) {

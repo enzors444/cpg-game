@@ -93,6 +93,20 @@ function limpar_bonus_temporarios_fase() {
     inicializar_roguelike();
 }
 
+function frame_carta_roguelike(_id) {
+    switch (_id) {
+        case "exponencial": return 0;
+        case "numero_grudado": return 1;
+        case "precisao": return 2;
+        case "mao_nova": return 3;
+        case "coringa_numerico": return 4;
+        case "sem_volta": return 5;
+        case "eco_operacao": return 6;
+    }
+
+    return 0;
+}
+
 function carta_roguelike(_id) {
     switch (_id) {
         case "mao_nova":
@@ -106,42 +120,42 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Precisao",
-                descricao: "Acerto exato: +1 tentativa extra."
+                descricao: "Acerto exato: +1 tentativa."
             };
 
         case "numero_grudado":
             return {
                 id: _id,
                 nome: "Numero Grudado",
-                descricao: "Uma vez por rodada, junte 2 cartas em 1 numero."
+                descricao: "Junte 2 cartas em 1 numero."
             };
 
         case "coringa_numerico":
             return {
                 id: _id,
                 nome: "Coringa Numerico",
-                descricao: "Shift + clique: escolha 0-9 uma vez por rodada."
+                descricao: "Shift + clique: escolha 0-9."
             };
 
         case "eco_operacao":
             return {
                 id: _id,
                 nome: "Eco Operacao",
-                descricao: "Repita uma operacao uma vez por rodada."
+                descricao: "Repita uma operacao."
             };
 
         case "sem_volta":
             return {
                 id: _id,
                 nome: "Sem Volta",
-                descricao: "+50% de dano como bonus inteiro verde."
+                descricao: "Trava cartas. +50% dano."
             };
 
         case "exponencial":
             return {
                 id: _id,
                 nome: "Exponencial",
-                descricao: "Desbloqueia ^2 em um unico numero."
+                descricao: "^2 em um unico numero."
             };
     }
 
@@ -226,7 +240,6 @@ function aplicar_carta_roguelike(_id) {
 
         case "exponencial":
             global.quadrado_desbloqueado = true;
-            global.precisa_atualizar_botoes = true;
             break;
     }
 }

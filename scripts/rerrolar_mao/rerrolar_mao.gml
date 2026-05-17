@@ -13,6 +13,10 @@ function rerrolar_mao() {
         return false;
     }
 
+    if (sem_volta_bloqueia_remocao_cartas(0)) {
+        return false;
+    }
+
     var _hand = instance_find(obj_hand, 0);
     if (_hand == noone) {
         return false;

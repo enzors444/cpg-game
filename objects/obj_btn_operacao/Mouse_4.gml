@@ -26,17 +26,7 @@ if (operacao == "E") {
 }
 
 if (operacao == "^2") {
-    var _idx_quadrado = indice_quadrado_expressao();
-
-    if (_idx_quadrado != -1) {
-        remover_expressao_a_partir(_idx_quadrado);
-        exit;
-    }
-
-    if (!pode_adicionar_quadrado_expressao()) exit;
-
-    selecionada = true;
-    array_push(global.expressao_partes, { tipo: "quadrado", valor: "^2" });
+    alternar_quadrado_expressao();
     exit;
 }
 
@@ -72,6 +62,7 @@ if (operacao == "=") {
                 }
 
                 global.bonus_tentativas_proxima += _bonus_exato_boss;
+                criar_criticos_numeros_visiveis();
 
                 recomprar_cartas();
                 proximo_inimigo();
@@ -85,6 +76,8 @@ if (operacao == "=") {
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();
+            } else {
+                recomprar_cartas();
             }
         }
     } else {
@@ -107,7 +100,7 @@ if (operacao == "=") {
 
                 global.bonus_tentativas_proxima += _bonus_exato;
                 _ganhou_reroll_exato = true;
-				instance_create_layer(room_width / 2, 250, "Instances", obj_critical);
+                criar_criticos_numeros_visiveis();
             }
 
             recomprar_cartas();

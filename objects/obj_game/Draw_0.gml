@@ -25,20 +25,45 @@ draw_rectangle(_x - _w / 2, _y - _h / 2, _x + _w / 2, _y + _h / 2, true);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
-var _bonus_sem_volta = (boss_exato_ativo() || boss_desafio_ativo()) ? 0 : bonus_sem_volta_preview();
+var _efeito_boss_texto = "";
+var _bonus_sem_volta = 0;
 
-if (_bonus_sem_volta > 0) {
+if (boss_modificador_ativo() && array_length(global.expressao_partes) > 0) {
+    _efeito_boss_texto = boss_modificador_texto_display();
+
+    if (expressao_valida()) {
+        _bonus_sem_volta = bonus_sem_volta_valor(boss_modificador_dano(calcular_resultado_expressao()));
+    }
+} else if (!(boss_exato_ativo() || boss_desafio_ativo())) {
+    _bonus_sem_volta = bonus_sem_volta_preview();
+}
+
+if (_efeito_boss_texto != "" || _bonus_sem_volta > 0) {
     var _bonus_texto = " + " + string(_bonus_sem_volta);
     var _texto_w = string_width(_texto);
+    var _efeito_w = string_width(_efeito_boss_texto);
     var _bonus_w = string_width(_bonus_texto);
-    var _texto_x = _x - (_texto_w + _bonus_w) / 2;
+    var _total_w = _texto_w + _efeito_w;
+
+    if (_bonus_sem_volta > 0) {
+        _total_w += _bonus_w;
+    }
+
+    var _texto_x = _x - _total_w / 2;
 
     draw_set_halign(fa_left);
     draw_set_color(c_white);
     draw_text(_texto_x, _y, _texto);
 
-    draw_set_color(make_color_rgb(80, 255, 120));
-    draw_text(_texto_x + _texto_w, _y, _bonus_texto);
+    if (_efeito_boss_texto != "") {
+        draw_set_color(make_color_rgb(255, 70, 70));
+        draw_text(_texto_x + _texto_w, _y, _efeito_boss_texto);
+    }
+
+    if (_bonus_sem_volta > 0) {
+        draw_set_color(make_color_rgb(80, 255, 120));
+        draw_text(_texto_x + _texto_w + _efeito_w, _y, _bonus_texto);
+    }
 } else {
     draw_text(_x, _y, _texto);
 }
@@ -86,6 +111,26 @@ if (boss_desafio_ativo()) {
     if (global.boss_mensagem != "") {
         draw_set_color(make_color_rgb(180, 220, 255));
         draw_text(_x, _boss_desafio_y + 42, global.boss_mensagem);
+    }
+}
+
+if (boss_modificador_ativo()) {
+    var _boss_modificador_y = _arena_top + 8;
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(c_yellow);
+    draw_text(_x, _boss_modificador_y, global.boss_nome + " - Estagio " + string(global.boss_estagio) + "/3");
+
+    draw_set_color(c_white);
+    draw_text(_x, _boss_modificador_y + 14, boss_modificador_nome_estagio());
+
+    draw_set_color(make_color_rgb(255, 120, 120));
+    draw_text(_x, _boss_modificador_y + 28, global.boss_regra_texto);
+
+    if (global.boss_mensagem != "") {
+        draw_set_color(make_color_rgb(180, 220, 255));
+        draw_text(_x, _boss_modificador_y + 42, global.boss_mensagem);
     }
 }
 

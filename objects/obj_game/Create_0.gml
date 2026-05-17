@@ -48,6 +48,8 @@ global.indices_cartas_selecionadas = [];
 global.ops_selecionadas = [];
 global.expressao_partes = [];
 
+tocar_musica_fase(global.fase, false);
+
 boss_resetar_estado();
 global.cargas_reroll_mao = cargas_reroll_maximas();
 

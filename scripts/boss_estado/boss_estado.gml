@@ -15,6 +15,7 @@ function boss_resetar_estado() {
     global.boss_desafio_texto = "";
     global.boss_ultima_saida = "";
     global.boss_ultimo_resultado = "";
+    global.boss_vida_por_estagio = 0;
     global.boss_turno = 1;
     global.boss_mensagem = "";
 }
@@ -31,11 +32,19 @@ function boss_desafio_ativo() {
         && global.boss_tipo == "desafio";
 }
 
+function boss_modificador_ativo() {
+    return variable_global_exists("boss_ativo")
+        && global.boss_ativo
+        && global.boss_tipo == "modificador";
+}
+
 function configurar_boss_atual() {
     boss_resetar_estado();
 
     if (encontro_atual_e_boss() && global.fase == 1) {
         boss_exato_configurar();
+    } else if (encontro_atual_e_boss() && global.fase == 2) {
+        boss_modificador_configurar();
     } else if (encontro_atual_e_boss() && global.fase == 3) {
         boss_desafio_configurar();
     }

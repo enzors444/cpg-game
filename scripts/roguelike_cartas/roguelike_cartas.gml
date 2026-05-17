@@ -263,7 +263,7 @@ function fechar_recompensa_roguelike() {
     }
 
     if (_ir_para_sala_pendente && _sala_pendente != noone) {
-        room_goto(_sala_pendente);
+        iniciar_transicao_fase(fase_da_sala(_sala_pendente), _sala_pendente);
     } else if (_continuar_caminhada) {
         global.progresso_visual_inicio = global.progresso_visual;
         global.progresso_visual_alvo = global.inimigo_atual_fase;

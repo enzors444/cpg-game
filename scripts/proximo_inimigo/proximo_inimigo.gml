@@ -4,18 +4,6 @@ function tentativas_base_fase() {
     return 5;
 }
 
-function fase_da_sala_atual() {
-    var _nome_sala = room_get_name(room);
-
-    switch (_nome_sala) {
-        case "Room1": return 1;
-        case "Room2": return 2;
-        case "Room3": return 3;
-    }
-
-    return 1;
-}
-
 function sala_da_fase(_fase) {
     switch (_fase) {
         case 1: return Room1;
@@ -24,6 +12,47 @@ function sala_da_fase(_fase) {
     }
 
     return Room1;
+}
+
+function fase_da_sala(_sala) {
+    switch (_sala) {
+        case Room1: return 1;
+        case Room2: return 2;
+        case Room3: return 3;
+    }
+
+    return 1;
+}
+
+function fase_da_sala_atual() {
+    return fase_da_sala(room);
+}
+
+function iniciar_transicao_fase(_fase_alvo, _sala_alvo) {
+    var _subtitulo = "A proxima sala comeca agora.";
+
+    switch (_fase_alvo) {
+        case 2:
+            _subtitulo = "A segunda sala comeca agora.";
+            break;
+
+        case 3:
+            _subtitulo = "A terceira sala comeca agora.";
+            break;
+    }
+
+    global.transicao_fase_ativa = true;
+    global.transicao_fase_timer = 0;
+    global.transicao_fase_duracao = 95;
+    global.transicao_fase_sala = _sala_alvo;
+    global.transicao_fase_titulo = "Fase " + string(_fase_alvo);
+    global.transicao_fase_subtitulo = _subtitulo;
+    global.jogo_pausado = true;
+    global.em_caminhada_arena = false;
+
+    if (!instance_exists(obj_transicao_fase)) {
+        instance_create_depth(0, 0, -100000, obj_transicao_fase);
+    }
 }
 
 function sprite_arena_da_fase(_fase) {
@@ -100,6 +129,7 @@ function sortear_vida_inimigo() {
 function criar_inimigos() {
     global.enemy_life = sortear_vida_inimigo();
     configurar_boss_atual();
+    tocar_musica_fase(global.fase, global.boss_ativo);
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
@@ -227,7 +257,7 @@ function proximo_inimigo() {
                 global.fase = _proxima_fase;
                 global.inimigo_atual_fase = 0;
                 global.inimigos_por_fase = encontros_combate_da_fase(global.fase);
-                room_goto(sala_da_fase(global.fase));
+                iniciar_transicao_fase(global.fase, sala_da_fase(global.fase));
             }
 
             exit;

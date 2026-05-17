@@ -9,6 +9,11 @@ if (variable_global_exists("em_caminhada_arena") && global.em_caminhada_arena) {
         global.caminhada_arena_scroll_alvo,
         _suave
     );
+    global.progresso_visual = lerp(
+        global.progresso_visual_inicio,
+        global.progresso_visual_alvo,
+        _suave
+    );
 
     with (obj_player) {
         sprite_index = spr_player_walking;

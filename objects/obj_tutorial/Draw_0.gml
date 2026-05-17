@@ -54,10 +54,10 @@ if (_bg_w > 0 && _bg_h > 0 && _arena_h > 0) {
 }
 
 var _frame_player = floor(anim_player) mod sprite_get_number(spr_player_walking);
-var _frame_professor = floor(anim_professor) mod sprite_get_number(spr_enemy_1);
+var _frame_professor = floor(anim_professor) mod sprite_get_number(spr_mosca);
 
 draw_sprite_ext(spr_player_walking, _frame_player, room_width / 3, 110 + _top_space, 1, 1, 0, c_white, 1);
-draw_sprite_ext(spr_enemy_1, _frame_professor, 325, 92, 1.5, 1.5, 0, c_white, 1);
+draw_sprite_ext(spr_mosca, _frame_professor, 325, 92, 1.5, 1.5, 0, c_white, 1);
 
 var _caixa_y1 = 238;
 var _caixa_y2 = room_height - 24;

@@ -1,4 +1,4 @@
-if (variable_global_exists("fase") && (global.fase == 2 || global.fase == 3)) {
+if (!boss_visual && variable_global_exists("fase") && (global.fase == 2 || global.fase == 3)) {
     var _u_color = shader_get_uniform(shd_enemy_recolor, "u_color");
     var _u_threshold = shader_get_uniform(shd_enemy_recolor, "u_threshold");
     var _u_fill_all = shader_get_uniform(shd_enemy_recolor, "u_fill_all");

@@ -66,6 +66,48 @@ function sprite_arena_da_fase(_fase) {
     return spr_background;
 }
 
+function sprite_boss_da_fase(_fase, _estagio) {
+    _estagio = clamp(_estagio, 1, 3);
+
+    switch (_fase) {
+        case 1:
+            switch (_estagio) {
+                case 1: return spr_darth_ygonuti_1;
+                case 2: return spr_darth_ygonuti_2;
+                case 3: return spr_darth_ygonuti_3;
+            }
+            break;
+
+        case 2:
+            switch (_estagio) {
+                case 1: return spr_mestre_janos_1;
+                case 2: return spr_mestre_janos_2;
+                case 3: return spr_mestre_janos_3;
+            }
+            break;
+
+        case 3:
+            switch (_estagio) {
+                case 1: return spr_mega_renzo_1;
+                case 2: return spr_mega_renzo_2;
+                case 3: return spr_mega_renzo_3;
+            }
+            break;
+    }
+
+    return spr_enemy_0;
+}
+
+function escala_boss_da_fase(_fase) {
+    switch (_fase) {
+        case 1: return 1.55;
+        case 2: return 1.35;
+        case 3: return 2.15;
+    }
+
+    return 1.5;
+}
+
 function encontros_combate_da_fase(_fase) {
     switch (_fase) {
         case 1: return 4;
@@ -135,6 +177,18 @@ function criar_inimigos() {
     var _base_x = 2 * room_width / 3;
     var _base_y = 80 + global.ui_top_space;
     var _gap = 55;
+
+    if (global.boss_ativo) {
+        var _boss = instance_create_layer(_base_x, _base_y - 18, "Instances", obj_enemy);
+        _boss.definir_boss_enemy(global.fase, global.boss_estagio);
+
+        var _boss_scale = escala_boss_da_fase(global.fase);
+        _boss.image_xscale = _boss_scale;
+        _boss.image_yscale = _boss_scale;
+        _boss.x = _base_x - sprite_get_width(_boss.sprite_index) * _boss_scale / 2;
+        _boss.y = _base_y - 18;
+        return;
+    }
 
     for (var i = 0; i < _qtd_inimigos; i++) {
         var _peso = power(10, i);

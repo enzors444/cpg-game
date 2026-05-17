@@ -158,7 +158,7 @@ function boss_exato_alvo_da_mao(_min, _max) {
 function boss_exato_sortear_alvo_estagio() {
     switch (global.boss_estagio) {
         case 1: return boss_exato_alvo_da_mao(8, 18);
-        case 2: return boss_exato_alvo_da_mao(10, 24);
+        case 2: return boss_exato_alvo_da_mao(10, 18);
         case 3: return boss_exato_alvo_linear_da_mao();
     }
 
@@ -208,8 +208,30 @@ function boss_exato_saida(_resultado) {
 }
 
 function boss_exato_alvo_linear_da_mao() {
-    var _x_possivel = boss_exato_alvo_da_mao(4, 18);
-    return max(1, floor(global.boss_funcao_a * _x_possivel + global.boss_funcao_b));
+    repeat (24) {
+        var _x_possivel = boss_exato_alvo_da_mao(1, 18);
+        var _saida = floor(global.boss_funcao_a * _x_possivel + global.boss_funcao_b);
+
+        if (_saida >= 1 && _saida <= 18) {
+            return _saida;
+        }
+    }
+
+    var _validos = [];
+
+    for (var x = 1; x <= 18; x++) {
+        var _alvo = floor(global.boss_funcao_a * x + global.boss_funcao_b);
+
+        if (_alvo >= 1 && _alvo <= 18) {
+            array_push(_validos, _alvo);
+        }
+    }
+
+    if (array_length(_validos) > 0) {
+        return _validos[irandom(array_length(_validos) - 1)];
+    }
+
+    return 18;
 }
 
 function boss_exato_preparar_estagio(_estagio) {

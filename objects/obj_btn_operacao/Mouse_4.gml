@@ -26,17 +26,7 @@ if (operacao == "E") {
 }
 
 if (operacao == "^2") {
-    var _idx_quadrado = indice_quadrado_expressao();
-
-    if (_idx_quadrado != -1) {
-        remover_expressao_a_partir(_idx_quadrado);
-        exit;
-    }
-
-    if (!pode_adicionar_quadrado_expressao()) exit;
-
-    selecionada = true;
-    array_push(global.expressao_partes, { tipo: "quadrado", valor: "^2" });
+    alternar_quadrado_expressao();
     exit;
 }
 
@@ -85,6 +75,8 @@ if (operacao == "=") {
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();
+            } else {
+                recomprar_cartas();
             }
         }
     } else {

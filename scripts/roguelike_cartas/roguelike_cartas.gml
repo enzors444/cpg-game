@@ -93,6 +93,20 @@ function limpar_bonus_temporarios_fase() {
     inicializar_roguelike();
 }
 
+function frame_carta_roguelike(_id) {
+    switch (_id) {
+        case "exponencial": return 0;
+        case "precisao": return 1;
+        case "numero_grudado": return 2;
+        case "coringa_numerico": return 3;
+        case "sem_volta": return 4;
+        case "eco_operacao": return 5;
+        case "mao_nova": return 6;
+    }
+
+    return 0;
+}
+
 function carta_roguelike(_id) {
     switch (_id) {
         case "mao_nova":
@@ -134,7 +148,7 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Sem Volta",
-                descricao: "+50% de dano como bonus inteiro verde."
+                descricao: "Nao desmarque cartas escolhidas. +50% de dano."
             };
 
         case "exponencial":
@@ -226,7 +240,6 @@ function aplicar_carta_roguelike(_id) {
 
         case "exponencial":
             global.quadrado_desbloqueado = true;
-            global.precisa_atualizar_botoes = true;
             break;
     }
 }

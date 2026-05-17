@@ -47,7 +47,8 @@ if (variable_global_exists("progresso_visual")) {
 
 var _progresso_span = max(1, (_qtd - 1) - _progresso_inicio);
 var _tooltip_titulo = "";
-var _tooltip_descricao = "";
+var _tooltip_x = 0;
+var _tooltip_y = _progresso_y;
 
 global.inimigos_por_fase = _qtd;
 
@@ -76,24 +77,13 @@ for (var j = 0; j < _qtd; j++) {
     }
 
     if (_tooltip_titulo == "" && point_distance(mouse_x, mouse_y, _px, _progresso_y) <= max(10, _raio_ponto + 4)) {
+        _tooltip_x = _px;
+        _tooltip_y = _progresso_y;
+
         if (_boss) {
             _tooltip_titulo = "Boss da sala";
-
-            if (global.fase == 1) {
-                _tooltip_descricao = "O Cofre Exato. So toma dano com resultado exato.";
-            } else {
-                _tooltip_descricao = "Combate final desta sala.";
-            }
         } else {
             _tooltip_titulo = "Combate " + string(j + 1);
-
-            if (j < _progresso_visual) {
-                _tooltip_descricao = "Inimigo ja derrotado.";
-            } else if (_ativo) {
-                _tooltip_descricao = "Combate atual.";
-            } else {
-                _tooltip_descricao = "Um novo inimigo aparece aqui.";
-            }
         }
     }
 }
@@ -126,15 +116,9 @@ for (var k = 0; k < _qtd; k++) {
     }
 
     if (_tooltip_titulo == "" && point_in_rectangle(mouse_x, mouse_y, _cx_carta - 10, _progresso_y - 12, _cx_carta + 10, _progresso_y + 12)) {
+        _tooltip_x = _cx_carta;
+        _tooltip_y = _progresso_y;
         _tooltip_titulo = "Compra de carta";
-
-        if (_reward_ativo) {
-            _tooltip_descricao = "Escolha uma das cartas agora.";
-        } else if (k >= _qtd - 1) {
-            _tooltip_descricao = "Escolha uma carta antes da proxima sala.";
-        } else {
-            _tooltip_descricao = "Escolha uma carta antes do proximo inimigo.";
-        }
     }
 }
 
@@ -144,10 +128,10 @@ draw_set_color(_cor_progresso);
 draw_circle(_px_marcador, _progresso_y, 4, false);
 
 if (_tooltip_titulo != "") {
-    var _tip_w = 196;
-    var _tip_h = 50;
-    var _tip_x = clamp(mouse_x + 10, 4, room_width - _tip_w - 4);
-    var _tip_y = clamp(mouse_y + 12, 4, room_height - _tip_h - 4);
+    var _tip_w = min(room_width - 8, max(82, string_width(_tooltip_titulo) + 28));
+    var _tip_h = max(25, string_height(_tooltip_titulo) + 10);
+    var _tip_x = clamp(_tooltip_x - _tip_w / 2, 4, room_width - _tip_w - 4);
+    var _tip_y = clamp(_tooltip_y + 16, 4, room_height - _tip_h - 4);
 
     draw_set_alpha(0.94);
     draw_set_color(c_black);
@@ -157,12 +141,10 @@ if (_tooltip_titulo != "") {
     draw_set_color(c_white);
     draw_rectangle(_tip_x, _tip_y, _tip_x + _tip_w, _tip_y + _tip_h, true);
 
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
     draw_set_color(make_color_rgb(255, 230, 90));
-    draw_text(_tip_x + 6, _tip_y + 5, _tooltip_titulo);
-    draw_set_color(make_color_rgb(215, 215, 215));
-    draw_text_ext(_tip_x + 6, _tip_y + 20, _tooltip_descricao, 11, _tip_w - 12);
+    draw_text(_tip_x + _tip_w / 2, _tip_y + _tip_h / 2, _tooltip_titulo);
 }
 
 draw_set_halign(fa_left);
@@ -174,41 +156,66 @@ var _inv_w = 48;
 var _inv_h = 48;
 var _inv_x = 8;
 var _inv_y = room_height - 30 - _inv_h / 2;
-var _inv_draw_y = _inv_y + inventario_y_offset;
+var _inv_draw_y = _inv_y;
 var _inv_cx = _inv_x + _inv_w / 2;
 var _inv_cy = _inv_draw_y + _inv_h / 2;
 var _inv_qtd = array_length(global.cartas_roguelike_escolhidas);
 var _inv_frame = max(0, sprite_get_number(spr_operations) - 1);
-var _card_w = 48;
-var _card_h = 64;
+var _card_scale = 0.75;
+var _card_w = sprite_get_width(spr_roguelike) * _card_scale;
+var _card_h = sprite_get_height(spr_roguelike) * _card_scale;
 var _card_gap = 8;
+var _tooltip_inventario_nome = "";
+var _tooltip_inventario_x = 0;
+var _tooltip_inventario_y = 0;
 
 if (inventario_aberto) {
     for (var i = 0; i < _inv_qtd; i++) {
         var _card_x1 = _inv_cx - _card_w / 2;
         var _card_y2 = _inv_draw_y - _card_gap - i * (_card_h + _card_gap);
         var _card_y1 = _card_y2 - _card_h;
-        var _card_x2 = _inv_cx + _card_w / 2;
-
-        draw_set_alpha(0.95);
-        draw_set_color(make_color_rgb(70, 8, 4));
-        draw_rectangle(_card_x1, _card_y1, _card_x2, _card_y2, false);
+        var _carta_id = global.cartas_roguelike_escolhidas[i];
+        var _frame_roguelike = min(frame_carta_roguelike(_carta_id), sprite_get_number(spr_roguelike) - 1);
 
         draw_set_alpha(1);
-        draw_set_color(make_color_rgb(235, 24, 18));
-        draw_rectangle(_card_x1, _card_y1, _card_x2, _card_y2, true);
+        draw_sprite_ext(spr_roguelike, _frame_roguelike, _card_x1, _card_y1, _card_scale, _card_scale, 0, c_white, 1);
 
-        draw_set_color(make_color_rgb(120, 16, 8));
-        draw_rectangle(_card_x1 + 4, _card_y2 - 12, _card_x2 - 4, _card_y2 - 4, false);
+        if (_tooltip_inventario_nome == "" && point_in_rectangle(mouse_x, mouse_y, _card_x1, _card_y1, _card_x1 + _card_w, _card_y1 + _card_h)) {
+            var _carta = carta_roguelike(_carta_id);
+
+            _tooltip_inventario_nome = _carta.nome;
+            _tooltip_inventario_x = _card_x1 + _card_w;
+            _tooltip_inventario_y = _card_y1 + _card_h / 2;
+        }
     }
 }
 
 draw_set_alpha(0.95);
-draw_set_color(inventario_hover ? make_color_rgb(24, 15, 14) : make_color_rgb(10, 5, 4));
+draw_set_color(make_color_rgb(10, 5, 4));
 draw_rectangle(_inv_x, _inv_draw_y, _inv_x + _inv_w, _inv_draw_y + _inv_h, false);
 
 draw_set_alpha(1);
 draw_sprite_ext(spr_operations, _inv_frame, _inv_cx - 24, _inv_cy - 24, 0.75, 0.75, 0, c_white, 1);
+
+if (_tooltip_inventario_nome != "") {
+    var _tip_inv_w = min(room_width - 8, max(82, string_width(_tooltip_inventario_nome) + 28));
+    var _tip_inv_h = max(25, string_height(_tooltip_inventario_nome) + 10);
+    var _tip_inv_x = clamp(_tooltip_inventario_x + 8, 4, room_width - _tip_inv_w - 4);
+    var _tip_inv_y = clamp(_tooltip_inventario_y - _tip_inv_h / 2, 4, room_height - _tip_inv_h - 4);
+
+    draw_set_alpha(0.94);
+    draw_set_color(c_black);
+    draw_rectangle(_tip_inv_x, _tip_inv_y, _tip_inv_x + _tip_inv_w, _tip_inv_y + _tip_inv_h, false);
+
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    draw_rectangle(_tip_inv_x, _tip_inv_y, _tip_inv_x + _tip_inv_w, _tip_inv_y + _tip_inv_h, true);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(make_color_rgb(255, 230, 90));
+    draw_text(_tip_inv_x + _tip_inv_w / 2, _tip_inv_y + _tip_inv_h / 2, _tooltip_inventario_nome);
+}
 
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);

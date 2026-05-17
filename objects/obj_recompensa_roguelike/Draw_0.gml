@@ -28,6 +28,7 @@ var _y = 92;
 for (var i = 0; i < _qtd; i++) {
     var _x = _start_x + i * (_w + _gap);
     var _carta = carta_roguelike(global.roguelike_opcoes[i]);
+    var _frame = min(frame_carta_roguelike(_carta.id), sprite_get_number(spr_roguelike) - 1);
     var _hover = point_in_rectangle(mouse_x, mouse_y, _x, _y, _x + _w, _y + _h);
 
     draw_set_color(_hover ? make_color_rgb(45, 28, 14) : make_color_rgb(20, 12, 10));
@@ -36,17 +37,20 @@ for (var i = 0; i < _qtd; i++) {
     draw_set_color(_hover ? c_yellow : c_white);
     draw_rectangle(_x, _y, _x + _w, _y + _h, true);
 
-    draw_set_color(_hover ? c_yellow : make_color_rgb(110, 64, 34));
-    draw_rectangle(_x + 7, _y + 7, _x + _w - 7, _y + _h - 7, true);
-    draw_line(_x + 10, _y + 64, _x + _w - 10, _y + 64);
+    var _sprite_scale = 1;
+    var _sprite_w = sprite_get_width(spr_roguelike) * _sprite_scale;
+    var _sprite_x = _x + _w / 2 - _sprite_w / 2;
+    var _sprite_y = _y + 14;
+
+    draw_sprite_ext(spr_roguelike, _frame, _sprite_x, _sprite_y, _sprite_scale, _sprite_scale, 0, c_white, 1);
 
     draw_set_color(c_white);
     draw_set_halign(fa_center);
     draw_set_valign(fa_top);
-    draw_text_ext(_x + _w / 2, _y + 18, _carta.nome, 14, _w - 24);
+    draw_text_ext(_x + _w / 2, _y + 84, _carta.nome, 12, _w - 24);
 
     draw_set_halign(fa_left);
-    draw_text_ext(_x + 14, _y + 84, _carta.descricao, 14, _w - 28);
+    draw_text_ext(_x + 14, _y + 118, _carta.descricao, 12, _w - 28);
 
     draw_set_halign(fa_center);
     draw_set_color(_hover ? c_yellow : make_color_rgb(180, 180, 180));

@@ -44,51 +44,69 @@ if (operacao == "=") {
     var _vida_antes = global.enemy_life;
     var _dano = max(0, _resultado);
 
-    if (boss_maquina_linear_ativo()) {
-        _dano = boss_maquina_linear_calcular_dano(_resultado);
-    }
+    if (boss_exato_ativo()) {
+        var _acertou_boss_exato = boss_exato_tentar_resultado(_resultado);
 
-    _dano += bonus_sem_volta_valor(_dano);
-
-    var _vida_depois = max(0, _vida_antes - _dano);
-
-    if (boss_maquina_linear_ativo()) {
-        _vida_depois = boss_maquina_linear_aplicar_limite_estagio(_vida_antes, _vida_depois);
-    }
-
-    global.enemy_life = _vida_depois;
-
-    if (boss_maquina_linear_ativo()) {
-        boss_maquina_linear_atualizar_estagio();
-    }
-
-    var _acertou_exato = (global.enemy_life <= 0 && _dano == _vida_antes);
-
-    if (global.enemy_life <= 0) {
-        var _ganhou_reroll_exato = false;
-
-        if (_acertou_exato) {
-            var _bonus_exato = 1;
-            if (variable_global_exists("bonus_precisao")) {
-                _bonus_exato += global.bonus_precisao;
-            }
-
-            global.bonus_tentativas_proxima += _bonus_exato;
-            _ganhou_reroll_exato = true;
-        }
-
-        recomprar_cartas();
-        proximo_inimigo();
-
-        if (_ganhou_reroll_exato) {
+        if (_acertou_boss_exato) {
             adicionar_reroll_acerto_exato();
+
+            if (global.enemy_life <= 0) {
+                var _bonus_exato_boss = 1;
+                if (variable_global_exists("bonus_precisao")) {
+                    _bonus_exato_boss += global.bonus_precisao;
+                }
+
+                global.bonus_tentativas_proxima += _bonus_exato_boss;
+
+                recomprar_cartas();
+                proximo_inimigo();
+            } else {
+                var _mensagem_boss_exato = global.boss_mensagem;
+                recomprar_cartas();
+                boss_exato_preparar_estagio(global.boss_estagio);
+                global.boss_mensagem = _mensagem_boss_exato;
+            }
+        } else {
+            global.tentativas--;
+            if (global.tentativas <= 0) {
+                game_over();
+            }
         }
     } else {
-        global.tentativas--;
-        if (global.tentativas <= 0) {
-            game_over();
-        } else {
+        _dano += bonus_sem_volta_valor(_dano);
+
+        var _vida_depois = max(0, _vida_antes - _dano);
+
+        global.enemy_life = _vida_depois;
+
+        var _acertou_exato = (global.enemy_life <= 0 && _dano == _vida_antes);
+
+        if (global.enemy_life <= 0) {
+            var _ganhou_reroll_exato = false;
+
+            if (_acertou_exato) {
+                var _bonus_exato = 1;
+                if (variable_global_exists("bonus_precisao")) {
+                    _bonus_exato += global.bonus_precisao;
+                }
+
+                global.bonus_tentativas_proxima += _bonus_exato;
+                _ganhou_reroll_exato = true;
+            }
+
             recomprar_cartas();
+            proximo_inimigo();
+
+            if (_ganhou_reroll_exato) {
+                adicionar_reroll_acerto_exato();
+            }
+        } else {
+            global.tentativas--;
+            if (global.tentativas <= 0) {
+                game_over();
+            } else {
+                recomprar_cartas();
+            }
         }
     }
 

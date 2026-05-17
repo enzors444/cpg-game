@@ -1,10 +1,24 @@
 // Create do obj_game
-global.fase = 1;
-global.tentativas = tentativas_base_fase();
+var _fase_da_sala = fase_da_sala_atual();
+var _nova_run = (_fase_da_sala == 1);
+
+global.fase = _fase_da_sala;
+
+if (_nova_run) {
+    resetar_roguelike();
+}
+
+inicializar_roguelike();
+
+if (!variable_global_exists("bonus_tentativas_proxima") || _nova_run) {
+    global.bonus_tentativas_proxima = 0;
+}
+
+global.tentativas = tentativas_base_fase() + global.bonus_tentativas_proxima;
 global.bonus_tentativas_proxima = 0;
 global.ui_tentativas = global.tentativas;
 global.ui_top_space = 50;
-global.inimigos_por_fase = 4;
+global.inimigos_por_fase = encontros_combate_da_fase(global.fase);
 global.inimigo_atual_fase = 0;
 global.fase_maxima = 3;
 global.precisa_atualizar_botoes = false;
@@ -18,8 +32,6 @@ global.indices_cartas_selecionadas = [];
 global.ops_selecionadas = [];
 global.expressao_partes = [];
 
-resetar_roguelike();
-inicializar_roguelike();
 global.cargas_reroll_mao = cargas_reroll_maximas();
 
 criar_inimigos();

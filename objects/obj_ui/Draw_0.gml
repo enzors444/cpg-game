@@ -31,8 +31,10 @@ var _progresso_x1 = 75;
 var _progresso_x2 = room_width - 65;
 var _progresso_y = 27;
 var _cor_progresso = make_color_rgb(255, 96, 0);
-var _qtd = global.inimigos_por_fase;
+var _qtd = encontros_combate_da_fase(global.fase);
 var _atual = global.inimigo_atual_fase;
+
+global.inimigos_por_fase = _qtd;
 
 draw_set_color(_cor_progresso);
 draw_line_width(_progresso_x1, _progresso_y, _progresso_x2, _progresso_y, 3);
@@ -56,6 +58,31 @@ for (var j = 0; j < _qtd; j++) {
     if (_ativo) {
         draw_set_color(c_white);
         draw_circle(_px, _progresso_y, _raio_ponto + 3, true);
+    }
+}
+
+for (var k = 0; k < _qtd; k++) {
+    if (!recompensa_apos_encontro(global.fase, k)) continue;
+
+    var _t_carta = k / max(1, _qtd - 1);
+    var _cx_carta = lerp(_progresso_x1, _progresso_x2, _t_carta);
+
+    if (k < _qtd - 1) {
+        var _t_proximo = (k + 1) / max(1, _qtd - 1);
+        _cx_carta = lerp(_cx_carta, lerp(_progresso_x1, _progresso_x2, _t_proximo), 0.5);
+    } else {
+        _cx_carta = min(room_width - 35, _cx_carta + 24);
+    }
+
+    var _reward_ativo = global.recompensa_roguelike_aberta && _atual == k + 1;
+    var _reward_passou = _atual > k;
+
+    draw_set_color(_reward_ativo ? c_yellow : _cor_progresso);
+    draw_rectangle(_cx_carta - 5, _progresso_y - 7, _cx_carta + 5, _progresso_y + 7, false);
+
+    if (!_reward_passou && !_reward_ativo) {
+        draw_set_color(c_black);
+        draw_rectangle(_cx_carta - 2, _progresso_y - 4, _cx_carta + 2, _progresso_y + 4, false);
     }
 }
 

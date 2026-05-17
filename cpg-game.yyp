@@ -35,6 +35,8 @@
     {"id":{"name":"obj_recompensa_roguelike","path":"objects/obj_recompensa_roguelike/obj_recompensa_roguelike.yy",},},
     {"id":{"name":"obj_ui","path":"objects/obj_ui/obj_ui.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"Room2","path":"rooms/Room2/Room2.yy",},},
+    {"id":{"name":"Room3","path":"rooms/Room3/Room3.yy",},},
     {"id":{"name":"calcular_resultados","path":"scripts/calcular_resultados/calcular_resultados.yy",},},
     {"id":{"name":"game_over","path":"scripts/game_over/game_over.yy",},},
     {"id":{"name":"globals","path":"scripts/globals/globals.yy",},},
@@ -63,6 +65,8 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"roomId":{"name":"Room2","path":"rooms/Room2/Room2.yy",},},
+    {"roomId":{"name":"Room3","path":"rooms/Room3/Room3.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

@@ -13,6 +13,8 @@ function inicializar_roguelike() {
     if (!variable_global_exists("recompensa_roguelike_aberta")) global.recompensa_roguelike_aberta = false;
     if (!variable_global_exists("roguelike_opcoes")) global.roguelike_opcoes = [];
     if (!variable_global_exists("cartas_roguelike_escolhidas")) global.cartas_roguelike_escolhidas = [];
+    if (!variable_global_exists("tem_sala_pendente_apos_recompensa")) global.tem_sala_pendente_apos_recompensa = false;
+    if (!variable_global_exists("sala_pendente_apos_recompensa")) global.sala_pendente_apos_recompensa = noone;
 }
 
 function resetar_roguelike() {
@@ -30,6 +32,8 @@ function resetar_roguelike() {
     global.recompensa_roguelike_aberta = false;
     global.roguelike_opcoes = [];
     global.cartas_roguelike_escolhidas = [];
+    global.tem_sala_pendente_apos_recompensa = false;
+    global.sala_pendente_apos_recompensa = noone;
 }
 
 function cargas_reroll_maximas() {
@@ -234,7 +238,17 @@ function fechar_recompensa_roguelike() {
     global.recompensa_roguelike_aberta = false;
     global.jogo_pausado = false;
 
+    var _ir_para_sala_pendente = global.tem_sala_pendente_apos_recompensa;
+    var _sala_pendente = global.sala_pendente_apos_recompensa;
+
+    global.tem_sala_pendente_apos_recompensa = false;
+    global.sala_pendente_apos_recompensa = noone;
+
     with (obj_recompensa_roguelike) {
         instance_destroy();
+    }
+
+    if (_ir_para_sala_pendente && _sala_pendente != noone) {
+        room_goto(_sala_pendente);
     }
 }

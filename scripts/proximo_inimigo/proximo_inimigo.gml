@@ -390,7 +390,7 @@ function criar_inimigos() {
         _enemy.definir_numero_enemy(_numero, i);
         _enemy.visible = (i == 0 || global.enemy_life >= _peso);
 		_enemy.image_xscale = 1.5;
-    }
+		}
 }
 
 function iniciar_caminhada_arena(_abrir_recompensa, _criar_inimigo_no_fim) {

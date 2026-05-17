@@ -99,6 +99,7 @@ if (operacao == "=") {
 
                 global.bonus_tentativas_proxima += _bonus_exato;
                 _ganhou_reroll_exato = true;
+				instance_create_layer(room_width / 2, 250, "Instances", obj_critical);
             }
 
             recomprar_cartas();

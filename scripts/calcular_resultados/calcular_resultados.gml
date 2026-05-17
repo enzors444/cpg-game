@@ -55,6 +55,7 @@ function pode_adicionar_carta_expressao(_valor, _indice) {
     if (_qtd_partes > 0) {
         var _ultima = global.expressao_partes[_qtd_partes - 1];
         if (_ultima.tipo == "paren" && _ultima.valor == ")") return false;
+        if (_ultima.tipo == "quadrado") return false;
     }
 
     var _partes_teste = [];
@@ -73,7 +74,9 @@ function pode_adicionar_operacao_expressao() {
     if (_qtd_partes <= 0) return false;
 
     var _ultima = global.expressao_partes[_qtd_partes - 1];
-    return _ultima.tipo == "carta" || (_ultima.tipo == "paren" && _ultima.valor == ")");
+    return _ultima.tipo == "carta"
+        || _ultima.tipo == "quadrado"
+        || (_ultima.tipo == "paren" && _ultima.valor == ")");
 }
 
 function contar_parenteses_abertos() {
@@ -112,10 +115,44 @@ function pode_adicionar_parentese_expressao(_parentese) {
         if (contar_parenteses_abertos() <= 0 || _qtd_partes <= 0) return false;
 
         var _ultima_fechamento = global.expressao_partes[_qtd_partes - 1];
-        return _ultima_fechamento.tipo == "carta" || (_ultima_fechamento.tipo == "paren" && _ultima_fechamento.valor == ")");
+        return _ultima_fechamento.tipo == "carta"
+            || _ultima_fechamento.tipo == "quadrado"
+            || (_ultima_fechamento.tipo == "paren" && _ultima_fechamento.valor == ")");
     }
 
     return false;
+}
+
+function indice_quadrado_expressao() {
+    if (!variable_global_exists("expressao_partes")) global.expressao_partes = [];
+
+    for (var i = 0; i < array_length(global.expressao_partes); i++) {
+        if (global.expressao_partes[i].tipo == "quadrado") {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function pode_adicionar_quadrado_expressao() {
+    inicializar_roguelike();
+
+    if (!global.quadrado_desbloqueado) return false;
+    if (indice_quadrado_expressao() != -1) return false;
+
+    var _qtd_partes = array_length(global.expressao_partes);
+    if (_qtd_partes <= 0) return false;
+
+    var _ultima = global.expressao_partes[_qtd_partes - 1];
+    if (_ultima.tipo != "carta") return false;
+
+    if (_qtd_partes >= 2) {
+        var _anterior = global.expressao_partes[_qtd_partes - 2];
+        if (_anterior.tipo == "carta") return false;
+    }
+
+    return true;
 }
 
 function expressao_valida() {
@@ -132,6 +169,7 @@ function expressao_valida() {
     var _parenteses_abertos = 0;
     var _tipo_anterior = "";
     var _valor_anterior = "";
+    var _tem_quadrado = false;
 
     for (var i = 0; i < _qtd_partes; i++) {
         var _parte = global.expressao_partes[i];
@@ -163,6 +201,14 @@ function expressao_valida() {
                 _parenteses_abertos--;
                 _espera_valor = false;
             }
+        } else if (_parte.tipo == "quadrado") {
+            if (_espera_valor || _tipo_anterior != "carta" || _tem_quadrado) return false;
+
+            if (i >= 2 && global.expressao_partes[i - 2].tipo == "carta") return false;
+
+            _tem_quadrado = true;
+            _cartas_seguidas = 0;
+            _espera_valor = false;
         } else {
             return false;
         }
@@ -211,6 +257,11 @@ function calcular_grupo_expressao(_partes, _inicio) {
                     _valor = _valor * 10 + _partes[_i].valor;
                     _i++;
                 }
+            }
+
+            if (_i < array_length(_partes) && _partes[_i].tipo == "quadrado") {
+                _valor = power(_valor, 2);
+                _i++;
             }
 
             if (!_tem_resultado) {
@@ -268,6 +319,13 @@ function remover_expressao_a_partir(_inicio) {
                     image_blend = c_white;
                 }
             }
+        } else if (_parte.tipo == "quadrado") {
+            with (obj_btn_operacao) {
+                if (operacao == "^2") {
+                    selecionada = false;
+                    image_blend = c_white;
+                }
+            }
         }
 
         array_delete(global.expressao_partes, i, 1);
@@ -310,6 +368,9 @@ function montar_texto_expressao(_mostrar_resultado) {
             if (_texto != "") _texto += " ";
             _texto += string(_parte.valor);
             _ultima_foi_carta = false;
+        } else if (_parte.tipo == "quadrado") {
+            _texto += "^2";
+            _ultima_foi_carta = true;
         }
     }
 

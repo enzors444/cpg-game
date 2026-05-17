@@ -12,6 +12,21 @@ if (operacao == "E") {
     exit;
 }
 
+if (operacao == "^2") {
+    var _idx_quadrado = indice_quadrado_expressao();
+
+    if (_idx_quadrado != -1) {
+        remover_expressao_a_partir(_idx_quadrado);
+        exit;
+    }
+
+    if (!pode_adicionar_quadrado_expressao()) exit;
+
+    selecionada = true;
+    array_push(global.expressao_partes, { tipo: "quadrado", valor: "^2" });
+    exit;
+}
+
 if (operacao == "(" || operacao == ")") {
     if (!pode_adicionar_parentese_expressao(operacao)) exit;
 
@@ -26,11 +41,32 @@ if (operacao == "=") {
     if (_enemy == noone) exit;
 
     var _resultado = calcular_resultado_expressao();
-    var _acertou_exato = (_resultado == global.enemy_life);
+    var _vida_antes = global.enemy_life;
     var _dano = max(0, _resultado);
-    global.enemy_life = max(0, global.enemy_life - _dano);
+
+    if (boss_maquina_linear_ativo()) {
+        _dano = boss_maquina_linear_calcular_dano(_resultado);
+    }
+
+    _dano += bonus_sem_volta_valor(_dano);
+
+    var _vida_depois = max(0, _vida_antes - _dano);
+
+    if (boss_maquina_linear_ativo()) {
+        _vida_depois = boss_maquina_linear_aplicar_limite_estagio(_vida_antes, _vida_depois);
+    }
+
+    global.enemy_life = _vida_depois;
+
+    if (boss_maquina_linear_ativo()) {
+        boss_maquina_linear_atualizar_estagio();
+    }
+
+    var _acertou_exato = (global.enemy_life <= 0 && _dano == _vida_antes);
 
     if (global.enemy_life <= 0) {
+        var _ganhou_reroll_exato = false;
+
         if (_acertou_exato) {
             var _bonus_exato = 1;
             if (variable_global_exists("bonus_precisao")) {
@@ -38,10 +74,15 @@ if (operacao == "=") {
             }
 
             global.bonus_tentativas_proxima += _bonus_exato;
+            _ganhou_reroll_exato = true;
         }
 
         recomprar_cartas();
         proximo_inimigo();
+
+        if (_ganhou_reroll_exato) {
+            adicionar_reroll_acerto_exato();
+        }
     } else {
         global.tentativas--;
         if (global.tentativas <= 0) {

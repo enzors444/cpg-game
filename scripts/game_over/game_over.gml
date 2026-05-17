@@ -64,7 +64,7 @@ function game_over_filtrar_resposta(_texto) {
 function game_over_gerar_equacao(_nivel) {
     var _dificuldade = max(1, _nivel + global.fase);
     var _tipo = min(4, floor((_dificuldade - 1) / 2));
-    var _x = irandom_range(3 + _dificuldade, 8 + _dificuldade * 3);
+    var _x = irandom_range(3 + _dificuldade, 8 + _dificuldade * 2);
     var _a = 0;
     var _b = 0;
     var _resultado = 0;
@@ -85,21 +85,20 @@ function game_over_gerar_equacao(_nivel) {
 
         case 2:
             _a = irandom_range(2, 4 + floor(_dificuldade / 3));
-            _b = irandom_range(2, 10 + _dificuldade);
-            _resultado = _a * _x + _b;
-            _texto = string(_a) + "x + " + string(_b) + " = " + string(_resultado);
+            _resultado = _a * _x;
+            _texto = string(_a) + "x = " + string(_resultado);
             break;
 
         case 3:
             _a = irandom_range(2, 5 + floor(_dificuldade / 3));
             _b = irandom_range(2, 9 + _dificuldade);
-            _resultado = _a * (_x + _b);
-            _texto = string(_a) + "(x + " + string(_b) + ") = " + string(_resultado);
+            _resultado = _a * _x + _b;
+            _texto = string(_a) + "x + " + string(_b) + " = " + string(_resultado);
             break;
 
         default:
             _a = irandom_range(3, 7 + floor(_dificuldade / 4));
-            _b = irandom_range(4, 12 + _dificuldade);
+            _b = irandom_range(2, min(_a * _x - 1, 12 + _dificuldade));
             _resultado = _a * _x - _b;
             _texto = string(_a) + "x - " + string(_b) + " = " + string(_resultado);
             break;
@@ -165,9 +164,12 @@ function game_over_iniciar_cena_renzo() {
         if (variable_instance_exists(_enemy, "boss_visual")
         && _enemy.boss_visual
         && _enemy.boss_fase == 3) {
-            global.renzo_game_over_boss_x = _enemy.x;
+            var _renzo_scale = abs(_enemy.image_xscale);
+            global.renzo_game_over_boss_x = (_enemy.image_xscale < 0)
+                ? _enemy.x - sprite_get_width(_enemy.sprite_index) * _renzo_scale
+                : _enemy.x;
             global.renzo_game_over_boss_y = _enemy.y;
-            global.renzo_game_over_boss_scale = abs(_enemy.image_xscale);
+            global.renzo_game_over_boss_scale = _renzo_scale;
             break;
         }
     }

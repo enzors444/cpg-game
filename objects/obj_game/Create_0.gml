@@ -1,8 +1,17 @@
 // Create do obj_game
 var _fase_da_sala = fase_da_sala_atual();
-var _nova_run = (_fase_da_sala == 1);
+var _admin_teleporte = variable_global_exists("admin_teleporte_ativo") && global.admin_teleporte_ativo;
+var _admin_fase = _fase_da_sala;
+var _admin_boss = false;
 
-global.fase = _fase_da_sala;
+if (_admin_teleporte) {
+    _admin_fase = clamp(global.admin_teleporte_fase, 1, 3);
+    _admin_boss = variable_global_exists("admin_teleporte_boss") && global.admin_teleporte_boss;
+}
+
+var _nova_run = (_fase_da_sala == 1) && !_admin_teleporte;
+
+global.fase = _admin_fase;
 
 if (_nova_run) {
     resetar_roguelike();
@@ -20,7 +29,7 @@ global.bonus_tentativas_proxima = 0;
 global.ui_tentativas = global.tentativas;
 global.ui_top_space = 50;
 global.inimigos_por_fase = encontros_combate_da_fase(global.fase);
-global.inimigo_atual_fase = 0;
+global.inimigo_atual_fase = _admin_boss ? indice_boss_da_fase(global.fase) : 0;
 global.fase_maxima = 3;
 global.precisa_atualizar_botoes = false;
 global.cargas_reroll_mao = 2;
@@ -30,6 +39,7 @@ global.jogo_pausado = false;
 global.jogo_vencido = false;
 global.morte_numeros_ativa = false;
 global.pause_ativo = false;
+global.admin_menu_ativo = false;
 global.em_caminhada_arena = false;
 global.caminhada_arena_timer = 0;
 global.caminhada_arena_duracao_base = 90;
@@ -49,6 +59,9 @@ global.cartas_selecionadas = [];
 global.indices_cartas_selecionadas = [];
 global.ops_selecionadas = [];
 global.expressao_partes = [];
+global.boss_display_stream_texto = "";
+global.boss_display_stream_pos = 0;
+global.boss_display_stream_vel = 0.22;
 
 tocar_musica_fase(global.fase, false);
 
@@ -61,7 +74,7 @@ if (!variable_global_exists("arena_scroll") || _nova_run) {
 }
 
 instance_create_layer(0, 0, "Instances", obj_arena_background);
-instance_create_layer(room_width / 3, 110 + global.ui_top_space, "Instances", obj_player);
+instance_create_layer(player_x_da_fase(global.fase), 110 + global.ui_top_space, "Instances", obj_player);
 instance_create_layer(0, 0, "Instances", obj_hand);
 instance_create_layer(0, 0, "Instances", obj_ui);
 
@@ -100,4 +113,16 @@ criar_botoes_operacao = function() {
 };
 
 criar_botoes_operacao();
-iniciar_caminhada_arena(false, true);
+
+if (_admin_teleporte) {
+    global.admin_teleporte_ativo = false;
+    global.admin_teleporte_fase = 0;
+    global.admin_teleporte_boss = false;
+    global.arena_scroll = global.inimigo_atual_fase * global.caminhada_arena_scroll_passo;
+    global.progresso_visual = global.inimigo_atual_fase;
+    global.progresso_visual_inicio = global.inimigo_atual_fase;
+    global.progresso_visual_alvo = global.inimigo_atual_fase;
+    criar_inimigos();
+} else {
+    iniciar_caminhada_arena(false, true);
+}

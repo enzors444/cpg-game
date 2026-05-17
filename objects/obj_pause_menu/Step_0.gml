@@ -5,11 +5,11 @@ if (!variable_global_exists("pause_ativo") || !global.pause_ativo) {
 
 pause_hover = -1;
 
-var _btn_w = 165;
-var _btn_h = 28;
-var _gap = 10;
-var _panel_h = 170;
-var _start_y = room_height / 2 - _panel_h / 2 + 64;
+var _btn_w = 220;
+var _btn_h = 34;
+var _gap = 13;
+var _panel_h = 245;
+var _start_y = room_height / 2 - _panel_h / 2 + 82;
 var _x1 = room_width / 2 - _btn_w / 2;
 var _acao = "";
 

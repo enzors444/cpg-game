@@ -2,8 +2,8 @@ draw_set_alpha(0.58);
 draw_set_color(c_black);
 draw_rectangle(0, 0, room_width, room_height, false);
 
-var _panel_w = 225;
-var _panel_h = 170;
+var _panel_w = 300;
+var _panel_h = 245;
 var _panel_x = room_width / 2;
 var _panel_y = room_height / 2;
 var _panel_x1 = _panel_x - _panel_w / 2;
@@ -22,12 +22,12 @@ draw_rectangle(_panel_x1, _panel_y1, _panel_x2, _panel_y2, true);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 draw_set_color(c_white);
-draw_text(_panel_x, _panel_y1 + 30, "PAUSADO");
+draw_text(_panel_x, _panel_y1 + 40, "PAUSADO");
 
-var _btn_w = 165;
-var _btn_h = 28;
-var _gap = 10;
-var _start_y = _panel_y1 + 64;
+var _btn_w = 220;
+var _btn_h = 34;
+var _gap = 13;
+var _start_y = _panel_y1 + 82;
 
 for (var i = 0; i < array_length(pause_botoes); i++) {
     var _x1 = room_width / 2 - _btn_w / 2;

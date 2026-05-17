@@ -26,6 +26,7 @@
   },
   "name":"cpg-game",
   "resources":[
+    {"id":{"name":"obj_admin_menu","path":"objects/obj_admin_menu/obj_admin_menu.yy",},},
     {"id":{"name":"obj_arena_background","path":"objects/obj_arena_background/obj_arena_background.yy",},},
     {"id":{"name":"obj_btn_operacao","path":"objects/obj_btn_operacao/obj_btn_operacao.yy",},},
     {"id":{"name":"obj_card_selection","path":"objects/obj_card_selection/obj_card_selection.yy",},},

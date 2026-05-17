@@ -28,6 +28,18 @@ function fase_da_sala_atual() {
     return fase_da_sala(room);
 }
 
+function player_x_da_fase(_fase) {
+    if (_fase == 3) return room_width * 0.27;
+
+    return room_width / 3;
+}
+
+function inimigo_base_x_da_fase(_fase) {
+    if (_fase == 3) return room_width * 0.82;
+
+    return 2 * room_width / 3;
+}
+
 function iniciar_transicao_fase(_fase_alvo, _sala_alvo) {
     var _subtitulo = "A proxima sala comeca agora.";
 
@@ -175,7 +187,7 @@ function criar_inimigos() {
     global.morte_numeros_ativa = false;
 
     var _qtd_inimigos = global.fase + 1;
-    var _base_x = 2 * room_width / 3;
+    var _base_x = inimigo_base_x_da_fase(global.fase);
     var _base_y = 80 + global.ui_top_space;
     var _gap = 55;
 
@@ -184,10 +196,22 @@ function criar_inimigos() {
         _boss.definir_boss_enemy(global.fase, global.boss_estagio);
 
         var _boss_scale = escala_boss_da_fase(global.fase);
-        _boss.image_xscale = _boss_scale;
+        var _boss_virado = global.fase == 3;
+
+        _boss.image_xscale = _boss_virado ? -_boss_scale : _boss_scale;
         _boss.image_yscale = _boss_scale;
-        _boss.x = _base_x - sprite_get_width(_boss.sprite_index) * _boss_scale / 2;
+        _boss.x = _boss_virado
+            ? _base_x + sprite_get_width(_boss.sprite_index) * _boss_scale / 2
+            : _base_x - sprite_get_width(_boss.sprite_index) * _boss_scale / 2;
         _boss.y = _base_y - 18;
+
+        if (global.fase == 2 || global.fase == 3) {
+            var _display_y = 175 + global.ui_top_space;
+            var _display_h = 34;
+            var _arena_bottom = _display_y - _display_h / 2 - 12;
+            _boss.y = _arena_bottom - sprite_get_height(_boss.sprite_index) * _boss_scale;
+        }
+
         return;
     }
 
@@ -297,7 +321,7 @@ function iniciar_caminhada_arena(_abrir_recompensa, _criar_inimigo_no_fim) {
     global.progresso_visual = global.progresso_visual_inicio;
 
     with (obj_player) {
-        x = room_width / 3;
+        x = player_x_da_fase(global.fase);
         y = 110 + global.ui_top_space;
         sprite_index = spr_player_walking;
     }
@@ -310,7 +334,7 @@ function finalizar_caminhada_arena() {
     global.progresso_visual = global.progresso_visual_alvo;
 
     with (obj_player) {
-        x = room_width / 3;
+        x = player_x_da_fase(global.fase);
         y = 110 + global.ui_top_space;
         sprite_index = spr_player_idle;
         image_index = 0;

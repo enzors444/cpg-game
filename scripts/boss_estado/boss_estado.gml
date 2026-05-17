@@ -57,24 +57,51 @@ function boss_fala_atual() {
             var _alvo = global.boss_alvo_oculto ? "??" : string(global.boss_alvo);
 
             if (global.boss_estagio == 3) {
-                return _nome + "#" + global.boss_funcao_texto + " -> " + _alvo + ".";
+                return _nome + "#" + _fala + " " + global.boss_funcao_texto + " -> " + _alvo + ".";
             }
 
-            return _nome + "#Exato: " + _alvo + ".";
+            return _nome + "#" + _fala + " Alvo: " + _alvo + ".";
 
         case "modificador":
             switch (global.boss_estagio) {
-                case 1: return _nome + "#" + _fala + " Resultado -50.";
-                case 2: return _nome + "#" + _fala + " Resultado /2.";
-                case 3: return _nome + "#" + _fala + " Resultado vira raiz.";
+                case 1: return _nome + "#" + _fala + " Dano = resultado -50.";
+                case 2: return _nome + "#" + _fala + " Dano = resultado /2.";
+                case 3: return _nome + "#" + _fala + " Dano = raiz.";
             }
             break;
 
         case "desafio":
-            return _nome + "#" + _fala + " " + global.boss_desafio_texto;
+            return _nome + "#" + _fala;
     }
 
     return _nome + "#" + _fala;
+}
+
+function boss_objetivo_hud_texto() {
+    if (!variable_global_exists("boss_ativo") || !global.boss_ativo) return "";
+
+    switch (global.boss_tipo) {
+        case "exato":
+            var _alvo = global.boss_alvo_oculto ? "??" : string(global.boss_alvo);
+
+            if (global.boss_estagio == 3 && global.boss_funcao_texto != "") {
+                return "Alvo: " + global.boss_funcao_texto + " -> " + _alvo;
+            }
+
+            return "Alvo: " + _alvo;
+
+        case "modificador":
+            return "Vida: " + string(max(0, ceil(global.enemy_life))) + "/" + string(global.boss_vida_maxima);
+
+        case "desafio":
+            if (global.boss_desafio_texto != "") {
+                return "Regra: " + global.boss_desafio_texto;
+            }
+
+            return "Regra: " + global.boss_regra_texto;
+    }
+
+    return "";
 }
 
 function configurar_boss_atual() {

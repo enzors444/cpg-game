@@ -148,11 +148,35 @@ draw_circle(_px_marcador, _progresso_y, 8, true);
 draw_set_color(_cor_progresso);
 draw_circle(_px_marcador, _progresso_y, 4, false);
 
+if (variable_global_exists("boss_ativo") && global.boss_ativo) {
+    var _objetivo_boss = boss_objetivo_hud_texto();
+
+    if (_objetivo_boss != "") {
+        var _obj_x = (_progresso_x1 + _progresso_x2) / 2;
+        var _obj_y = _progresso_y + 22;
+        var _obj_max_w = _progresso_x2 - _progresso_x1 - 18;
+        var _obj_scale = min(1, _obj_max_w / max(1, string_width(_objetivo_boss)));
+        var _obj_w = string_width(_objetivo_boss) * _obj_scale + 22;
+        var _obj_h = 18;
+
+        draw_set_alpha(0.76);
+        draw_set_color(c_black);
+        draw_rectangle(_obj_x - _obj_w / 2, _obj_y - _obj_h / 2, _obj_x + _obj_w / 2, _obj_y + _obj_h / 2, false);
+
+        draw_set_alpha(1);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(make_color_rgb(255, 230, 90));
+        draw_text_transformed(_obj_x, _obj_y, _objetivo_boss, _obj_scale, _obj_scale, 0);
+    }
+}
+
 if (_tooltip_titulo != "") {
     var _tip_w = min(room_width - 8, max(82, string_width(_tooltip_titulo) + 28));
     var _tip_h = max(25, string_height(_tooltip_titulo) + 10);
+    var _tip_offset_y = (variable_global_exists("boss_ativo") && global.boss_ativo) ? 36 : 16;
     var _tip_x = clamp(_tooltip_x - _tip_w / 2, 4, room_width - _tip_w - 4);
-    var _tip_y = clamp(_tooltip_y + 16, 4, room_height - _tip_h - 4);
+    var _tip_y = clamp(_tooltip_y + _tip_offset_y, 4, room_height - _tip_h - 4);
 
     draw_set_alpha(0.94);
     draw_set_color(c_black);

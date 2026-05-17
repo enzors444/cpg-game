@@ -38,17 +38,17 @@ function boss_modificador_preparar_estagio(_estagio) {
     switch (global.boss_estagio) {
         case 1:
             global.boss_regra_texto = "Seu resultado perde 50 antes do dano.";
-            global.boss_mensagem = "Eu corto 50 do seu ataque antes de sentir qualquer coisa.";
+            global.boss_mensagem = "Primeiro eu corto 50.";
             break;
 
         case 2:
             global.boss_regra_texto = "Seu resultado e dividido por 2.";
-            global.boss_mensagem = "Agora eu parto seu resultado no meio.";
+            global.boss_mensagem = "Agora eu divido por 2.";
             break;
 
         case 3:
             global.boss_regra_texto = "Seu resultado vira raiz antes do dano.";
-            global.boss_mensagem = "No fim, so a raiz chega ate mim.";
+            global.boss_mensagem = "Agora so a raiz passa.";
             break;
     }
 }
@@ -80,7 +80,7 @@ function boss_modificador_tentar_resultado(_resultado) {
 
     if (_dano_aplicado <= 0) {
         global.boss_turno += 1;
-        global.boss_mensagem = "Isso virou " + string(floor(_resultado_final)) + ". Nem arranhou.";
+        global.boss_mensagem = "Virou " + string(floor(_resultado_final)) + ". Sem dano.";
         return false;
     }
 
@@ -88,16 +88,16 @@ function boss_modificador_tentar_resultado(_resultado) {
         var _estagio_vencido = global.boss_estagio;
 
         if (_estagio_vencido >= 3) {
-            global.boss_mensagem = "Minha ultima conta caiu.";
+            global.boss_mensagem = "Meu ritual acabou.";
         } else {
             boss_modificador_preparar_estagio(_estagio_vencido + 1);
-            global.boss_mensagem = "Esse truque quebrou. Vamos ao proximo.";
+            global.boss_mensagem = "Quebrou. Proximo ritual.";
         }
 
         return true;
     }
 
     global.boss_turno += 1;
-    global.boss_mensagem = "So " + string(_dano_base) + " passou pelo meu ritual.";
+    global.boss_mensagem = string(_dano_base) + " de dano passou.";
     return false;
 }

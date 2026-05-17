@@ -1,4 +1,5 @@
-if (variable_global_exists("pause_ativo") && global.pause_ativo) {
+if ((variable_global_exists("pause_ativo") && global.pause_ativo)
+|| (variable_global_exists("admin_menu_ativo") && global.admin_menu_ativo)) {
     exit;
 }
 

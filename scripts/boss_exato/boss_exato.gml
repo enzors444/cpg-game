@@ -130,7 +130,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_oculto = false;
             global.boss_funcao_texto = "";
             global.boss_regra_texto = "Acerte exatamente o alvo.";
-            global.boss_mensagem = "Quero resultado perfeito.";
+            global.boss_mensagem = "Mire no numero exato.";
             break;
 
         case 2:
@@ -138,7 +138,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_oculto = false;
             global.boss_funcao_texto = "";
             global.boss_regra_texto = "Se errar, o alvo troca.";
-            global.boss_mensagem = "Errou, alvo troca.";
+            global.boss_mensagem = "Errou, eu mudo o alvo.";
             break;
 
         case 3:
@@ -148,7 +148,7 @@ function boss_exato_preparar_estagio(_estagio) {
             global.boss_alvo_min = 0;
             global.boss_alvo_max = 0;
             global.boss_regra_texto = "Faca x para f(x) acertar o alvo.";
-            global.boss_mensagem = "Agora passa pela minha funcao.";
+            global.boss_mensagem = "Agora resolva minha funcao.";
             break;
     }
 }
@@ -176,13 +176,13 @@ function boss_exato_registrar_erro(_resultado) {
     global.boss_ultima_saida = _saida;
 
     if (_saida < global.boss_alvo) {
-        global.boss_mensagem = "Baixo demais: " + string(_saida) + ".";
+        global.boss_mensagem = "Baixo: " + string(_saida) + ".";
         if (global.boss_estagio == 3) {
             boss_exato_sortear_funcao_linear();
             global.boss_alvo = boss_exato_sortear_alvo_estagio();
         }
     } else {
-        global.boss_mensagem = "Alto demais: " + string(_saida) + ".";
+        global.boss_mensagem = "Alto: " + string(_saida) + ".";
         if (global.boss_estagio == 3) {
             boss_exato_sortear_funcao_linear();
             global.boss_alvo = boss_exato_sortear_alvo_estagio();
@@ -211,9 +211,9 @@ function boss_exato_tentar_resultado(_resultado) {
 
         if (global.enemy_life > 0) {
             global.boss_estagio = _estagio_quebrado + 1;
-            global.boss_mensagem = "Acerto exato. Ainda tem mais.";
+            global.boss_mensagem = "Exato. Proxima prova.";
         } else {
-            global.boss_mensagem = "Acerto exato. Voce venceu.";
+            global.boss_mensagem = "Exato. Voce me venceu.";
         }
 
         return true;

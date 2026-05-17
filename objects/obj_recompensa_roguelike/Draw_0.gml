@@ -50,11 +50,11 @@ for (var i = 0; i < _qtd; i++) {
     draw_text_ext(_x + _w / 2, _y + 84, _carta.nome, 12, _w - 24);
 
     draw_set_halign(fa_left);
-    draw_text_ext(_x + 14, _y + 118, _carta.descricao, 12, _w - 28);
+    draw_text_ext(_x + 14, _y + 122, _carta.descricao, 14, _w - 28);
 
     draw_set_halign(fa_center);
     draw_set_color(_hover ? c_yellow : make_color_rgb(180, 180, 180));
-    draw_text(_x + _w / 2, _y + _h - 30, "ESCOLHER");
+    draw_text(_x + _w / 2, _y + _h - 24, "ESCOLHER");
 }
 
 draw_set_halign(fa_left);

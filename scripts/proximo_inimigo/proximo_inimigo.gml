@@ -379,7 +379,7 @@ function criar_inimigos() {
 
     var _qtd_inimigos = global.fase + 1;
     var _base_x = 2 * room_width / 3;
-	var _base_y = 80 + global.ui_top_space;
+    var _base_y = 80 + global.ui_top_space;
     var _gap = 55;
 
     for (var i = 0; i < _qtd_inimigos; i++) {
@@ -389,8 +389,28 @@ function criar_inimigos() {
         var _enemy = instance_create_layer(_base_x - i * _gap, _base_y , "Instances", obj_enemy);
         _enemy.definir_numero_enemy(_numero, i);
         _enemy.visible = (i == 0 || global.enemy_life >= _peso);
-		_enemy.image_xscale = 1.5;
-		}
+        _enemy.image_xscale = 1.5;
+        _enemy.image_blend = c_white;
+    }
+}
+
+function criar_criticos_numeros_visiveis() {
+    with (obj_enemy) {
+        if (visible) {
+            var _escala_x = abs(image_xscale);
+            var _escala_y = abs(image_yscale);
+            var _enemy_w = sprite_get_width(sprite_index) * _escala_x;
+            var _enemy_h = sprite_get_height(sprite_index) * _escala_y;
+            var _critical_w = sprite_get_width(spr_critical) * _escala_x;
+            var _critical_h = sprite_get_height(spr_critical) * _escala_y;
+            var _critical_x = x + _enemy_w / 2 - _critical_w / 2;
+            var _critical_y = y + _enemy_h / 2 - _critical_h / 2;
+            var _critical = instance_create_layer(_critical_x, _critical_y, "Instances", obj_critical);
+
+            _critical.image_xscale = _escala_x;
+            _critical.image_yscale = _escala_y;
+        }
+    }
 }
 
 function iniciar_caminhada_arena(_abrir_recompensa, _criar_inimigo_no_fim) {

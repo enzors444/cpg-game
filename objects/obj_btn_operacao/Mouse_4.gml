@@ -62,6 +62,7 @@ if (operacao == "=") {
                 }
 
                 global.bonus_tentativas_proxima += _bonus_exato_boss;
+                criar_criticos_numeros_visiveis();
 
                 recomprar_cartas();
                 proximo_inimigo();
@@ -99,7 +100,7 @@ if (operacao == "=") {
 
                 global.bonus_tentativas_proxima += _bonus_exato;
                 _ganhou_reroll_exato = true;
-				instance_create_layer(room_width / 2, 250, "Instances", obj_critical);
+                criar_criticos_numeros_visiveis();
             }
 
             recomprar_cartas();

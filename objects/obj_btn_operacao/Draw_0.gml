@@ -42,8 +42,8 @@ if (_frame_operacao != -1 && _frame_operacao < sprite_get_number(spr_operations)
     draw_sprite_ext(spr_operations, _frame_operacao, x - _w / 2, _draw_y - _h / 2, _escala, _escala, 0, _cor, 1);
 
     if (operacao == "R") {
-        draw_set_color(_cor);
-        draw_text(x + 13, _draw_y - 13, string(global.cargas_reroll_mao));
+        draw_set_color(c_black);
+        draw_text(x, _draw_y, string(global.cargas_reroll_mao));
     }
 
     exit;

@@ -12,8 +12,8 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"v1","%Name":"cba0ea58-27b2-47cc-a836-e61be6d35227","name":"cba0ea58-27b2-47cc-a836-e61be6d35227","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"v1","%Name":"0c3194a4-6f80-4a66-9460-9cf604d0589d","name":"0c3194a4-6f80-4a66-9460-9cf604d0589d","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"v1","%Name":"c23ba87a-633f-4c4d-a8a0-78011848862c","name":"c23ba87a-633f-4c4d-a8a0-78011848862c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"v1","%Name":"d2ec2197-b8c9-43d0-a2ab-11973942a781","name":"d2ec2197-b8c9-43d0-a2ab-11973942a781","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
@@ -75,11 +75,11 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","path":"sprites/spr_roguelike/spr_roguelike.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3c02eadd-938b-4dc2-950c-1d5617e1c312","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"cba0ea58-27b2-47cc-a836-e61be6d35227","path":"sprites/spr_roguelike/spr_roguelike.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"7987f5a2-dd04-41b4-be13-bff26a574d0b","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+              },"Disabled":false,"id":"7987f5a2-dd04-41b4-be13-bff26a574d0b","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"388d8f5b-83ff-41cf-a742-5d6d9f571b4c","path":"sprites/spr_roguelike/spr_roguelike.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"3c02eadd-938b-4dc2-950c-1d5617e1c312","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0c3194a4-6f80-4a66-9460-9cf604d0589d","path":"sprites/spr_roguelike/spr_roguelike.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a8f7fbe7-c264-486d-8c3e-a6bff8c76d47","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},

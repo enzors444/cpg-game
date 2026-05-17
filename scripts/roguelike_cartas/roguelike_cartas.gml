@@ -1,8 +1,8 @@
 function inicializar_roguelike() {
     if (!variable_global_exists("bonus_cargas_reroll_mao")) global.bonus_cargas_reroll_mao = 0;
     if (!variable_global_exists("bonus_precisao")) global.bonus_precisao = 0;
-    if (!variable_global_exists("bonus_cartas_seguidas_temporario")) global.bonus_cartas_seguidas_temporario = 0;
-    if (!variable_global_exists("fase_bonus_numero_grudado")) global.fase_bonus_numero_grudado = -1;
+    if (!variable_global_exists("usos_numero_grudado_por_rodada")) global.usos_numero_grudado_por_rodada = 0;
+    if (!variable_global_exists("usos_numero_grudado_rodada")) global.usos_numero_grudado_rodada = 0;
     if (!variable_global_exists("usos_coringa_numerico_por_rodada")) global.usos_coringa_numerico_por_rodada = 0;
     if (!variable_global_exists("usos_coringa_numerico_rodada")) global.usos_coringa_numerico_rodada = 0;
     if (!variable_global_exists("repeticoes_operacao_por_rodada")) global.repeticoes_operacao_por_rodada = 0;
@@ -20,8 +20,8 @@ function inicializar_roguelike() {
 function resetar_roguelike() {
     global.bonus_cargas_reroll_mao = 0;
     global.bonus_precisao = 0;
-    global.bonus_cartas_seguidas_temporario = 0;
-    global.fase_bonus_numero_grudado = -1;
+    global.usos_numero_grudado_por_rodada = 0;
+    global.usos_numero_grudado_rodada = 0;
     global.usos_coringa_numerico_por_rodada = 0;
     global.usos_coringa_numerico_rodada = 0;
     global.repeticoes_operacao_por_rodada = 0;
@@ -43,6 +43,7 @@ function cargas_reroll_maximas() {
 
 function resetar_roguelike_por_rodada() {
     inicializar_roguelike();
+    global.usos_numero_grudado_rodada = 0;
     global.usos_coringa_numerico_rodada = 0;
     global.repeticoes_operacao_rodada = 0;
 }
@@ -90,8 +91,6 @@ function adicionar_reroll_acerto_exato() {
 
 function limpar_bonus_temporarios_fase() {
     inicializar_roguelike();
-    global.bonus_cartas_seguidas_temporario = 0;
-    global.fase_bonus_numero_grudado = -1;
 }
 
 function carta_roguelike(_id) {
@@ -114,7 +113,7 @@ function carta_roguelike(_id) {
             return {
                 id: _id,
                 nome: "Numero Grudado",
-                descricao: "Um numero pode ter +1 carta nesta fase."
+                descricao: "Uma vez por rodada, junte 2 cartas em 1 numero."
             };
 
         case "coringa_numerico":
@@ -210,8 +209,7 @@ function aplicar_carta_roguelike(_id) {
             break;
 
         case "numero_grudado":
-            global.bonus_cartas_seguidas_temporario += 1;
-            global.fase_bonus_numero_grudado = global.fase;
+            global.usos_numero_grudado_por_rodada = max(1, global.usos_numero_grudado_por_rodada);
             break;
 
         case "coringa_numerico":

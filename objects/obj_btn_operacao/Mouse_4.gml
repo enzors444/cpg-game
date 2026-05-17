@@ -41,6 +41,8 @@ if (operacao == "=") {
     if (_enemy == noone) exit;
 
     var _resultado = calcular_resultado_expressao();
+    registrar_numero_grudado_rodada(global.expressao_partes);
+
     var _vida_antes = global.enemy_life;
     var _dano = max(0, _resultado);
 

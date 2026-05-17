@@ -9,6 +9,7 @@ if (_nova_run) {
 }
 
 inicializar_roguelike();
+resetar_roguelike_por_rodada();
 
 if (!variable_global_exists("bonus_tentativas_proxima") || _nova_run) {
     global.bonus_tentativas_proxima = 0;

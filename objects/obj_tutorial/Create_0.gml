@@ -13,8 +13,14 @@ anim_player = 0;
 anim_professor = 0;
 transicao = false;
 transicao_timer = 0;
+texto_revelado = 0;
+texto_timer = 0;
+texto_velocidade = 0.9;
+dialogo_som_tocando = false;
 
-tocar_musica(_01);
+parar_musica();
+tocar_sfx_loop_unico("dialogo", dialogo, 1.4);
+dialogo_som_tocando = true;
 
 ok_x1 = room_width - 148;
 ok_y1 = room_height - 92;

@@ -74,6 +74,10 @@ if (operacao == "=") {
                 global.boss_mensagem = _mensagem_boss_exato;
             }
         } else {
+            if (global.tentativas > 1) {
+                tocar_sfx(tentativa, 0.85);
+            }
+
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();
@@ -93,6 +97,10 @@ if (operacao == "=") {
                 recomprar_cartas();
             }
         } else {
+            if (global.tentativas > 1) {
+                tocar_sfx(tentativa, 0.85);
+            }
+
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();
@@ -112,6 +120,10 @@ if (operacao == "=") {
                 recomprar_cartas();
             }
         } else {
+            if (global.tentativas > 1) {
+                tocar_sfx(tentativa, 0.85);
+            }
+
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();
@@ -149,6 +161,10 @@ if (operacao == "=") {
                 adicionar_reroll_acerto_exato();
             }
         } else {
+            if (global.tentativas > 1) {
+                tocar_sfx(tentativa, 0.85);
+            }
+
             global.tentativas--;
             if (global.tentativas <= 0) {
                 game_over();

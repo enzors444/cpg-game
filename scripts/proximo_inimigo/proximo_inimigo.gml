@@ -149,6 +149,10 @@ function criar_inimigos() {
 }
 
 function criar_criticos_numeros_visiveis() {
+    if (instance_exists(obj_enemy)) {
+        tocar_sfx(critico, 1);
+    }
+
     with (obj_enemy) {
         if (visible) {
             var _escala_x = abs(image_xscale);

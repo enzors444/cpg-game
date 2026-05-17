@@ -205,6 +205,8 @@ function abrir_recompensa_roguelike() {
     global.recompensa_roguelike_aberta = true;
     global.jogo_pausado = true;
 
+    tocar_sfx_unico("roguelike", roguelike, 0.9);
+
     instance_create_depth(0, 0, -100000, obj_recompensa_roguelike);
 }
 
